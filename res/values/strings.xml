@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Buzzbox!</string>
+    <string name="app_name">Buzzbox</string>
+    <string name="error_intro">"Please "</string>
+    <string name="error_blank_password">enter a password</string>
+    <string name="error_blank_username">enter a username</string>
+	<string name="error_mismatched_passwords">enter the same password twice</string>
+    <string name="error_join">", and "</string>
+    <string name="error_end">.</string>
+</resources>
