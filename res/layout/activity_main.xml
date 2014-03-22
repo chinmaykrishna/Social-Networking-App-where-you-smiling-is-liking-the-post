@@ -9,5 +9,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post" />
+    
+    <ListView
+        android:id="@+id/postsView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+    </ListView>
+    
 
 </LinearLayout>
