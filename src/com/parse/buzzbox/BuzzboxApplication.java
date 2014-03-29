@@ -15,7 +15,7 @@ public class BuzzboxApplication extends Application {
 
 		// Add your initialization code here
 		Parse.initialize(this, "7teCmwjmSQIPiZ3yX3UHK93b8dJeu9CDjYOHIS6K", "YCI5fdYh8Wh6wGCGjMq04G5ZSXR2xs3DLlQhYqAq");
-
+		
 		
 	}
 
