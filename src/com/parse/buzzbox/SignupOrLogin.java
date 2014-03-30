@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
@@ -33,13 +34,13 @@ public class SignupOrLogin extends Activity {
 				
 		setContentView(R.layout.main);
 				ParseAnalytics.trackAppOpened(getIntent());
-		((Button) findViewById(R.id.loginButton)).setOnClickListener(new OnClickListener(){
+		((ImageButton) findViewById(R.id.loginButton)).setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
 				startActivity(new Intent(SignupOrLogin.this,LoginActivity.class));
 			}
 		});
 		
-		((Button) findViewById(R.id.signupButton)).setOnClickListener(new OnClickListener(){
+		((ImageButton) findViewById(R.id.signupButton)).setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
 				startActivity(new Intent(SignupOrLogin.this,SignupActivity.class));
 			}
