@@ -32,7 +32,7 @@ public class SignupOrLogin extends Activity {
 			}
 		
 				
-		setContentView(R.layout.main);
+		setContentView(R.layout.signup_login);
 				ParseAnalytics.trackAppOpened(getIntent());
 		((ImageButton) findViewById(R.id.loginButton)).setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
