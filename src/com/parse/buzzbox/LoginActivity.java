@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,8 +26,10 @@ public class LoginActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_login);
-
+  //fullscreen 
+    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    setContentView(R.layout.main);
+    
     // Set up the login form.
     usernameView = (EditText) findViewById(R.id.username);
     passwordView = (EditText) findViewById(R.id.password);
@@ -60,7 +64,7 @@ public class LoginActivity extends Activity {
         // Set up a progress dialog
         final ProgressDialog dlg = new ProgressDialog(LoginActivity.this);
         dlg.setTitle("Please wait.");
-        dlg.setMessage("Logging in.  Please wait.");
+        dlg.setMessage("Logging in");
         dlg.show();
         // Call the Parse login method
         ParseUser.logInInBackground(usernameView.getText().toString(), passwordView.getText()
@@ -77,6 +81,7 @@ public class LoginActivity extends Activity {
               Intent intent = new Intent(LoginActivity.this, DispatchActivity.class);
               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
               startActivity(intent);
+              finish();
             }
           }
         });
@@ -90,5 +95,11 @@ public class LoginActivity extends Activity {
     } else {
       return true;
     }
+  }
+  //signup button listener
+  public void signup_fuction(View v)
+  {
+	  Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+      startActivity(intent);
   }
 }

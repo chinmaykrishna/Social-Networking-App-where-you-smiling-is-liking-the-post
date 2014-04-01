@@ -7,40 +7,40 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 
-	/**
-	 * Data model for a post.
-	 */
-	@ParseClassName("Posts")
-	public class BuzzboxPost extends ParseObject {
-	  public String getText() {
-	    return getString("text");
-	  }
+/**
+ * Data model for a post.
+ */
+@ParseClassName("Posts")
+public class BuzzboxPost extends ParseObject {
+  public String getText() {
+    return getString("text");
+  }
 
-	  public void setText(String value) {
-	    put("text", value);
-	  }
+  public void setText(String value) {
+    put("text", value);
+  }
 
-	  public ParseUser getUser() {
-	    return getParseUser("user");
-	  }
+  public ParseUser getUser() {
+    return getParseUser("user");
+  }
 
-	  public void setUser(ParseUser value) {
-	    put("user", value);
-	  }
+  public void setUser(ParseUser value) {
+    put("user", value);
+  }
 
-	  public ParseGeoPoint getLocation() {
-	    return getParseGeoPoint("location");
-	  }
+  public ParseGeoPoint getLocation() {
+    return getParseGeoPoint("location");
+  }
 
-	  public void setLocation(ParseGeoPoint value) {
-	    put("location", value);
-	  }
+  public void setLocation(ParseGeoPoint value) {
+    put("location", value);
+  }
 
-	  //to put likes, dislikes to post
-	  
-	  public static ParseQuery<BuzzboxPost> getQuery() {
-	    return ParseQuery.getQuery(BuzzboxPost.class);
-	  }
-	}
+  //to put likes, dislikes to post
+  
+  public static ParseQuery<BuzzboxPost> getQuery() {
+    return ParseQuery.getQuery(BuzzboxPost.class);
+  }
+}
 
 

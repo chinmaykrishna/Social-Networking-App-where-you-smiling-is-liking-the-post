@@ -2,7 +2,9 @@ package com.parse.buzzbox;
 
 import android.app.Activity;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ public class MainActivity extends Activity {
 	private static final int SEARCH_RADIUS=100;
 	private Location lastLocation = null;
 	  private Location currentLocation = null;
+	  private LocationManager locationManager;
 
 	private ParseQueryAdapter<BuzzboxPost> posts;
 
@@ -24,6 +27,10 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		
+		currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+		Log.d("current loc", currentLocation.toString());
 		 // Set up a customized query
 	    ParseQueryAdapter.QueryFactory<BuzzboxPost> factory =
 	        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
@@ -54,8 +61,12 @@ public class MainActivity extends Activity {
 	        };
 	        
 	     // Attach the query adapter to the view
-	        ListView postsView = (ListView) this.findViewById(R.id.postsView);
-	        postsView.setAdapter(posts);
+	        if(!posts.isEmpty())
+	        {
+	        	ListView postsView = (ListView) this.findViewById(R.id.postsView);
+		        postsView.setAdapter(posts);
+	        }
+	        
 	}
 	
 	/*

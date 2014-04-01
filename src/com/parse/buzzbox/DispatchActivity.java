@@ -17,9 +17,11 @@ public class DispatchActivity extends Activity{
 	    if (ParseUser.getCurrentUser() != null) {
 	      // Start an intent for the logged in activity
 	      startActivity(new Intent(this, MainActivity.class));
+	      finish();
 	    } else {
 	      // Start and intent for the logged out activity
-	      startActivity(new Intent(this, SignupOrLogin.class));
+	      startActivity(new Intent(this, LoginActivity.class));
+	      finish();
 	    }
 
 }

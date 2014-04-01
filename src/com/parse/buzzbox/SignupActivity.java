@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,8 +24,11 @@ public class SignupActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		//fullscreen 
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_signup);
 
+		
 	    // Set up the signup form.
 	    usernameView = (EditText) findViewById(R.id.username);
 	    passwordView = (EditText) findViewById(R.id.password);
