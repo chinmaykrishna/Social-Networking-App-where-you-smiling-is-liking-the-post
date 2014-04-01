@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 		
 		currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
@@ -61,11 +62,10 @@ public class MainActivity extends Activity {
 	        };
 	        
 	     // Attach the query adapter to the view
-	        if(!posts.isEmpty())
-	        {
+	        
 	        	ListView postsView = (ListView) this.findViewById(R.id.postsView);
 		        postsView.setAdapter(posts);
-	        }
+	        
 	        
 	}
 	
@@ -76,4 +76,8 @@ public class MainActivity extends Activity {
 	    return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
 	  }
 
+	  public void post_function(View v)
+	  {
+		  
+	  }
 }
