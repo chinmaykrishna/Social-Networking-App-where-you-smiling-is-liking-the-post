@@ -30,7 +30,9 @@
         <activity
             android:name="com.parse.buzzbox.SignupActivity">
         </activity>
-        
+        <activity
+            android:name="com.parse.buzzbox.SignupOrLogin">
+        </activity>
         <activity
             android:name="com.parse.buzzbox.MainActivity">
         </activity>

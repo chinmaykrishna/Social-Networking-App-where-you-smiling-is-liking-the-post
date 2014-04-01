@@ -28,7 +28,7 @@ public class LoginActivity extends Activity {
 
   //fullscreen 
     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    setContentView(R.layout.main);
+    setContentView(R.layout.login);
     
     // Set up the login form.
     usernameView = (EditText) findViewById(R.id.username);
@@ -96,10 +96,5 @@ public class LoginActivity extends Activity {
       return true;
     }
   }
-  //signup button listener
-  public void signup_fuction(View v)
-  {
-	  Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-      startActivity(intent);
-  }
+  
 }

@@ -71,7 +71,7 @@ public class SignupActivity extends Activity{
 	     // Set up a progress dialog
 	        final ProgressDialog dlg = new ProgressDialog(SignupActivity.this);
 	        dlg.setTitle("Please wait.");
-	        dlg.setMessage("Signing up.  Please wait.");
+	        dlg.setMessage("Signing up.");
 	        dlg.show();
 
 	        // Set up a new Parse user

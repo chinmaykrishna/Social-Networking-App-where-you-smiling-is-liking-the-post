@@ -20,7 +20,7 @@ public class DispatchActivity extends Activity{
 	      finish();
 	    } else {
 	      // Start and intent for the logged out activity
-	      startActivity(new Intent(this, LoginActivity.class));
+	      startActivity(new Intent(this, SignupOrLogin.class));
 	      finish();
 	    }
 
