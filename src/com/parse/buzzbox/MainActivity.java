@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 	            query.include("user");
 	            query.orderByDescending("createdAt");
 	            query.whereWithinKilometers("location", geoPointFromLocation(myLoc), SEARCH_RADIUS);
-	            query.setLimit(MAX_POST_SEARCH_RESULTS);
+	            //query.setLimit(MAX_POST_SEARCH_RESULTS);
 	            return query;
 	          }
 	        };
