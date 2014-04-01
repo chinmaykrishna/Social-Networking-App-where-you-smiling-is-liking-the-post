@@ -12,6 +12,12 @@ import com.parse.ParseUser;
  */
 @ParseClassName("Posts")
 public class BuzzboxPost extends ParseObject {
+	
+	public BuzzboxPost()
+	{
+		
+	}
+	
   public String getText() {
     return getString("text");
   }
