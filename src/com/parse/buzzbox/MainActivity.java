@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,11 +43,12 @@ import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
-	private static final int SEARCH_RADIUS=100;
+	private static int SEARCH_RADIUS=100,flag=0;
 	private Location lastLocation = null;
     private Location currentLocation = null;
     protected double Latitude,Longitude;
     private LocationManager locationManager;
+    private static ParseGeoPoint p;
     private Context con;
 	private ParseQueryAdapter<BuzzboxPost> posts;
 
@@ -64,7 +67,7 @@ public class MainActivity extends Activity {
 		
 		Log.d("current loc", currentLocation.toString());
 		Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
-		ParseGeoPoint p = geoPointFromLocation(myLoc);
+		p = geoPointFromLocation(myLoc);
 		setQuery(p);
 	        
 	        
@@ -79,7 +82,13 @@ public class MainActivity extends Activity {
 	            
 	            ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
 	            query.include("user");
-	            query.orderByDescending("createdAt");
+	            
+	            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
+	            
+	            else query.orderByDescending("no_of_empathizes");	// If the user has pressed the Featured Button.
+	            
+	            flag=0;
+	            
 	            query.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
 	            query.setLimit(MAX_POST_SEARCH_RESULTS);
 	            return query;
@@ -95,6 +104,8 @@ public class MainActivity extends Activity {
 	            }
 	            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 	            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
+	            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
+	            // contentView.setBackground();  // We will do this to show the image.
 	            contentView.setText(post.getText());
 	            usernameView.setText(post.getUser().getUsername());
 	            return view;
@@ -108,75 +119,23 @@ public class MainActivity extends Activity {
 	}
 	
 
-	  //Post button clicked. This button will navigate the user to a new Activity where he will be able to post.
-	public void post_message(View v)
+	//Post button clicked. This button will navigate the user to a new Activity where he will be able to post.
+	public void post_function(View v)
 	  {
-		  
-			final ParseUser currentUser = ParseUser.getCurrentUser();
-			
-			//pop up a dialog box
-			final Dialog dialog = new Dialog(this);
-			dialog.setContentView(R.layout.new_post);
-			dialog.setTitle("New Post");
-			Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
-			Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
-			
-			//cancel button clicked
-			dialogButtonC.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.cancel();
-				}
-			});
-			
-			//send button clicked
-			dialogButtonA.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					
-					EditText pnre = (EditText)dialog.findViewById(R.id.location);
-					String message = pnre.getText().toString();
-					if(message.trim().length()>=1)
-					{
-						//now send post
-						dialog.dismiss();
-						BuzzboxPost new_post = new BuzzboxPost();
-						new_post.setLocation(geoPointFromLocation(currentLocation));
-						new_post.setText(message);
-						new_post.setUser(currentUser);
-						new_post.saveInBackground(new SaveCallback() {
-							
-							@Override
-							public void done(ParseException e) {
-								//successfull
-								Toast.makeText(con, "posted", Toast.LENGTH_SHORT).show();
-							}
-						});
-					}
-					else
-					{
-						//invalid message
-						Toast.makeText(con, "Please enter a valid message", Toast.LENGTH_SHORT).show();
-					}
-				}
-				
-			});
-	
-			dialog.show();				
+		 // Intent i = new Intent(MainActivity.class, BuzzFeedPost.class);
+		 // MainActivity.this.startActivity(i);
+						
 	  }
 	
 	
-		// If the user wants to set a different radius.
-	  public void Location(View v)
+	// If the user wants to set a different radius.
+	  public void change_radius(View v)
 	  {
-		  
-			final ParseUser currentUser = ParseUser.getCurrentUser();
-			
+		  			
 			//pop up a dialog box
 			final Dialog dialog = new Dialog(this);
 			dialog.setContentView(R.layout.new_post);
-			dialog.setTitle("Enter Location");			
+			dialog.setTitle("Enter Radius");			
 			Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 			Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 			
@@ -196,18 +155,11 @@ public class MainActivity extends Activity {
 					
 					EditText location = (EditText)dialog.findViewById(R.id.location);
 					String loc = location.getText().toString();
-					if(loc.trim().length()>=1)
-					{
-						//now find that place and set current location to this place.
-						dialog.dismiss();
-						new FindPlace().execute(loc);
-						
-					}
-					else
-					{
-						//invalid message
-						Toast.makeText(con, "Please enter a valid message", Toast.LENGTH_SHORT).show();
-					}
+					SEARCH_RADIUS = Integer.parseInt(loc);
+					setQuery(p);	// Update the List.
+					dialog.dismiss();
+					
+					
 				}
 				
 			});
@@ -215,8 +167,39 @@ public class MainActivity extends Activity {
 			dialog.show();				
 	  }
 	  
+	  
+	  // This method will simply sort the Posts on the basis of number of highest empathizes.
+	  public void featured(View v){
+		  
+		  flag=1;
+		  setQuery(p);
+	  }
+	  
+	  
+	  // This method will simply enable user to Empathize a Post.
+	  public void empathize(View v){
+		  
+	  }
+	  
+	  
+	  // This method will simply enable user to mark this post as his favourite.
+	  public void favourite(View v){
+		  
+	  }
+	  
+	  
+	  /*
+	   * Helper method to get the Parse GEO point representation of a location
+	   */
+	  private static ParseGeoPoint geoPointFromLocation(Location loc) {
+	    return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
+	  }
+	  
+	  
+	  //This inner class will be used in some other versions of the Application.
+	  
 	  // This class will search for the new Location in a background thread when the user sets another location.
-	  private class FindPlace extends AsyncTask<String,Void, JSONObject> {
+/*	  private class FindPlace extends AsyncTask<String,Void, JSONObject> {
 			 
 			 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
 		 	     String add=null;
@@ -297,14 +280,6 @@ public class MainActivity extends Activity {
 		     
 		     
 		    	 
-		     }
-	  
-	  /*
-	   * Helper method to get the Parse GEO point representation of a location
-	   */
-	  private static ParseGeoPoint geoPointFromLocation(Location loc) {
-	    return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
-	  }
-
+		     }*/
 
 }

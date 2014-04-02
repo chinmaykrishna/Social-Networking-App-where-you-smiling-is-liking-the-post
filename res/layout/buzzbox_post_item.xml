@@ -1,22 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/usernameView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Username"
         android:textAppearance="?android:attr/textAppearanceSmall" />
         
 
     <TextView
         android:id="@+id/contentView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Message"
+        android:background="@drawable/background"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        
+    <ImageButton
+        android:id="@+id/privatemessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/favourite"
+        android:onClick="private_message"
+        android:src="@android:drawable/sym_action_email" />
+    
+    <ImageButton
+        android:id="@+id/favourite"
+        android:layout_width=160dp
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:onClick="favourite"        
+        android:src="@android:drawable/star_big_off" />
+    
+    </RelativeLayout>
 
 
 </LinearLayout>

@@ -20,21 +20,23 @@
     />
 
         <Button
-            android:id="@+id/Location"
+            android:id="@+id/changeradius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:onClick="change_radius"
             android:layout_toRightOf="@+id/postButton"
-            android:text="Change Location" />
+            android:text="Change Radius" />
         
         <Button
-            android:id="@+id/Search"
+            android:id="@+id/Featured"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight = "true"
+            android:onClick="featured"
             android:layout_toRightOf="@+id/Location"
-            android:text="Search" />
+            android:text="Featured" />
         
         
     </RelativeLayout>

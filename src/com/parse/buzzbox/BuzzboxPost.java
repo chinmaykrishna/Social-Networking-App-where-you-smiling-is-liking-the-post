@@ -33,6 +33,16 @@ public class BuzzboxPost extends ParseObject {
   public void setUser(ParseUser value) {
     put("user", value);
   }
+  
+  public int no_of_empathizes(){
+	  return getInt("NoOfEmpathizes");
+  }
+  
+  public void add_to_empathizes(){
+	  int temp = getInt("NoOfEmpathizes");
+	  temp++;
+	  put("NoOfEmpathizes",temp);
+  }
 
   public ParseGeoPoint getLocation() {
     return getParseGeoPoint("location");
