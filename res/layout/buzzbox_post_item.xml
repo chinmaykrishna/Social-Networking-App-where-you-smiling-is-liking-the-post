@@ -27,23 +27,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         
-        
     <ImageButton
         android:id="@+id/privatemessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/favourite"
         android:onClick="private_message"
         android:src="@android:drawable/sym_action_email" />
     
     <ImageButton
         android:id="@+id/favourite"
-        android:layout_width=160dp
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:onClick="favourite"        
         android:src="@android:drawable/star_big_off" />
+
+    <TextView
+        android:id="@+id/Count_of_Empathizes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/privatemessage"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/Count_of_Empathizes"
+        android:onClick="empathize"
+        android:src="@android:drawable/ic_menu_view" />
     
     </RelativeLayout>
 
