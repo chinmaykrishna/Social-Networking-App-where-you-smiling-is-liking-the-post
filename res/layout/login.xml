@@ -27,7 +27,6 @@
         android:textColorHint="@android:color/darker_gray"
         android:padding="5dp"
         android:textCursorDrawable="@null" 
-        android:textColor="@android:color/holo_blue_dark"
         android:layout_gravity="center_horizontal"
          >
          
@@ -48,7 +47,7 @@
         android:background="@drawable/custom_edittext"
         android:textCursorDrawable="@null"
         android:layout_gravity="center_horizontal"
-        android:textColor="@android:color/holo_blue_dark"  />
+          />
 
     <Button
         android:id="@+id/action_button"

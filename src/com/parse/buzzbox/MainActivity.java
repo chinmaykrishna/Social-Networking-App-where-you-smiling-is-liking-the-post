@@ -120,6 +120,8 @@ public class MainActivity extends Activity {
 	        
 	        	ListView postsView = (ListView) this.findViewById(R.id.postsView);
 		        postsView.setAdapter(posts);
+		        
+		        //posts.clear();
 	}
 	
 
@@ -159,8 +161,15 @@ public class MainActivity extends Activity {
 					
 					EditText location = (EditText)dialog.findViewById(R.id.location);
 					String loc = location.getText().toString();
+					if(!(loc.isEmpty())){
 					SEARCH_RADIUS = Integer.parseInt(loc);
 					setQuery(p);	// Update the List.
+					
+					}
+					else{
+						Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
+			     		mtoast.show();
+					}
 					dialog.dismiss();
 					
 					
@@ -181,19 +190,19 @@ public class MainActivity extends Activity {
 	  
 	  
 	  // This method will simply enable user to Empathize a Post.
-	  public void empathize(View v){
-		  
-		  
-	  }
-	  
-	  
-	  // This method will simply enable user to mark this post as his favourite.
-	  public void favourite(View v){
-		  
-		  
-	  }
-	  
-	  
+//	  public void empathize(View v){
+//		  
+//		  
+//	  }
+//	  
+//	  
+//	  // This method will simply enable user to mark this post as his favourite.
+//	  public void favourite(View v){
+//		  
+//		  
+//	  }
+//	  
+//	  
 	  /*
 	   * Helper method to get the Parse GEO point representation of a location
 	   */

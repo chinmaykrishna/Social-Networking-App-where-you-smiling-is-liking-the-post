@@ -15,38 +15,6 @@
         android:layout_marginLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-     
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/post_message"
-         android:layout_marginTop="20dp"
-         android:padding="5dp"
-         android:layout_centerHorizontal="true" >
-
-         <Button
-             android:id="@+id/dialogButtonOK"
-             android:layout_width="wrap_content"
-             android:layout_height="40dp"
-             android:background="#C0392B"
-             android:text="Go"
-             android:textColor="#ffffff"
-             android:textSize="22dp"
-             android:layout_weight="1" />
-
-         <Button
-             android:id="@+id/dialogButtonCancel"
-             android:layout_width="wrap_content"
-             android:layout_height="40dp"
-             android:background="#C0392B"
-             android:text="Cancel"
-             android:textColor="#ffffff"
-             android:textSize="22dp"
-             android:layout_marginLeft="20dp"
-             android:layout_weight="1" />
-         
-     </LinearLayout>
-
      <EditText
          android:id="@+id/location"
          android:layout_width="match_parent"
@@ -57,5 +25,29 @@
          android:hint="Enter radius"
          android:inputType="number"
          android:maxLines="5" />
+     
+     <Button
+             android:id="@+id/dialogButtonOK"
+             android:layout_width="wrap_content"
+             android:layout_height="40dp"
+             android:background="#C0392B"
+             android:text="Go"
+             android:layout_below="@+id/location"
+             android:textColor="#ffffff"
+             android:textSize="22dp"
+             android:layout_weight="1" />
+
+     <Button
+         android:id="@+id/dialogButtonCancel"
+         android:layout_width="wrap_content"
+         android:layout_height="40dp"
+         android:layout_alignBaseline="@+id/dialogButtonOK"
+         android:layout_alignBottom="@+id/dialogButtonOK"
+         android:layout_toRightOf="@+id/textView1"
+         android:layout_weight="1"
+         android:background="#C0392B"
+         android:text="Cancel"
+         android:textColor="#ffffff"
+         android:textSize="22dp" />
 
 </RelativeLayout>
