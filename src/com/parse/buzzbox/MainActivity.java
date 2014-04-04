@@ -3,6 +3,7 @@ package com.parse.buzzbox;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,15 +113,44 @@ public class MainActivity extends Activity {
 	public void post_function(View v)
 	  {
 		 // Intent i = new Intent(MainActivity.class, BuzzFeedPost.class);
-		 // MainActivity.this.startActivity(i);
-						
+		 // MainActivity.this.startActivity(i);				
 	  }
 	
 	
 	// If user want to create a new post
 	  public void new_post_function(View v)
 	  {
-		  
+	  	 final Dialog dialog = new Dialog(this);
+		 dialog.setContentView(R.layout.new_post);
+		 dialog.setTitle("New Post");	
+		 Button choose_bg = (Button) dialog.findViewById(R.id.choose_bg);
+		 Button done_but = (Button) dialog.findViewById(R.id.done);
+		 EditText message = (EditText)dialog.findViewById(R.id.message);
+		 ImageView bg = (ImageView)dialog.findViewById(R.id.bg);
+		 
+		 	//done button clicked
+			 done_but.setOnClickListener(new OnClickListener() {
+
+				 @Override
+				 public void onClick(View v) {
+					 //post function
+					 
+					 dialog.dismiss();
+				 }
+			 });
+
+			 //Choose background button clicked
+			 choose_bg.setOnClickListener(new OnClickListener() {
+				 @Override
+				 public void onClick(View v) {
+					 //choose_bg function
+					 Intent i = new Intent(con,Choose_bg.class);
+					 startActivity(i);
+				 }
+
+			 });
+
+			 dialog.show();	
 	  }
 	  
 	  //Menu configuration
@@ -256,7 +287,7 @@ public class MainActivity extends Activity {
 			 
 				//pop up a dialog box
 			 final Dialog dialog = new Dialog(this);
-			 dialog.setContentView(R.layout.new_post);
+			 dialog.setContentView(R.layout.change_radius);
 			 dialog.setTitle("Enter Radius");	
 			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);

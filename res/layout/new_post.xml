@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+     >
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Radius: "
-        android:layout_marginLeft="5dp"
+        android:text="Message:"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-     <EditText
-         android:id="@+id/location"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/textView1"
-         android:layout_centerHorizontal="true"
-         android:ems="10"
-         android:hint="Enter radius"
-         android:inputType="number"
-         android:maxLines="5" />
-     
-     <Button
-             android:id="@+id/dialogButtonOK"
-             android:layout_width="wrap_content"
-             android:layout_height="40dp"
-             android:background="#C0392B"
-             android:text="Go"
-             android:layout_below="@+id/location"
-             android:textColor="#ffffff"
-             android:textSize="22dp"
-             android:layout_weight="1" />
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:maxLines="5" >
 
-     <Button
-         android:id="@+id/dialogButtonCancel"
-         android:layout_width="wrap_content"
-         android:layout_height="40dp"
-         android:layout_alignBaseline="@+id/dialogButtonOK"
-         android:layout_alignBottom="@+id/dialogButtonOK"
-         android:layout_toRightOf="@+id/textView1"
-         android:layout_weight="1"
-         android:background="#C0392B"
-         android:text="Cancel"
-         android:textColor="#ffffff"
-         android:textSize="22dp" />
+        <requestFocus />
+    </EditText>
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/choose_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose background"
+        android:layout_marginTop="20dp"
+        
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Post" />
+
+</LinearLayout>
