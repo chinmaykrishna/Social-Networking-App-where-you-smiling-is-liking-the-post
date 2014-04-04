@@ -1,45 +1,27 @@
 package com.parse.buzzbox;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
@@ -134,53 +116,20 @@ public class MainActivity extends Activity {
 	  }
 	
 	
-	// If the user wants to set a different radius.
-	  public void change_radius(View v)
+	// If user want to create a new post
+	  public void new_post_function(View v)
 	  {
-		  			
-			//pop up a dialog box
-			final Dialog dialog = new Dialog(this);
-			dialog.setContentView(R.layout.new_post);
-			dialog.setTitle("Enter Radius");			
-			Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
-			Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
-			
-			//cancel button clicked
-			dialogButtonC.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.cancel();
-				}
-			});
-			
-			//Go button clicked
-			dialogButtonA.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					
-					EditText location = (EditText)dialog.findViewById(R.id.location);
-					String loc = location.getText().toString();
-					if(!(loc.isEmpty())){
-					SEARCH_RADIUS = Integer.parseInt(loc);
-					setQuery(p);	// Update the List.
-					
-					}
-					else{
-						Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
-			     		mtoast.show();
-					}
-					dialog.dismiss();
-					
-					
-				}
-				
-			});
-	
-			dialog.show();				
+		  
 	  }
 	  
-	  
+	  //Menu configuration
+	  public boolean onCreateOptionsMenu(Menu menu){
+			
+			
+			MenuInflater inf=new MenuInflater(this);
+				inf.inflate(R.menu.main_activity_menu, menu);
+	    	return true;
+	     }
 	  // This method will simply sort the Posts on the basis of number of highest empathizes.
 	  public void featured(View v){
 		  
@@ -296,5 +245,57 @@ public class MainActivity extends Activity {
 		     
 		    	 
 		     }*/
+	  @Override
+		public boolean onOptionsItemSelected
+									    (MenuItem item) {
+		 if(item.getItemId()==R.id.refresh){
+			  setQuery(p);
+		 }
+		 else if(item.getItemId()==R.id.changeradius){
+			 //change radius
+			 
+				//pop up a dialog box
+			 final Dialog dialog = new Dialog(this);
+			 dialog.setContentView(R.layout.new_post);
+			 dialog.setTitle("Enter Radius");	
+			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
+			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 
+			 //cancel button clicked
+			 dialogButtonC.setOnClickListener(new OnClickListener() {
+
+				 @Override
+				 public void onClick(View v) {
+					 dialog.cancel();
+				 }
+			 });
+
+			 //Go button clicked
+			 dialogButtonA.setOnClickListener(new OnClickListener() {
+				 @Override
+				 public void onClick(View v) {
+	
+					 EditText location = (EditText)dialog.findViewById(R.id.location);
+					 String loc = location.getText().toString();
+					 if(!(loc.isEmpty())){
+						 SEARCH_RADIUS = Integer.parseInt(loc);
+						 setQuery(p);	// Update the List.
+			
+					 }
+					 else{
+			 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
+			 		 	 mtoast.show();
+					 }
+				 dialog.dismiss();
+	
+	
+				 }
+
+			 });
+
+			 dialog.show();	
+		 }
+		 return true;
+		}
+	  
 }

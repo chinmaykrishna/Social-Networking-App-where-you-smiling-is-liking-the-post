@@ -1,54 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    >
+    android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="40dp" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="9" >
 
         <Button
-        android:id="@+id/postButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="post_function"
-        android:text="Feeds" 
-    />
+            android:id="@+id/postButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="post_function"
+            android:text="Feeds"
+            android:layout_weight="3" />
 
         <Button
             android:id="@+id/changeradius"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:onClick="change_radius"
-            android:layout_toRightOf="@+id/postButton"
-            android:text="Change Radius" />
-        
+            android:onClick="new_post_function"
+            android:text="New Post"
+            android:layout_weight="3" />
+
         <Button
             android:id="@+id/Featured"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:onClick="featured"
-            android:layout_toRightOf="@+id/changeradius"
-            android:text="Featured" />
-        
-        
-    </RelativeLayout>
-    
+            android:text="Featured"
+            android:layout_weight="3" />
+    </LinearLayout>
 
-        
-     
     <ListView
         android:id="@+id/postsView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
+        android:layout_height="fill_parent" >
     </ListView>
-    
 
 </LinearLayout>
