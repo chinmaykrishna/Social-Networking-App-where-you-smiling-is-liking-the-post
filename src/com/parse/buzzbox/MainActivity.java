@@ -1,5 +1,6 @@
 package com.parse.buzzbox;
 
+import android.R.drawable;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -96,6 +98,15 @@ public class MainActivity extends Activity {
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
 	            
+	            final ImageButton b = (ImageButton) view.findViewById(R.id.favourite);
+	            b.setOnClickListener(new OnClickListener(){
+	            	
+	            	public void onClick(View v){
+	            	    	b.setImageResource(drawable.star_big_on);
+	            	    		            		  
+	            	}
+	            });
+	            
 	            return view;
 	          }
 	        };
@@ -161,6 +172,7 @@ public class MainActivity extends Activity {
 				inf.inflate(R.menu.main_activity_menu, menu);
 	    	return true;
 	     }
+	  
 	  // This method will simply sort the Posts on the basis of number of highest empathizes.
 	  public void featured(View v){
 		  
@@ -170,19 +182,21 @@ public class MainActivity extends Activity {
 	  
 	  
 	  // This method will simply enable user to Empathize a Post.
-//	  public void empathize(View v){
-//		  
-//		  
-//	  }
-//	  
-//	  
-//	  // This method will simply enable user to mark this post as his favourite.
+	  public void empathize(View v){
+		  
+		  
+	  }
+	  
+	  
+	  // This method will simply enable user to mark this post as his favourite.
 //	  public void favourite(View v){
 //		  
+//		  ImageButton b = (ImageButton) v.getTag();
 //		  
+//		  b.setImageResource(R.drawable.background);
 //	  }
-//	  
-//	  
+	  
+	  
 	  /*
 	   * Helper method to get the Parse GEO point representation of a location
 	   */
