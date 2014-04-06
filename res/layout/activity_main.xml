@@ -12,15 +12,15 @@
         android:weightSum="9" >
 
         <Button
-            android:id="@+id/postButton"
+            android:id="@+id/changeRadius"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick="post_function"
-            android:text="Feeds"
+            android:onClick="change_radius"
+            android:text="Radius"
             android:layout_weight="3" />
 
         <Button
-            android:id="@+id/changeradius"
+            android:id="@+id/newPost"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:onClick="new_post_function"

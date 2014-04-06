@@ -127,6 +127,52 @@ public class MainActivity extends Activity {
 		 // MainActivity.this.startActivity(i);				
 	  }
 	
+	public void change_radius(View v){
+		
+		 //change radius
+		 
+		//pop up a dialog box
+	 final Dialog dialog = new Dialog(this);
+	 dialog.setContentView(R.layout.change_radius);
+	 dialog.setTitle("Change Radius");	
+	 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
+	 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+
+	 //cancel button clicked
+	 dialogButtonC.setOnClickListener(new OnClickListener() {
+
+		 @Override
+		 public void onClick(View v) {
+			 dialog.cancel();
+		 }
+	 });
+
+	 //Go button clicked
+	 dialogButtonA.setOnClickListener(new OnClickListener() {
+		 @Override
+		 public void onClick(View v) {
+
+			 EditText location = (EditText)dialog.findViewById(R.id.location);
+			 String loc = location.getText().toString();
+			 if(!(loc.isEmpty())){
+				 SEARCH_RADIUS = Integer.parseInt(loc);
+				 setQuery(p);	// Update the List.
+	
+			 }
+			 else{
+	 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
+	 		 	 mtoast.show();
+			 }
+		 dialog.dismiss();
+
+
+		 }
+
+	 });
+
+	 dialog.show();
+	}
+	
 	
 	// If user want to create a new post
 	  public void new_post_function(View v)
@@ -302,7 +348,7 @@ public class MainActivity extends Activity {
 				//pop up a dialog box
 			 final Dialog dialog = new Dialog(this);
 			 dialog.setContentView(R.layout.change_radius);
-			 dialog.setTitle("Enter Radius");	
+			 dialog.setTitle("Change Radius");	
 			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 
