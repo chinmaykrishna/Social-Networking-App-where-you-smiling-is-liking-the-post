@@ -38,6 +38,9 @@ public class BuzzboxPost extends ParseObject {
 	  return getInt("NoOfEmpathizes");
   }
   
+  public void set_no_of_empathizes(int value){
+	  put("NoOfEmpathizes", value);
+  }
   public void add_to_empathizes(){
 	  int temp = getInt("NoOfEmpathizes");
 	  temp++;

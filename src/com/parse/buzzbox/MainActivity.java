@@ -23,9 +23,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
@@ -182,7 +185,7 @@ public class MainActivity extends Activity {
 		 dialog.setTitle("New Post");	
 		 Button choose_bg = (Button) dialog.findViewById(R.id.choose_bg);
 		 Button done_but = (Button) dialog.findViewById(R.id.done);
-		 EditText message = (EditText)dialog.findViewById(R.id.message);
+		 final EditText message = (EditText)dialog.findViewById(R.id.message);
 		 ImageView bg = (ImageView)dialog.findViewById(R.id.bg);
 		 
 		 	//done button clicked
@@ -191,21 +194,47 @@ public class MainActivity extends Activity {
 				 @Override
 				 public void onClick(View v) {
 					 //post function
-					 
+					 if(message.getText().toString().trim().length()<1)
+					 {
+						 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+					 }
+					 else
+					 {
+						 BuzzboxPost new_post = new BuzzboxPost();
+						 new_post.setUser(ParseUser.getCurrentUser());
+						 new_post.setText(message.getText().toString().trim());
+						 new_post.set_no_of_empathizes(0);
+						 new_post.setLocation(geoPointFromLocation(currentLocation));
+						 new_post.saveInBackground(new SaveCallback() {
+							
+							@Override
+							public void done(ParseException e) {
+								// TODO Auto-generated method stub
+								if(e==null)
+								{
+									Toast.makeText(con, "Successfully posted", Toast.LENGTH_SHORT).show();
+									setQuery(p);	// Update the List.
+								}
+								else
+								Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+								
+							}
+						});
+					 }
 					 dialog.dismiss();
 				 }
 			 });
 
 			 //Choose background button clicked
-			 choose_bg.setOnClickListener(new OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-					 //choose_bg function
-					 Intent i = new Intent(con,Choose_bg.class);
-					 startActivity(i);
-				 }
-
-			 });
+//			 choose_bg.setOnClickListener(new OnClickListener() {
+//				 @Override
+//				 public void onClick(View v) {
+//					 //choose_bg function
+//					 Intent i = new Intent(con,Choose_bg.class);
+//					 startActivity(i);
+//				 }
+//
+//			 });
 
 			 dialog.show();	
 	  }
@@ -377,7 +406,7 @@ public class MainActivity extends Activity {
 			 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
 			 		 	 mtoast.show();
 					 }
-				 dialog.dismiss();
+					 dialog.dismiss();
 	
 	
 				 }

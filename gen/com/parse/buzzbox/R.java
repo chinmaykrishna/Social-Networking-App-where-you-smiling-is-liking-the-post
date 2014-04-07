@@ -26,7 +26,8 @@ public final class R {
         public static final int RelativeLayout1=0x7f070010;
         public static final int action_button=0x7f070009;
         public static final int bg=0x7f070019;
-        public static final int changeradius=0x7f070002;
+        public static final int changeRadius=0x7f070001;
+        public static final int changeradius=0x7f07001d;
         public static final int choose_bg=0x7f07001a;
         public static final int contentView=0x7f07000b;
         public static final int dialogButtonCancel=0x7f070013;
@@ -38,9 +39,9 @@ public final class R {
         public static final int location=0x7f070012;
         public static final int loginButton=0x7f070016;
         public static final int message=0x7f070018;
+        public static final int newPost=0x7f070002;
         public static final int password=0x7f070006;
         public static final int passwordAgain=0x7f070008;
-        public static final int postButton=0x7f070001;
         public static final int postsView=0x7f070004;
         public static final int privatemessage=0x7f07000c;
         public static final int refresh=0x7f07001c;
