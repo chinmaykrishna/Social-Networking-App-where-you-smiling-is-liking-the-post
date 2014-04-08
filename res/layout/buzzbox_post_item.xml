@@ -51,12 +51,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/btnEmpathize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/Count_of_Empathizes"
-        android:onClick="empathize"
         android:src="@android:drawable/ic_menu_view" />
     
     </RelativeLayout>

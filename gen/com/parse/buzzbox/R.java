@@ -26,6 +26,7 @@ public final class R {
         public static final int RelativeLayout1=0x7f070010;
         public static final int action_button=0x7f070009;
         public static final int bg=0x7f070019;
+        public static final int btnEmpathize=0x7f07000f;
         public static final int changeRadius=0x7f070001;
         public static final int changeradius=0x7f07001d;
         public static final int choose_bg=0x7f07001a;
@@ -34,7 +35,6 @@ public final class R {
         public static final int dialogButtonOK=0x7f070014;
         public static final int done=0x7f07001b;
         public static final int favourite=0x7f07000d;
-        public static final int imageButton1=0x7f07000f;
         public static final int imageView1=0x7f070015;
         public static final int location=0x7f070012;
         public static final int loginButton=0x7f070016;

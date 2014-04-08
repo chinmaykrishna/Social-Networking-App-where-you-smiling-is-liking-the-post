@@ -23,8 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
@@ -74,7 +76,7 @@ public class MainActivity extends Activity {
 	            
 	            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
 	            
-	            else query.orderByDescending("no_of_empathizes");	// If the user has pressed the Featured Button.
+	            else query.orderByDescending("NoOfEmpathizes");	// If the user has pressed the Featured Button.
 	            
 	            flag=0;
 	            
@@ -87,41 +89,101 @@ public class MainActivity extends Activity {
 	        // Set up the query adapter
 	        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
 	          @Override
-	          public View getItemView(BuzzboxPost post, View view, ViewGroup parent) {
-	            if (view == null) {
-	              view = View.inflate(getContext(), R.layout.buzzbox_post_item, null);
-	            }
+	          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
+	            
+	            view = View.inflate(getContext(), R.layout.buzzbox_post_item, null);
+	            
 	            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 	            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
-	            TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
+	            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
 	            
 	            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 	            // contentView.setBackground();  // We will do this to show the image.
+	            
 	            contentView.setText(post.getText());
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
 	            
-	            final ImageButton b = (ImageButton) view.findViewById(R.id.favourite);
-	            b.setOnClickListener(new OnClickListener(){
+	            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
+	            
+	            if(post.getFav(ParseUser.getCurrentUser().getUsername())==1){
+	            	bfav.setImageResource(drawable.star_big_on);
+	            }
+	            
+	            bfav.setOnClickListener(new OnClickListener(){
 	            	
 	            	public void onClick(View v){
-	            	    	b.setImageResource(drawable.star_big_on);
-	            	    		            		  
+	            	    	
+	            	    	ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+	            	    	
+	            	    	// Retrieve the object by id
+	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
+	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
+	            	    	    if (e == null) {
+	            	    	      // Now let's update the favourite list of the user. 
+	            	    	      newquery.put(ParseUser.getCurrentUser().getUsername(),1);
+	            	    	      newquery.saveInBackground();
+	            	    	      bfav.setImageResource(drawable.star_big_on);
+	            	    	      setList(posts);
+	            	    	    }
+	            	    	  }
+	            	    	  
+	            	    	  
+	            	    	  
+	            	    	});
+	            	    	//post.setFav();	            		  
 	            	}
+	            });
+	            
+	            final ImageButton bemp = (ImageButton) view.findViewById(R.id.btnEmpathize);
+	            
+	            bemp.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						if(!(post.IsEmpathized().equals("true"))){
+							ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+	            	    	
+	            	    	// Retrieve the object by id
+	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
+	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
+	            	    	    if (e == null) {
+	            	    	      // Now let's update the favourite list of the user. 
+	            	    	    int temp = post.no_of_empathizes()+1;  
+	            	    	    newquery.put("NoOfEmpathizes",temp);
+	            	    	    
+	            	    	    newquery.saveInBackground();
+	            	    	    //Toast mtoast = Toast.makeText(MainActivity.this, "Refresh to see the Changes..", Toast.LENGTH_SHORT);
+					 		 	//mtoast.show();
+					 		 	//count.setText(""+post.no_of_empathizes());
+					 		 	setList(posts);
+	            	    	    }
+	            	    	  }
+	            	    	});
+						
+						}
+						else{
+							Toast mtoast = Toast.makeText(MainActivity.this, "This post is Already Empathized.", Toast.LENGTH_SHORT);
+				 		 	 mtoast.show();
+						}
+					}
+	            	
 	            });
 	            
 	            return view;
 	          }
 	        };
-	        
-	     // Attach the query adapter to the view
-	        
-	        	ListView postsView = (ListView) this.findViewById(R.id.postsView);
-		        postsView.setAdapter(posts);
+
+		        setList(posts);
 		        
-		        //posts.clear();
 	}
 	
+	// Attach the query Adapter to the View.
+	public void setList(ParseQueryAdapter<BuzzboxPost> Po){
+		ListView postsView = (ListView) this.findViewById(R.id.postsView);
+        postsView.setAdapter(Po);
+	}
 
 	//Post button clicked. This button will navigate the user to a new Activity where he will be able to post.
 	public void post_function(View v)
@@ -204,6 +266,8 @@ public class MainActivity extends Activity {
 						 new_post.setUser(ParseUser.getCurrentUser());
 						 new_post.setText(message.getText().toString().trim());
 						 new_post.set_no_of_empathizes(0);
+						 new_post.Init(ParseUser.getCurrentUser().getUsername());
+						 
 						 new_post.setLocation(geoPointFromLocation(currentLocation));
 						 new_post.saveInBackground(new SaveCallback() {
 							

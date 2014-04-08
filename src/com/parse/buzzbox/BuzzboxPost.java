@@ -29,6 +29,20 @@ public class BuzzboxPost extends ParseObject {
   public ParseUser getUser() {
     return getParseUser("user");
   }
+  
+  public void setFav(){
+	  put("Fav",1);
+  }
+  
+  public int getFav(String key){
+	  return getInt(key);
+  }
+  
+  public void Init(String key){
+	  put(key,0);
+	  put("IsEmpathized","false");
+	  //put("NoOfEmpathizes",val);
+  }
 
   public void setUser(ParseUser value) {
     put("user", value);
@@ -41,10 +55,16 @@ public class BuzzboxPost extends ParseObject {
   public void set_no_of_empathizes(int value){
 	  put("NoOfEmpathizes", value);
   }
+  
   public void add_to_empathizes(){
 	  int temp = getInt("NoOfEmpathizes");
 	  temp++;
 	  put("NoOfEmpathizes",temp);
+	  put("IsEmpathized","true");
+  }
+  
+  public String IsEmpathized(){
+	  return getString("IsEmpathized");
   }
 
   public ParseGeoPoint getLocation() {
