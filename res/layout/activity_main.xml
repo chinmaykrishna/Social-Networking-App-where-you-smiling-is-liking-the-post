@@ -12,11 +12,11 @@
         android:weightSum="9" >
 
         <Button
-            android:id="@+id/changeRadius"
+            android:id="@+id/changeLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick="change_radius"
-            android:text="Radius"
+            android:onClick="change_location"
+            android:text="Search"
             android:layout_weight="3" />
 
         <Button

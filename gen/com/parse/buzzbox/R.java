@@ -27,7 +27,7 @@ public final class R {
         public static final int action_button=0x7f070009;
         public static final int bg=0x7f070019;
         public static final int btnEmpathize=0x7f07000f;
-        public static final int changeRadius=0x7f070001;
+        public static final int changeLocation=0x7f070001;
         public static final int changeradius=0x7f07001d;
         public static final int choose_bg=0x7f07001a;
         public static final int contentView=0x7f07000b;
@@ -55,11 +55,12 @@ public final class R {
         public static final int activity_main=0x7f030000;
         public static final int activity_signup=0x7f030001;
         public static final int buzzbox_post_item=0x7f030002;
-        public static final int change_radius=0x7f030003;
-        public static final int choose_bg_layout=0x7f030004;
-        public static final int login=0x7f030005;
-        public static final int login_or_signup=0x7f030006;
-        public static final int new_post=0x7f030007;
+        public static final int change_loc=0x7f030003;
+        public static final int change_radius=0x7f030004;
+        public static final int choose_bg_layout=0x7f030005;
+        public static final int login=0x7f030006;
+        public static final int login_or_signup=0x7f030007;
+        public static final int new_post=0x7f030008;
     }
     public static final class menu {
         public static final int main_activity_menu=0x7f060000;

@@ -1,13 +1,29 @@
 package com.parse.buzzbox;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.R.drawable;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -181,6 +197,7 @@ public class MainActivity extends Activity {
 	
 	// Attach the query Adapter to the View.
 	public void setList(ParseQueryAdapter<BuzzboxPost> Po){
+		
 		ListView postsView = (ListView) this.findViewById(R.id.postsView);
         postsView.setAdapter(Po);
 	}
@@ -192,14 +209,14 @@ public class MainActivity extends Activity {
 		 // MainActivity.this.startActivity(i);				
 	  }
 	
-	public void change_radius(View v){
+	public void change_location(View v){
 		
 		 //change radius
 		 
 		//pop up a dialog box
 	 final Dialog dialog = new Dialog(this);
-	 dialog.setContentView(R.layout.change_radius);
-	 dialog.setTitle("Change Radius");	
+	 dialog.setContentView(R.layout.change_loc);
+	 dialog.setTitle("Change Location");	
 	 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 	 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 
@@ -216,12 +233,12 @@ public class MainActivity extends Activity {
 	 dialogButtonA.setOnClickListener(new OnClickListener() {
 		 @Override
 		 public void onClick(View v) {
-
 			 EditText location = (EditText)dialog.findViewById(R.id.location);
+			 location.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+			 
 			 String loc = location.getText().toString();
 			 if(!(loc.isEmpty())){
-				 SEARCH_RADIUS = Integer.parseInt(loc);
-				 setQuery(p);	// Update the List.
+				 new FindPlace().execute(loc);
 	
 			 }
 			 else{
@@ -320,13 +337,6 @@ public class MainActivity extends Activity {
 	  }
 	  
 	  
-	  // This method will simply enable user to Empathize a Post.
-	  public void empathize(View v){
-		  
-		  
-	  }
-	  
-	  
 	  // This method will simply enable user to mark this post as his favourite.
 //	  public void favourite(View v){
 //		  
@@ -347,10 +357,10 @@ public class MainActivity extends Activity {
 	  //This inner class will be used in some other versions of the Application.
 	  
 	  // This class will search for the new Location in a background thread when the user sets another location.
-/*	  private class FindPlace extends AsyncTask<String,Void, JSONObject> {
+	  private class FindPlace extends AsyncTask<String,Void, JSONObject> {
 			 
 			 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
-		 	     String add=null;
+		 	 String add=null;
 
 
 			    @Override
@@ -410,6 +420,10 @@ public class MainActivity extends Activity {
 						Latitude = ((JSONArray)result.get("results")).getJSONObject(0)
 				 	            	.getJSONObject("geometry").getJSONObject("location")
 				 	            	.getDouble("lat");
+						add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
+						Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
+			     		mtoast.show();
+						
 						ParseGeoPoint p = new ParseGeoPoint(Latitude,Longitude);
 						setQuery(p);
 					} catch (JSONException e) {
@@ -428,7 +442,7 @@ public class MainActivity extends Activity {
 		     
 		     
 		    	 
-		     }*/
+		     }
 	  @Override
 		public boolean onOptionsItemSelected
 									    (MenuItem item) {
@@ -438,7 +452,6 @@ public class MainActivity extends Activity {
 		 else if(item.getItemId()==R.id.changeradius){
 			 //change radius
 			 
-				//pop up a dialog box
 			 final Dialog dialog = new Dialog(this);
 			 dialog.setContentView(R.layout.change_radius);
 			 dialog.setTitle("Change Radius");	
@@ -458,7 +471,7 @@ public class MainActivity extends Activity {
 			 dialogButtonA.setOnClickListener(new OnClickListener() {
 				 @Override
 				 public void onClick(View v) {
-	
+
 					 EditText location = (EditText)dialog.findViewById(R.id.location);
 					 String loc = location.getText().toString();
 					 if(!(loc.isEmpty())){
@@ -470,14 +483,14 @@ public class MainActivity extends Activity {
 			 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
 			 		 	 mtoast.show();
 					 }
-					 dialog.dismiss();
-	
-	
+				 dialog.dismiss();
+
+
 				 }
 
 			 });
 
-			 dialog.show();	
+			 dialog.show();
 		 }
 		 return true;
 		}
