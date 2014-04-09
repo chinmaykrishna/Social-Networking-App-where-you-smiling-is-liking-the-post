@@ -324,10 +324,11 @@ public class MainActivity extends Activity {
 		 @Override
 		 public void onClick(View v) {
 			 EditText location = (EditText)dialog.findViewById(R.id.location);
-			 location.setInputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS);
+			 location.setInputType(InputType.TYPE_CLASS_TEXT);
 			 
 			 String loc = location.getText().toString();
 			 if(!(loc.isEmpty())){
+				 loc = loc.replace(" ", "+");
 				 new FindPlace().execute(loc);
 	
 			 }
@@ -392,6 +393,8 @@ public class MainActivity extends Activity {
 								
 							}
 						});
+						 
+						
 					 }
 					 dialog.dismiss();
 				 }
