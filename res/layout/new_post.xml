@@ -18,10 +18,22 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="5"
+        android:hint="Enter the message here"
         android:maxLines="5" >
 
         <requestFocus />
+    </EditText>
+    
+        <EditText
+        android:id="@+id/locat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:hint="Enter the region from where you want to post."
+        android:maxLines="5" >
+
+        
     </EditText>
 
 

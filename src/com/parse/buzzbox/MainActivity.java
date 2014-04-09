@@ -50,13 +50,14 @@ import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
-	private static int SEARCH_RADIUS=100,flag=0;
+	private static int SEARCH_RADIUS=100,flag=0, Postflag=0;
 	private Location lastLocation = null;
     private Location currentLocation = null;
     protected double Latitude,Longitude;
     private LocationManager locationManager;
     private static ParseGeoPoint p;
     private Context con;
+    private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
 
 	@Override
@@ -355,6 +356,7 @@ public class MainActivity extends Activity {
 		 dialog.setTitle("New Post");
 		 Button done_but = (Button) dialog.findViewById(R.id.done);
 		 final EditText message = (EditText)dialog.findViewById(R.id.message);
+		 final EditText locat = (EditText)dialog.findViewById(R.id.locat);
 		 
 		 	//done button clicked
 			 done_but.setOnClickListener(new OnClickListener() {
@@ -362,37 +364,41 @@ public class MainActivity extends Activity {
 				 @Override
 				 public void onClick(View v) {
 					 //post function
-					 if(message.getText().toString().trim().length()<1)
+					 if(message.getText().toString().trim().length()<1 || locat.getText().toString().trim().length()<1)
 					 {
 						 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
 					 }
 					 else
 					 {
-						 BuzzboxPost new_post = new BuzzboxPost();
-						 new_post.setUser(ParseUser.getCurrentUser());
-						 new_post.setText(message.getText().toString().trim());
-						 new_post.set_no_of_empathizes(0);
-						 new_post.Init(ParseUser.getCurrentUser().getUsername());
-						 
-						 new_post.setLocation(geoPointFromLocation(currentLocation));
-						 new_post.saveInBackground(new SaveCallback() {
-							
-							@Override
-							public void done(ParseException e) {
-								// TODO Auto-generated method stub
-								if(e==null)
-								{
-									Toast.makeText(con, "Successfully posted", Toast.LENGTH_SHORT).show();
-									setQuery(p);	// Update the List.
-								}
-								else
-								{
-									Log.d("error post", e.getMessage().toString());
-									Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-								}
-								
-							}
-						});
+						 Postflag=1;
+						 Post = message.getText().toString();
+						 String loc = (locat.getText().toString()).replace(" ","+");
+						 new FindPlace().execute(loc);
+//						 BuzzboxPost new_post = new BuzzboxPost();
+//						 new_post.setUser(ParseUser.getCurrentUser());
+//						 new_post.setText(message.getText().toString().trim());
+//						 new_post.set_no_of_empathizes(0);
+//						 new_post.Init(ParseUser.getCurrentUser().getUsername());
+//						 
+//						 new_post.setLocation(geoPointFromLocation(currentLocation));
+//						 new_post.saveInBackground(new SaveCallback() {
+//							
+//							@Override
+//							public void done(ParseException e) {
+//								// TODO Auto-generated method stub
+//								if(e==null)
+//								{
+//									Toast.makeText(con, "Successfully posted", Toast.LENGTH_SHORT).show();
+//									setQuery(p);	// Update the List.
+//								}
+//								else
+//								{
+//									Log.d("error post", e.getMessage().toString());
+//									Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+//								}
+//								
+//							}
+//						});
 						 
 						
 					 }
@@ -412,6 +418,35 @@ public class MainActivity extends Activity {
 //			 });
 
 			 dialog.show();	
+	  }
+	  
+	  public void PostBuzz(final ParseGeoPoint par){
+		  	 Postflag=0;
+		  	 BuzzboxPost new_post = new BuzzboxPost();
+			 new_post.setUser(ParseUser.getCurrentUser());
+			 new_post.setText(Post);
+			 new_post.set_no_of_empathizes(0);
+			 new_post.Init(ParseUser.getCurrentUser().getUsername());
+			 
+			 new_post.setLocation(par);
+			 new_post.saveInBackground(new SaveCallback() {
+				
+				@Override
+				public void done(ParseException e) {
+					// TODO Auto-generated method stub
+					if(e==null)
+					{
+						Toast.makeText(con, "Successfully posted", Toast.LENGTH_SHORT).show();
+						setQuery(par);	// Update the List.
+					}
+					else
+					{
+						Log.d("error post", e.getMessage().toString());
+						Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+					}
+					
+				}
+			});
 	  }
 	  
 	  //Menu configuration
@@ -514,12 +549,18 @@ public class MainActivity extends Activity {
 						Latitude = ((JSONArray)result.get("results")).getJSONObject(0)
 				 	            	.getJSONObject("geometry").getJSONObject("location")
 				 	            	.getDouble("lat");
-						add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
-						Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
-			     		mtoast.show();
-						
-						ParseGeoPoint p = new ParseGeoPoint(Latitude,Longitude);
-						setQuery(p);
+						ParseGeoPoint pa = new ParseGeoPoint(Latitude,Longitude);
+			     		
+						if(Postflag==0){
+							
+							setQuery(pa);
+							add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
+							Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
+				     		mtoast.show();
+						}
+						else{
+							PostBuzz(pa);
+						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
