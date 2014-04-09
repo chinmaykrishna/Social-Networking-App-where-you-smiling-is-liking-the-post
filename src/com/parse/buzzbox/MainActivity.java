@@ -20,6 +20,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -67,7 +68,17 @@ public class MainActivity extends Activity {
 		con = this;
 		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 		
-		currentLocation = this.getLastKnownLocation();
+		 // Creating a criteria object to retrieve provider
+	     Criteria criteria = new Criteria();
+	     //  criteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+	      // Getting the name of the best provider
+	     String provider = locationManager.getBestProvider(criteria, true);
+
+	       // Getting Current Location
+	     currentLocation = locationManager.getLastKnownLocation(provider);
+		
+		//currentLocation = this.getLastKnownLocation();
 		
 		if(currentLocation!=null) lastLocation= currentLocation;
 		
