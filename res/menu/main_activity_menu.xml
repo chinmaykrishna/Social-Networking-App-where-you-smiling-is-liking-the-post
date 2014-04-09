@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
+    <item 
+	    android:title="My Messages"
+	    android:id="@+id/MyMessages"
+	    />
 	<item 
 	    android:title="Refresh"
 	    android:id="@+id/refresh"
 	    />
 	<item 
-	    android:title="ChangeRadius"
+	    android:title="Change Radius"
 	    android:id="@+id/changeradius"
 	    />
+	
 </menu>

@@ -32,7 +32,7 @@
             android:name="com.parse.buzzbox.SignupActivity">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.Choose_bg">
+            android:name="com.parse.buzzbox.My_messages">
         </activity>
         <activity
             android:name="com.parse.buzzbox.SignupOrLogin">

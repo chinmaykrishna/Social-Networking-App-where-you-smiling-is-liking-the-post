@@ -2,6 +2,7 @@ package com.parse.buzzbox;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 @ParseClassName("Messages")
@@ -57,5 +58,7 @@ public class MessageObject extends ParseObject {
 		return getString("post");
 	}
 	
-	
+	public static ParseQuery<MessageObject> getQuery() {
+	    return ParseQuery.getQuery(MessageObject.class);
+	  }
 }

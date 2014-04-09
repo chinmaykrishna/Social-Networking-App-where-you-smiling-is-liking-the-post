@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -142,8 +143,6 @@ public class MainActivity extends Activity {
 	            	    	    }
 	            	    	  }
 	            	    	  
-	            	    	  
-	            	    	  
 	            	    	});
 	            	    	//post.setFav();	            		  
 	            	}
@@ -185,6 +184,7 @@ public class MainActivity extends Activity {
 	            	
 	            });
 	            
+	            //Send private message
 	            final ImageButton message = (ImageButton) view.findViewById(R.id.privatemessage);
 	            
 	            message.setOnClickListener(new OnClickListener(){
@@ -199,12 +199,12 @@ public class MainActivity extends Activity {
 						 Button done_but = (Button) dialog.findViewById(R.id.done);
 						 final EditText message = (EditText)dialog.findViewById(R.id.message);
 						 
-						 	//done button clicked
+						 	//send button clicked
 							 done_but.setOnClickListener(new OnClickListener() {
 
 								 @Override
 								 public void onClick(View v) {
-									 //post function
+									 //send function
 									 if(message.getText().toString().trim().length()<1)
 									 {
 										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
@@ -528,6 +528,10 @@ public class MainActivity extends Activity {
 									    (MenuItem item) {
 		 if(item.getItemId()==R.id.refresh){
 			  setQuery(p);
+		 }
+		 else if(item.getItemId()==R.id.MyMessages){
+			  Intent i = new Intent(this,My_messages.class);
+			  startActivity(i);
 		 }
 		 else if(item.getItemId()==R.id.changeradius){
 			 //change radius
