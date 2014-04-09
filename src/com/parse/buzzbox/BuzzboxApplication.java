@@ -17,6 +17,7 @@ public class BuzzboxApplication extends Application {
 		// Add your initialization code here
 		Parse.initialize(this, "nOuI36TTrBv426lobvsaE63UhV3XR7Av2397Ga2j", "y6XtplZWQToWEKJcSW8QKy1t1hz2Z6eKjdaFMpZU");
 		ParseObject.registerSubclass(BuzzboxPost.class);
+		ParseObject.registerSubclass(MessageObject.class);
 		
 	}
 

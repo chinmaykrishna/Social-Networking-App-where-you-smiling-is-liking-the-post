@@ -2,6 +2,7 @@ package com.parse.buzzbox;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,7 +19,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -34,7 +34,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +41,6 @@ import android.widget.Toast;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
@@ -68,7 +66,7 @@ public class MainActivity extends Activity {
 		con = this;
 		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 		
-		currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+		currentLocation = this.getLastKnownLocation();
 		
 		if(currentLocation!=null) lastLocation= currentLocation;
 		
@@ -187,6 +185,87 @@ public class MainActivity extends Activity {
 	            	
 	            });
 	            
+	            final ImageButton message = (ImageButton) view.findViewById(R.id.privatemessage);
+	            
+	            message.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						
+						final Dialog dialog = new Dialog(con);
+						 dialog.setContentView(R.layout.new_message);
+						 dialog.setTitle("New Message");
+						 Button done_but = (Button) dialog.findViewById(R.id.done);
+						 final EditText message = (EditText)dialog.findViewById(R.id.message);
+						 
+						 	//done button clicked
+							 done_but.setOnClickListener(new OnClickListener() {
+
+								 @Override
+								 public void onClick(View v) {
+									 //post function
+									 if(message.getText().toString().trim().length()<1)
+									 {
+										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+									 }
+									 else
+									 {
+										 MessageObject new_Message = new MessageObject();
+										 new_Message.toUser(post.getUser());
+										 new_Message.setText(message.getText().toString().trim());
+										 new_Message.setType("via_post");
+										 new_Message.setViaPost(post.getText());
+										 new_Message.saveInBackground(new SaveCallback() {
+											
+											@Override
+											public void done(ParseException e) {
+												// TODO Auto-generated method stub
+												if(e==null)
+												{
+													Toast.makeText(con, "Successfully Sent", Toast.LENGTH_SHORT).show();
+												}
+												else
+												{
+													Log.d("error while sending", e.getMessage().toString());
+													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+												}
+												
+											}
+										});
+									 }
+									 dialog.dismiss();
+								 }
+							 });
+							 dialog.show();
+//						if(!(post.IsEmpathized().equals("true"))){
+//							ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+//	            	    	
+//	            	    	// Retrieve the object by id
+//	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
+//	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
+//	            	    	    if (e == null) {
+//	            	    	      // Now let's update the favourite list of the user. 
+//	            	    	    int temp = post.no_of_empathizes()+1;  
+//	            	    	    newquery.put("NoOfEmpathizes",temp);
+//	            	    	    
+//	            	    	    newquery.saveInBackground();
+//	            	    	    //Toast mtoast = Toast.makeText(MainActivity.this, "Refresh to see the Changes..", Toast.LENGTH_SHORT);
+//					 		 	//mtoast.show();
+//					 		 	//count.setText(""+post.no_of_empathizes());
+//					 		 	setList(posts);
+//	            	    	    }
+//	            	    	  }
+//	            	    	});
+//						
+//						}
+//						else{
+//							Toast mtoast = Toast.makeText(MainActivity.this, "This post is Already Empathized.", Toast.LENGTH_SHORT);
+//				 		 	 mtoast.show();
+//						}
+					}
+	            	
+	            });
 	            return view;
 	          }
 	        };
@@ -261,11 +340,9 @@ public class MainActivity extends Activity {
 	  {
 	  	 final Dialog dialog = new Dialog(this);
 		 dialog.setContentView(R.layout.new_post);
-		 dialog.setTitle("New Post");	
-		 Button choose_bg = (Button) dialog.findViewById(R.id.choose_bg);
+		 dialog.setTitle("New Post");
 		 Button done_but = (Button) dialog.findViewById(R.id.done);
 		 final EditText message = (EditText)dialog.findViewById(R.id.message);
-		 ImageView bg = (ImageView)dialog.findViewById(R.id.bg);
 		 
 		 	//done button clicked
 			 done_but.setOnClickListener(new OnClickListener() {
@@ -297,7 +374,10 @@ public class MainActivity extends Activity {
 									setQuery(p);	// Update the List.
 								}
 								else
-								Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+								{
+									Log.d("error post", e.getMessage().toString());
+									Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+								}
 								
 							}
 						});
@@ -494,5 +574,23 @@ public class MainActivity extends Activity {
 		 }
 		 return true;
 		}
-	  
+	  private Location getLastKnownLocation() {
+		    List<String> providers = locationManager.getProviders(true);
+		    Location bestLocation = null;
+		    for (String provider : providers) {
+		        Location l = locationManager.getLastKnownLocation(provider);
+
+		        if (l == null) {
+		            continue;
+		        }
+		        if (bestLocation == null
+		                || l.getAccuracy() < bestLocation.getAccuracy()) {
+		            bestLocation = l;
+		        }
+		    }
+		    if (bestLocation == null) {
+		        return null;
+		    }
+		    return bestLocation;
+		}
 }

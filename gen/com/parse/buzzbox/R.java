@@ -25,15 +25,13 @@ public final class R {
         public static final int LinearLayout1=0x7f070000;
         public static final int RelativeLayout1=0x7f070010;
         public static final int action_button=0x7f070009;
-        public static final int bg=0x7f070019;
         public static final int btnEmpathize=0x7f07000f;
         public static final int changeLocation=0x7f070001;
-        public static final int changeradius=0x7f07001d;
-        public static final int choose_bg=0x7f07001a;
+        public static final int changeradius=0x7f07001b;
         public static final int contentView=0x7f07000b;
         public static final int dialogButtonCancel=0x7f070013;
         public static final int dialogButtonOK=0x7f070014;
-        public static final int done=0x7f07001b;
+        public static final int done=0x7f070019;
         public static final int favourite=0x7f07000d;
         public static final int imageView1=0x7f070015;
         public static final int location=0x7f070012;
@@ -44,7 +42,7 @@ public final class R {
         public static final int passwordAgain=0x7f070008;
         public static final int postsView=0x7f070004;
         public static final int privatemessage=0x7f07000c;
-        public static final int refresh=0x7f07001c;
+        public static final int refresh=0x7f07001a;
         public static final int relativeLayout1=0x7f070005;
         public static final int signupButton=0x7f070017;
         public static final int textView1=0x7f070011;
@@ -57,9 +55,9 @@ public final class R {
         public static final int buzzbox_post_item=0x7f030002;
         public static final int change_loc=0x7f030003;
         public static final int change_radius=0x7f030004;
-        public static final int choose_bg_layout=0x7f030005;
-        public static final int login=0x7f030006;
-        public static final int login_or_signup=0x7f030007;
+        public static final int login=0x7f030005;
+        public static final int login_or_signup=0x7f030006;
+        public static final int new_message=0x7f030007;
         public static final int new_post=0x7f030008;
     }
     public static final class menu {
