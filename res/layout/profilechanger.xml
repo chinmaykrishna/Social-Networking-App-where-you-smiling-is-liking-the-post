@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Gallery
+        android:id="@+id/gallery1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/currentnick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hi, "
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/buttonNick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="myNick"
+        android:layout_gravity="center_horizontal"
+        android:text="Change Nick" />
+
+    <Button
+        android:id="@+id/buttonPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="myPass"
+        android:layout_gravity="center_horizontal"
+        android:text="Change Password" />
+
+    <Button
+        android:id="@+id/buttonlogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:onClick="logout"
+        android:text="Logout" />
+    
+    "
+
+</LinearLayout>

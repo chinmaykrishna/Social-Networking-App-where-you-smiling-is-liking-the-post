@@ -32,6 +32,9 @@
             android:name="com.parse.buzzbox.SignupActivity">
         </activity>
         <activity
+            android:name="com.parse.buzzbox.MyProfile">
+        </activity>
+        <activity
             android:name="com.parse.buzzbox.My_messages">
         </activity>
         <activity

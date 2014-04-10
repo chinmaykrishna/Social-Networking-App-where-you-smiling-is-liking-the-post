@@ -16,9 +16,11 @@ import org.json.JSONObject;
 
 import android.R.drawable;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -33,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -81,10 +84,42 @@ public class MainActivity extends Activity {
 		Log.d("current loc", currentLocation.toString());
 		Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
 		p = geoPointFromLocation(myLoc);
+		if(!(ParseUser.getCurrentUser().isDataAvailable()))
+			finish();
 		setQuery(p);
-
+		
 	}
 	
+	
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onRestart()
+	 */
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		
+		if(!(ParseUser.getCurrentUser().isDataAvailable()))
+			finish();
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		if(!(ParseUser.getCurrentUser().isDataAvailable()))
+			finish();
+		
+		super.onResume();
+	}
+
+
+
 	// This method will Set up our customized query and will then update the List View.
 	public void setQuery(final ParseGeoPoint pgp){
 		// Set up a customized query
@@ -102,10 +137,38 @@ public class MainActivity extends Activity {
 	            flag=0;
 	            
 	            query.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
+	            
 	            query.setLimit(MAX_POST_SEARCH_RESULTS);
+	            
+	            try {
+					if(query.count()==0){
+						AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
+						alert.setTitle("No Posts Found!!");
+						alert.setMessage("Try changing Radius or search for Posts in a different Region..");
+						alert.setButton(alert.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
+									
+							public void onClick(DialogInterface dialog, int which) {
+									
+
+							}
+						});
+						alert.setButton(alert.BUTTON_POSITIVE, "Okay!", new DialogInterface.OnClickListener() {
+							
+							public void onClick(DialogInterface dialog, int which) {
+										finish();	
+							}
+						});
+						alert.show();
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            
 	            return query;
 	          }
 	        };
+	        
 	        
 	        // Set up the query adapter
 	        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
@@ -181,10 +244,10 @@ public class MainActivity extends Activity {
 					}
 				});
 	            
-	            //favorites button
+	            //Favorite button
 	            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
 	            
-	            if(post.getFav(ParseUser.getCurrentUser().getUsername())==1){
+	            if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
 	            	bfav.setImageResource(drawable.star_big_on);
 	            }
 	            
@@ -192,25 +255,14 @@ public class MainActivity extends Activity {
 	            	
 	            	public void onClick(View v){
 	            	    	
-	            	    	ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-	            	    	
-	            	    	// Retrieve the object by id
-	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
-	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
-	            	    	    if (e == null) {
-	            	    	      // Now let's update the favourite list of the user. 
-	            	    	      newquery.put(ParseUser.getCurrentUser().getUsername(),1);
-	            	    	      newquery.saveInBackground();
-	            	    	      bfav.setImageResource(drawable.star_big_on);
-	            	    	      setList(posts);
-	            	    	    }
-	            	    	  }
-	            	    	  
-	            	    	});
-	            	    	//post.setFav();	            		  
+	            		ParseUser.getCurrentUser().put(post.getObjectId(), 1);
+	            		ParseUser.getCurrentUser().saveInBackground();
+	            		bfav.setImageResource(drawable.star_big_on);
+	            	    		            		  
 	            	}
 	            });
 	            
+	            // Empathize Button.
 	            final ImageButton bemp = (ImageButton) view.findViewById(R.id.btnEmpathize);
 	            
 	            bemp.setOnClickListener(new OnClickListener(){
@@ -218,22 +270,21 @@ public class MainActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						if(!(post.IsEmpathized().equals("true"))){
+						if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
 							ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-	            	    	
+							count.setText(""+(post.no_of_empathizes()+1));
 	            	    	// Retrieve the object by id
 	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
 	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
 	            	    	    if (e == null) {
-	            	    	      // Now let's update the favourite list of the user. 
+	            	    	      
 	            	    	    int temp = post.no_of_empathizes()+1;  
 	            	    	    newquery.put("NoOfEmpathizes",temp);
-	            	    	    
+	            	    	    count.setText(""+temp);
 	            	    	    newquery.saveInBackground();
-	            	    	    //Toast mtoast = Toast.makeText(MainActivity.this, "Refresh to see the Changes..", Toast.LENGTH_SHORT);
-					 		 	//mtoast.show();
-					 		 	//count.setText(""+post.no_of_empathizes());
-					 		 	setList(posts);
+	            	    	    ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
+	            	    	    ParseUser.getCurrentUser().saveInBackground();
+	            	    	   
 	            	    	    }
 	            	    	  }
 	            	    	});
@@ -301,31 +352,7 @@ public class MainActivity extends Activity {
 								 }
 							 });
 							 dialog.show();
-//						if(!(post.IsEmpathized().equals("true"))){
-//							ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-//	            	    	
-//	            	    	// Retrieve the object by id
-//	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
-//	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
-//	            	    	    if (e == null) {
-//	            	    	      // Now let's update the favourite list of the user. 
-//	            	    	    int temp = post.no_of_empathizes()+1;  
-//	            	    	    newquery.put("NoOfEmpathizes",temp);
-//	            	    	    
-//	            	    	    newquery.saveInBackground();
-//	            	    	    //Toast mtoast = Toast.makeText(MainActivity.this, "Refresh to see the Changes..", Toast.LENGTH_SHORT);
-//					 		 	//mtoast.show();
-//					 		 	//count.setText(""+post.no_of_empathizes());
-//					 		 	setList(posts);
-//	            	    	    }
-//	            	    	  }
-//	            	    	});
 //						
-//						}
-//						else{
-//							Toast mtoast = Toast.makeText(MainActivity.this, "This post is Already Empathized.", Toast.LENGTH_SHORT);
-//				 		 	 mtoast.show();
-//						}
 					}
 	            	
 	            });
@@ -343,18 +370,9 @@ public class MainActivity extends Activity {
 		ListView postsView = (ListView) this.findViewById(R.id.postsView);
         postsView.setAdapter(Po);
 	}
-
-	//Post button clicked. This button will navigate the user to a new Activity where he will be able to post.
-	public void post_function(View v)
-	  {
-		 // Intent i = new Intent(MainActivity.class, BuzzFeedPost.class);
-		 // MainActivity.this.startActivity(i);				
-	  }
 	
 	public void change_location(View v){
-		
-		 //change radius
-		 
+				 
 		//pop up a dialog box
 	 final Dialog dialog = new Dialog(this);
 	 dialog.setContentView(R.layout.change_loc);
@@ -424,33 +442,7 @@ public class MainActivity extends Activity {
 						 Postflag=1;
 						 Post = message.getText().toString();
 						 String loc = (locat.getText().toString()).replace(" ","+");
-						 new FindPlace().execute(loc);
-//						 BuzzboxPost new_post = new BuzzboxPost();
-//						 new_post.setUser(ParseUser.getCurrentUser());
-//						 new_post.setText(message.getText().toString().trim());
-//						 new_post.set_no_of_empathizes(0);
-//						 new_post.Init(ParseUser.getCurrentUser().getUsername());
-//						 
-//						 new_post.setLocation(geoPointFromLocation(currentLocation));
-//						 new_post.saveInBackground(new SaveCallback() {
-//							
-//							@Override
-//							public void done(ParseException e) {
-//								// TODO Auto-generated method stub
-//								if(e==null)
-//								{
-//									Toast.makeText(con, "Successfully posted", Toast.LENGTH_SHORT).show();
-//									setQuery(p);	// Update the List.
-//								}
-//								else
-//								{
-//									Log.d("error post", e.getMessage().toString());
-//									Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-//								}
-//								
-//							}
-//						});
-						 
+						 new FindPlace().execute(loc);						 
 						
 					 }
 					 dialog.dismiss();
@@ -471,10 +463,18 @@ public class MainActivity extends Activity {
 			 dialog.show();	
 	  }
 	  
+	  public void myProfile(View v){
+		  Intent i = new Intent(MainActivity.this,MyProfile.class);
+		  MainActivity.this.startActivity(i);
+		  
+		  //finish();
+	  }
+	  
 	  public void PostBuzz(final ParseGeoPoint par){
 		  	 Postflag=0;
 		  	 BuzzboxPost new_post = new BuzzboxPost();
 			 new_post.setUser(ParseUser.getCurrentUser());
+			 
 			 new_post.setText(Post);
 			 new_post.set_no_of_empathizes(0);
 			 new_post.Init(ParseUser.getCurrentUser().getUsername());
@@ -493,7 +493,7 @@ public class MainActivity extends Activity {
 					else
 					{
 						Log.d("error post", e.getMessage().toString());
-						Toast.makeText(con, "Posting failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+						Toast.makeText(con, "Posting failed. Please check internet connection"+e.toString(), Toast.LENGTH_LONG).show();
 					}
 					
 				}
@@ -517,25 +517,13 @@ public class MainActivity extends Activity {
 	  }
 	  
 	  
-	  // This method will simply enable user to mark this post as his favourite.
-//	  public void favourite(View v){
-//		  
-//		  ImageButton b = (ImageButton) v.getTag();
-//		  
-//		  b.setImageResource(R.drawable.background);
-//	  }
-	  
-	  
 	  /*
 	   * Helper method to get the Parse GEO point representation of a location
 	   */
 	  private static ParseGeoPoint geoPointFromLocation(Location loc) {
 	    return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
 	  }
-	  
-	  
-	  //This inner class will be used in some other versions of the Application.
-	  
+	  	  
 	  // This class will search for the new Location in a background thread when the user sets another location.
 	  private class FindPlace extends AsyncTask<String,Void, JSONObject> {
 			 
@@ -601,6 +589,7 @@ public class MainActivity extends Activity {
 				 	            	.getJSONObject("geometry").getJSONObject("location")
 				 	            	.getDouble("lat");
 						ParseGeoPoint pa = new ParseGeoPoint(Latitude,Longitude);
+						add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
 			     		
 						if(Postflag==0){
 							
@@ -611,6 +600,8 @@ public class MainActivity extends Activity {
 						}
 						else{
 							PostBuzz(pa);
+							Toast mtoast = Toast.makeText(MainActivity.this,"Posting through: " +add, Toast.LENGTH_SHORT);
+				     		mtoast.show();
 						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
