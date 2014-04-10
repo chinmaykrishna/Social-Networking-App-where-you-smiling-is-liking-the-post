@@ -148,14 +148,14 @@ public class MainActivity extends Activity {
 						alert.setButton(alert.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
 									
 							public void onClick(DialogInterface dialog, int which) {
-									
+								finish();
 
 							}
 						});
 						alert.setButton(alert.BUTTON_POSITIVE, "Okay!", new DialogInterface.OnClickListener() {
 							
 							public void onClick(DialogInterface dialog, int which) {
-										finish();	
+											
 							}
 						});
 						alert.show();
@@ -592,7 +592,9 @@ public class MainActivity extends Activity {
 						add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
 			     		
 						if(Postflag==0){
-							
+							currentLocation.setLatitude(Latitude);
+							currentLocation.setLongitude(Longitude);
+							p=geoPointFromLocation(currentLocation);
 							setQuery(pa);
 							add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
 							Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
@@ -624,7 +626,9 @@ public class MainActivity extends Activity {
 		public boolean onOptionsItemSelected
 									    (MenuItem item) {
 		 if(item.getItemId()==R.id.refresh){
-			  setQuery(p);
+			 currentLocation= this.getLastKnownLocation(); 
+			 p=geoPointFromLocation(currentLocation);
+			 setQuery(p);
 		 }
 		 else if(item.getItemId()==R.id.MyMessages){
 			  Intent i = new Intent(this,My_messages.class);
