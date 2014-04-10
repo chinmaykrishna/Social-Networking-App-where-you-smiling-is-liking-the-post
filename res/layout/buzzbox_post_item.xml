@@ -57,6 +57,14 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/Count_of_Empathizes"
         android:src="@android:drawable/ic_menu_view" />
+
+    <Button
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/btnEmpathize"
+        android:text="Comment" />
     
     </RelativeLayout>
 

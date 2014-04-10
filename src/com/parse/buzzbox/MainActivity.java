@@ -20,13 +20,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +40,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -59,27 +60,21 @@ public class MainActivity extends Activity {
     private Context con;
     private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
-
+	private SlidingMenu menu;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		//configure slider for comments
+		config_slider();
+		
 		con = this;
+		
 		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
-		
-		 // Creating a criteria object to retrieve provider
-	     Criteria criteria = new Criteria();
-	     //  criteria.setAccuracy(Criteria.ACCURACY_FINE);
-
-	      // Getting the name of the best provider
-	     String provider = locationManager.getBestProvider(criteria, true);
-
-	       // Getting Current Location
-	     currentLocation = locationManager.getLastKnownLocation(provider);
-		
-		//currentLocation = this.getLastKnownLocation();
+	    
+		currentLocation = this.getLastKnownLocation();
 		
 		if(currentLocation!=null) lastLocation= currentLocation;
 		
@@ -87,8 +82,7 @@ public class MainActivity extends Activity {
 		Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
 		p = geoPointFromLocation(myLoc);
 		setQuery(p);
-	        
-	        
+
 	}
 	
 	// This method will Set up our customized query and will then update the List View.
@@ -131,6 +125,63 @@ public class MainActivity extends Activity {
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
 	            
+	            //comment button pressed
+	            final Button comment_but = (Button)view.findViewById(R.id.comment);
+	            
+	            comment_but.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						//toggle slider
+						menu.toggle();
+						
+						//retrieve comments
+						final ListView comments_list = (ListView)menu.getMenu().findViewById(R.id.comments_list);
+						retrieve_comments(post, comments_list);
+					        //sending a new comment
+					        
+					        final EditText ed = (EditText)menu.getMenu().findViewById(R.id.edit_comments);
+					        Button ok = (Button)menu.getMenu().findViewById(R.id.ok_button);
+					        ok.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									if(ed.getText().toString().trim().length()<1)
+									 {
+										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+									 }
+									 else
+									 {
+										 
+										 CommentsObject new_comment = new CommentsObject();
+										 new_comment.toPost(post.getObjectId());
+										 new_comment.setText(ed.getText().toString().trim());
+										 new_comment.saveInBackground(new SaveCallback() {
+											
+											@Override
+											public void done(ParseException e) {
+												// TODO Auto-generated method stub
+												if(e==null)
+												{
+													retrieve_comments(post, comments_list);
+													Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+												}
+												else
+												{
+													Log.d("error while sending", e.getMessage().toString());
+													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+												}
+												
+											}
+										});
+										 ed.setText("");
+									 }
+								}
+							});
+					}
+				});
+	            
+	            //favorites button
 	            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
 	            
 	            if(post.getFav(ParseUser.getCurrentUser().getUsername())==1){
@@ -651,5 +702,69 @@ public class MainActivity extends Activity {
 		        return null;
 		    }
 		    return bestLocation;
+		}
+	  
+	  //Function to configure slider
+	  private void config_slider()
+	  {
+		  	//configuring slider for comments
+			menu = new SlidingMenu(this);
+	        menu.setMode(SlidingMenu.RIGHT);
+	        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+	        menu.setShadowWidthRes(R.dimen.shadow_length);
+	        menu.setShadowDrawable(R.drawable.shadow);
+	        menu.setBehindOffsetRes(R.dimen.behind_offset);
+	        menu.setFadeDegree(0.35f);
+	        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+	        menu.setMenu(R.layout.slider_layout);
+	  }
+	  
+	  @Override
+		public boolean onKeyDown(int keyCode, KeyEvent event) {
+			switch (keyCode) {
+			case KeyEvent.KEYCODE_BACK:
+				onCustomBackPressed();
+				return true;
+			default:
+				return super.onKeyDown(keyCode, event);
+			}
+		}
+
+		// If sliding menu is showing, we need to hide it on the first back button
+		// press.
+		private void onCustomBackPressed() {
+			if (menu != null
+					&& menu.isMenuShowing()) {
+				menu.toggle();
+			} else {
+				this.onBackPressed();
+			}
+		}
+		public void retrieve_comments(final BuzzboxPost post, ListView comments_list)
+		{
+			ParseQueryAdapter.QueryFactory<CommentsObject> factory1 =
+			        new ParseQueryAdapter.QueryFactory<CommentsObject>() {
+			          public ParseQuery<CommentsObject> create() {
+			            
+			            ParseQuery<CommentsObject> query = CommentsObject.getQuery();
+			            query.orderByDescending("createdAt");
+			            query.whereEqualTo("topost", post.getObjectId());
+			            return query;
+			          }
+			        };
+			    ParseQueryAdapter<CommentsObject> Comments_adapter = new ParseQueryAdapter<CommentsObject>(con, factory1) {
+		        	@Override
+			          public View getItemView(final CommentsObject message, View view, ViewGroup parent) {
+			            
+			            view = View.inflate(con, R.layout.comments_element, null);
+			            
+			            TextView message_text = (TextView) view.findViewById(R.id.comment_text);
+			            
+			            message_text.setText(message.getText());
+			           
+			            return view;
+			          }
+			        };
+			        comments_list.setAdapter(Comments_adapter);
 		}
 }

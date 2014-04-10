@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="shadow_length">0dp</dimen>
+	<dimen name="behind_offset">0dp</dimen>
+</resources>
