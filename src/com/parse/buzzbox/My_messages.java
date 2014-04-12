@@ -45,7 +45,7 @@ public class My_messages extends Activity{
 		            
 		            ParseQuery<MessageObject> query = MessageObject.getQuery();
 		            query.orderByDescending("createdAt");
-		            query.whereEqualTo("touser", ParseUser.getCurrentUser());
+		            query.whereEqualTo("toobjectid", ParseUser.getCurrentUser().getObjectId());
 		            return query;
 		          }
 		        };

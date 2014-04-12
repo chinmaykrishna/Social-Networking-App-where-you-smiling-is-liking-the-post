@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
     <item 
+	    android:title="Send Private Message"
+	    android:id="@+id/private_message"
+	    />
+    <item 
 	    android:title="My Messages"
 	    android:id="@+id/MyMessages"
 	    />

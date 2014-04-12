@@ -12,6 +12,24 @@
         android:gravity="center" >
 
         <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/custom_edittext"
+            android:ems="10"
+            android:hint="mobile number"
+            android:layout_alignParentTop="true"
+            android:inputType="phone"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray"
+            android:textCursorDrawable="@null" >
+            <requestFocus />
+            </EditText>
+        <EditText
             android:id="@+id/password"
             android:layout_width="250dp"
             android:layout_height="30dp"
@@ -24,7 +42,7 @@
             android:layout_marginTop="5dp"
             android:padding="5dp"
             android:singleLine="true"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
             android:textCursorDrawable="@null" />
         
@@ -41,7 +59,7 @@
             android:inputType="textPassword"
             android:padding="5dp"
             android:singleLine="true"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
             android:textCursorDrawable="@null" />
 
@@ -49,18 +67,19 @@
              android:id="@+id/username"
              android:layout_width="250dp"
              android:layout_height="30dp"
-             android:layout_alignParentTop="true"
+             
              android:layout_centerHorizontal="true"
+             android:layout_below="@+id/phone_number"
              android:background="@drawable/custom_edittext"
              android:layout_marginTop="5dp"
              android:ems="10"
              android:hint="Username"
              android:padding="5dp"
              android:singleLine="true"
-             android:textColor="@android:color/holo_blue_dark"
+             android:textColor="@android:color/black"
              android:textColorHint="@android:color/darker_gray"
              android:textCursorDrawable="@null" >
-             <requestFocus />
+            
              </EditText>
 
          <Button

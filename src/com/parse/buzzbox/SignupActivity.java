@@ -1,9 +1,12 @@
 package com.parse.buzzbox;
 
+import phone_numbers.To_international;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +22,8 @@ public class SignupActivity extends Activity{
 	private EditText usernameView;
 	  private EditText passwordView;
 	  private EditText passwordAgainView;
+	  private EditText phoneNumberView;
+	  private Context con; 
 	  
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +33,13 @@ public class SignupActivity extends Activity{
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_signup);
 
+		con = this;
 		
 	    // Set up the signup form.
 	    usernameView = (EditText) findViewById(R.id.username);
 	    passwordView = (EditText) findViewById(R.id.password);
 	    passwordAgainView = (EditText) findViewById(R.id.passwordAgain);
+	    phoneNumberView = (EditText) findViewById(R.id.phone_number);
 	    
 	 // Set up the submit button click handler
 	    findViewById(R.id.action_button).setOnClickListener(new View.OnClickListener() {
@@ -46,12 +53,19 @@ public class SignupActivity extends Activity{
 	          validationError = true;
 	          validationErrorMessage.append(getResources().getString(R.string.error_blank_username));
 	        }
+	        if (isEmpty(phoneNumberView)) {
+		          if (validationError) {
+		            validationErrorMessage.append(getResources().getString(R.string.error_join));
+		          }
+		          validationError = true;
+		          validationErrorMessage.append(getResources().getString(R.string.error_blank_password));
+		        }
 	        if (isEmpty(passwordView)) {
 	          if (validationError) {
 	            validationErrorMessage.append(getResources().getString(R.string.error_join));
 	          }
 	          validationError = true;
-	          validationErrorMessage.append(getResources().getString(R.string.error_blank_password));
+	          validationErrorMessage.append(getResources().getString(R.string.error_blank_phone_number));
 	        }
 	        if (!isMatching(passwordView, passwordAgainView)) {
 	          if (validationError) {
@@ -74,27 +88,42 @@ public class SignupActivity extends Activity{
 	        dlg.setMessage("Signing up.");
 	        dlg.show();
 
+	        //To convert phone number to international format
+	        To_international ti = new To_international(con);
+	        
 	        // Set up a new Parse user
 	        ParseUser user = new ParseUser();
 	        user.setUsername(usernameView.getText().toString());
 	        user.setPassword(passwordView.getText().toString());
-	        // Call the Parse signup method
-	        user.signUpInBackground(new SignUpCallback() {
+	        if(ti.change_to_international(phoneNumberView.getText().toString())==null)
+	        {
+	        	//wrong phone number
+	        	// Show the error message
+	            Toast.makeText(con, "Please enter a valid phone number", Toast.LENGTH_LONG).show();
+	        }
+	        else
+	        {
+	        	Log.d("phone number checking", ti.change_to_international(phoneNumberView.getText().toString()));
+	        	user.put("phone_number", ti.change_to_international(phoneNumberView.getText().toString()));
+		        // Call the Parse signup method
+		        user.signUpInBackground(new SignUpCallback() {
 
-	          @Override
-	          public void done(ParseException e) {
-	            dlg.dismiss();
-	            if (e != null) {
-	              // Show the error message
-	              Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-	            } else {
-	              // Start an intent for the dispatch activity
-	              Intent intent = new Intent(SignupActivity.this, DispatchActivity.class);
-	              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-	              startActivity(intent);
-	            }
-	          }
-	        });
+		          @Override
+		          public void done(ParseException e) {
+		            dlg.dismiss();
+		            if (e != null) {
+		              // Show the error message
+		              Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+		            } else {
+		              // Start an intent for the dispatch activity
+		              Intent intent = new Intent(SignupActivity.this, DispatchActivity.class);
+		              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+		              startActivity(intent);
+		            }
+		          }
+		        });
+	        }
+	        
 
 
 	}

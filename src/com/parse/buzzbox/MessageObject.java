@@ -26,9 +26,9 @@ public class MessageObject extends ParseObject {
 	}
 	
 	//Message intended to user
-	public void toUser(ParseUser value) 
+	public void toUserObjectID(String value) 
 	{
-		put("touser", value);
+		put("toobjectid", value);
 	}
 	
 	/*Message Type: Message is via post messsage or personally sent after searching users mail id

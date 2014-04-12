@@ -6,6 +6,7 @@
     <string name="error_blank_password">enter a password</string>
     <string name="error_blank_username">enter a username</string>
 	<string name="error_mismatched_passwords">enter the same password twice</string>
+	<string name="error_blank_phone_number">enter a phone number</string>
     <string name="error_join">", and "</string>
     <string name="error_end">.</string>
 </resources>

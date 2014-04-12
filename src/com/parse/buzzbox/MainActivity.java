@@ -35,7 +35,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -329,7 +328,7 @@ public class MainActivity extends Activity {
 									 else
 									 {
 										 MessageObject new_Message = new MessageObject();
-										 new_Message.toUser(post.getUser());
+										 new_Message.toUserObjectID(post.getUser().getObjectId());
 										 new_Message.setText(message.getText().toString().trim());
 										 new_Message.setType("via_post");
 										 new_Message.setViaPost(post.getText());
@@ -636,6 +635,10 @@ public class MainActivity extends Activity {
 		 }
 		 else if(item.getItemId()==R.id.MyMessages){
 			  Intent i = new Intent(this,My_messages.class);
+			  startActivity(i);
+		 }
+		 else if(item.getItemId()==R.id.private_message){
+			  Intent i = new Intent(this,Private_message.class);
 			  startActivity(i);
 		 }
 		 else if(item.getItemId()==R.id.changeradius){
