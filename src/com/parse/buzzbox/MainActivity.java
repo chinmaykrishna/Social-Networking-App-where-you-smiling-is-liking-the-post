@@ -425,7 +425,7 @@ public class MainActivity extends Activity {
 		 dialog.setTitle("New Post");
 		 Button done_but = (Button) dialog.findViewById(R.id.done);
 		 final EditText message = (EditText)dialog.findViewById(R.id.message);
-		 final EditText locat = (EditText)dialog.findViewById(R.id.locat);
+		 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
 		 
 		 	//done button clicked
 			 done_but.setOnClickListener(new OnClickListener() {
@@ -433,7 +433,7 @@ public class MainActivity extends Activity {
 				 @Override
 				 public void onClick(View v) {
 					 //post function
-					 if(message.getText().toString().trim().length()<1 || locat.getText().toString().trim().length()<1)
+					 if(message.getText().toString().trim().length()<1)
 					 {
 						 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
 					 }
