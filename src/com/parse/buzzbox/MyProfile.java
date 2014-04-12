@@ -12,8 +12,12 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,18 @@ public class MyProfile extends Activity {
 	
 	TextView currnick;
 	
+	private Integer[] mImageIds = {
+            R.drawable.avatar1,
+            R.drawable.avatar2,
+            R.drawable.avatar3,
+            R.drawable.avatar4,
+            R.drawable.avatar5,
+            R.drawable.avatar6,
+            R.drawable.avatar7,
+            R.drawable.avatar8,
+            R.drawable.avatar9
+    };
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -35,6 +51,20 @@ public class MyProfile extends Activity {
 		currnick = (TextView) findViewById(R.id.currentnick);
 		currnick.setText(currnick.getText()+ParseUser.getCurrentUser().getUsername());
 		
+		@SuppressWarnings("deprecation")
+		Gallery gallery = (Gallery) findViewById(R.id.gallery);
+        final ImageView selectedImage=(ImageView)findViewById(R.id.avatar);
+        gallery.setSpacing(1);
+        gallery.setAdapter(new GalleryImageAdapter(this));
+
+         // clicklistener for Gallery
+        gallery.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                // Toast.makeText(MyProfile.this, "Your selected position = " + position, Toast.LENGTH_SHORT).show();
+                // show the selected Image
+                selectedImage.setImageResource(mImageIds[position]);
+            }
+        });
 		
 	}
 	

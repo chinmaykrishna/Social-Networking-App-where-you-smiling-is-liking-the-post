@@ -128,15 +128,24 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int shadow_length=0x7f050000;
     }
     public static final class drawable {
-        public static final int background=0x7f020000;
-        public static final int background_without_logo=0x7f020001;
-        public static final int custom_edittext=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int login_button=0x7f020004;
-        public static final int rect_round_corners=0x7f020005;
-        public static final int rounded_edittext=0x7f020006;
-        public static final int shadow=0x7f020007;
-        public static final int signup_button=0x7f020008;
+        public static final int avatar1=0x7f020000;
+        public static final int avatar2=0x7f020001;
+        public static final int avatar3=0x7f020002;
+        public static final int avatar4=0x7f020003;
+        public static final int avatar5=0x7f020004;
+        public static final int avatar6=0x7f020005;
+        public static final int avatar7=0x7f020006;
+        public static final int avatar8=0x7f020007;
+        public static final int avatar9=0x7f020008;
+        public static final int background=0x7f020009;
+        public static final int background_without_logo=0x7f02000a;
+        public static final int custom_edittext=0x7f02000b;
+        public static final int ic_launcher=0x7f02000c;
+        public static final int login_button=0x7f02000d;
+        public static final int rect_round_corners=0x7f02000e;
+        public static final int rounded_edittext=0x7f02000f;
+        public static final int shadow=0x7f020010;
+        public static final int signup_button=0x7f020011;
     }
     public static final class id {
         public static final int Count_of_Empathizes=0x7f040015;
@@ -145,6 +154,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int MyMessages=0x7f040031;
         public static final int RelativeLayout1=0x7f040018;
         public static final int action_button=0x7f040010;
+        public static final int avatar=0x7f040028;
         public static final int btnEmpathize=0x7f040016;
         public static final int buttonNick=0x7f04002a;
         public static final int buttonPassword=0x7f04002b;
@@ -162,10 +172,9 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int edit_comments=0x7f04002d;
         public static final int favourite=0x7f040014;
         public static final int fullscreen=0x7f040003;
-        public static final int gallery1=0x7f040028;
+        public static final int gallery=0x7f040027;
         public static final int imageView1=0x7f040020;
         public static final int left=0x7f040000;
-        public static final int locat=0x7f040027;
         public static final int location=0x7f04001a;
         public static final int loginButton=0x7f040021;
         public static final int margin=0x7f040002;
