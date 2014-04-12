@@ -439,10 +439,11 @@ public class MainActivity extends Activity {
 					 }
 					 else
 					 {
-						 Postflag=1;
+						 //Postflag=1;
 						 Post = message.getText().toString();
-						 String loc = (locat.getText().toString()).replace(" ","+");
-						 new FindPlace().execute(loc);						 
+						 PostBuzz(p);
+						 //String loc = (locat.getText().toString()).replace(" ","+");
+						 //new FindPlace().execute(loc);						 
 						
 					 }
 					 dialog.dismiss();
@@ -471,7 +472,7 @@ public class MainActivity extends Activity {
 	  }
 	  
 	  public void PostBuzz(final ParseGeoPoint par){
-		  	 Postflag=0;
+		  	// Postflag=0;
 		  	 BuzzboxPost new_post = new BuzzboxPost();
 			 new_post.setUser(ParseUser.getCurrentUser());
 			 
@@ -600,11 +601,11 @@ public class MainActivity extends Activity {
 							Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
 				     		mtoast.show();
 						}
-						else{
-							PostBuzz(pa);
-							Toast mtoast = Toast.makeText(MainActivity.this,"Posting through: " +add, Toast.LENGTH_SHORT);
-				     		mtoast.show();
-						}
+//						else{
+//							PostBuzz(pa);
+//							Toast mtoast = Toast.makeText(MainActivity.this,"Posting through: " +add, Toast.LENGTH_SHORT);
+//				     		mtoast.show();
+//						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
