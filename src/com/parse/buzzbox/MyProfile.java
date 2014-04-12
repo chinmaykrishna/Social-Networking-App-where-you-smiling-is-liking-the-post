@@ -1,5 +1,6 @@
 package com.parse.buzzbox;
 
+
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -41,6 +42,8 @@ public class MyProfile extends Activity {
             R.drawable.avatar9
     };
 	
+	ImageView selectedImage=null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -53,19 +56,53 @@ public class MyProfile extends Activity {
 		
 		@SuppressWarnings("deprecation")
 		Gallery gallery = (Gallery) findViewById(R.id.gallery);
-        final ImageView selectedImage=(ImageView)findViewById(R.id.avatar);
+        selectedImage=(ImageView)findViewById(R.id.avatar);
         gallery.setSpacing(1);
         gallery.setAdapter(new GalleryImageAdapter(this));
 
          // clicklistener for Gallery
         gallery.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                // Toast.makeText(MyProfile.this, "Your selected position = " + position, Toast.LENGTH_SHORT).show();
+            	
+            	// Toast.makeText(MyProfile.this, "Your selected position = " + position, Toast.LENGTH_SHORT).show();
                 // show the selected Image
                 selectedImage.setImageResource(mImageIds[position]);
+                ParseUser.getCurrentUser().put("Avatar",mImageIds[position] );
+                //int temp=selectedImage.getId();
+                //Toast.makeText(MyProfile.this, "Your selected position = " + , Toast.LENGTH_SHORT).show();
             }
         });
 		
+	}
+	
+	public void update(View v){
+		
+		final ProgressDialog pdLoading = new ProgressDialog(MyProfile.this);
+		pdLoading.setMessage("\tLoading...");
+		
+        ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+        	       	
+        	
+        	
+			@Override
+			public void done(ParseException e) {
+				// TODO Auto-generated method stub
+				if(e==null)
+				{
+					Toast.makeText(MyProfile.this, "Profile updated Successfully :)", Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					Log.d("error while sending", e.getMessage().toString());
+					Toast.makeText(MyProfile.this, "Updating profile failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+				}
+				
+				pdLoading.cancel();
+				
+			}
+		});
+        pdLoading.show();
+        
 	}
 	
 	public void myNick(View v){
@@ -96,17 +133,17 @@ public class MyProfile extends Activity {
 				 String nick = newnick.getText().toString();
 				 if(!(nick.isEmpty())){
 					 ParseUser.getCurrentUser().setUsername(nick);
-					 try {
-						ParseUser.getCurrentUser().save();
-						currnick.setText("Hi, "+nick);
-						Toast mtoast = Toast.makeText(MyProfile.this, "Nick successfully changed :)", Toast.LENGTH_LONG);
-			 		 	mtoast.show();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						Toast mtoast = Toast.makeText(MyProfile.this, "Nick changing failed :(", Toast.LENGTH_LONG);
-			 		 	mtoast.show();
-					}
+//					 try {
+//						ParseUser.getCurrentUser().save();
+//						currnick.setText("Hi, "+nick);
+//						Toast mtoast = Toast.makeText(MyProfile.this, "Nick successfully changed :)", Toast.LENGTH_LONG);
+//			 		 	mtoast.show();
+//					} catch (ParseException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//						Toast mtoast = Toast.makeText(MyProfile.this, "Nick changing failed :(", Toast.LENGTH_LONG);
+//			 		 	mtoast.show();
+//					}
 					 	
 				 }
 				 else{

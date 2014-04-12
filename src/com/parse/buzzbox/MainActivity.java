@@ -39,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -180,6 +181,7 @@ public class MainActivity extends Activity {
 	            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 	            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
 	            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
+	            ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 	            
 	            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 	            // contentView.setBackground();  // We will do this to show the image.
@@ -187,6 +189,7 @@ public class MainActivity extends Activity {
 	            contentView.setText(post.getText());
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
+	            im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
 	            
 	            //comment button pressed
 	            final Button comment_but = (Button)view.findViewById(R.id.comment);

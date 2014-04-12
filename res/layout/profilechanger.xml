@@ -40,6 +40,14 @@
         android:onClick="myPass"
         android:layout_gravity="center_horizontal"
         android:text="Change Password" />
+    
+    <Button
+        android:id="@+id/buttonupdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="update"
+        android:layout_gravity="center_horizontal"
+        android:text="Update Profile" />
 
     <Button
         android:id="@+id/buttonlogout"
