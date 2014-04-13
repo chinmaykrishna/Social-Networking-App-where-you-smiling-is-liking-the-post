@@ -57,6 +57,7 @@ public class MyProfile extends Activity {
 		@SuppressWarnings("deprecation")
 		Gallery gallery = (Gallery) findViewById(R.id.gallery);
         selectedImage=(ImageView)findViewById(R.id.avatar);
+        selectedImage.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
         gallery.setSpacing(1);
         gallery.setAdapter(new GalleryImageAdapter(this));
 

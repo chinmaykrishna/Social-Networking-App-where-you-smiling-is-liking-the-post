@@ -188,7 +188,7 @@ public class MainActivity extends Activity {
 	            contentView.setText(post.getText());
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
-	            im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
+	            im.setImageResource(post.getUser().getInt("Avatar"));
 	            
 	            //comment button pressed
 	            final Button comment_but = (Button)view.findViewById(R.id.comment);
