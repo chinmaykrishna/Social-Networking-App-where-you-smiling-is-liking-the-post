@@ -16,11 +16,9 @@ import org.json.JSONObject;
 
 import android.R.drawable;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -51,6 +49,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.buzzbox.FetchLocation.LocationResult;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
@@ -64,12 +63,14 @@ public class MainActivity extends Activity {
     private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		if(!(ParseUser.getCurrentUser().isDataAvailable()))
+			finish();
 		//configure slider for comments
 		config_slider();
 		
@@ -79,22 +80,24 @@ public class MainActivity extends Activity {
 	    
 		currentLocation = this.getLastKnownLocation();
 		
-		if(currentLocation!=null) lastLocation= currentLocation;
+		if(currentLocation!=null)
+		{
+			if(currentLocation!=null) lastLocation= currentLocation;
+			
+			Log.d("current loc", currentLocation.toString());
+			Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
+			
+			p = geoPointFromLocation(myLoc);
+			
+			setQuery(p);
 		
-		Log.d("current loc", currentLocation.toString());
-		Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
-		p = geoPointFromLocation(myLoc);
-		if(!(ParseUser.getCurrentUser().isDataAvailable()))
-			finish();
-		setQuery(p);
-		
+		}
+				
 	}
 	
 	
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onRestart()
-	 */
+	
 	@Override
 	protected void onRestart() {
 		// TODO Auto-generated method stub
@@ -106,9 +109,7 @@ public class MainActivity extends Activity {
 
 
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
-	 */
+	
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -140,30 +141,31 @@ public class MainActivity extends Activity {
 	            
 	            query.setLimit(MAX_POST_SEARCH_RESULTS);
 	            
-	            try {
-					if(query.count()==0){
-						AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
-						alert.setTitle("No Posts Found!!");
-						alert.setMessage("Try changing Radius or search for Posts in a different Region..");
-						alert.setButton(alert.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
-									
-							public void onClick(DialogInterface dialog, int which) {
-								finish();
-
-							}
-						});
-						alert.setButton(alert.BUTTON_POSITIVE, "Okay!", new DialogInterface.OnClickListener() {
-							
-							public void onClick(DialogInterface dialog, int which) {
-											
-							}
-						});
-						alert.show();
-					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//THIS CODE WAS REASON FOR CREATING APP LAG ON START. PLEASE FIND ALTERNATIVE FOR THIS.
+//	            try {
+//					if(query.count()==0){
+//						AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
+//						alert.setTitle("No Posts Found!!");
+//						alert.setMessage("Try changing Radius or search for Posts in a different Region..");
+//						alert.setButton(alert.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
+//									
+//							public void onClick(DialogInterface dialog, int which) {
+//								finish();
+//
+//							}
+//						});
+//						alert.setButton(alert.BUTTON_POSITIVE, "Okay!", new DialogInterface.OnClickListener() {
+//							
+//							public void onClick(DialogInterface dialog, int which) {
+//											
+//							}
+//						});
+//						alert.show();
+//					}
+//				} catch (ParseException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 	            
 	            return query;
 	          }
@@ -700,9 +702,40 @@ public class MainActivity extends Activity {
 		            bestLocation = l;
 		        }
 		    }
-		    if (bestLocation == null) {
-		        return null;
-		    }
+		    
+		    if(bestLocation==null)
+		    {
+		    	final ProgressDialog pdLoading = new ProgressDialog(con);
+				 pdLoading.setMessage("Please wait while retreiving location...");
+			     pdLoading.show();
+			     pdLoading.setCancelable(false);
+		    	LocationResult locationResult = new LocationResult(){
+		    	    @Override
+		    	    public void gotLocation(Location location){
+		    	    	
+		    	    	pdLoading.dismiss();
+		    	    	if(location==null)
+		    	    	{
+		    	    		Toast.makeText(con, "Failed to retreive location. Please check network connections.", Toast.LENGTH_SHORT).show();
+		    	    		finish();
+		    	    		
+		    	    	}
+		    	    	else
+		    	    	{
+		    	    		//got location :)
+			    			p = geoPointFromLocation(location);
+			    			setQuery(p);
+		    	    	}
+		    	    	
+		    	    }
+		    	};
+		    	
+		    	
+		    	
+		    	FetchLocation myLocation = new FetchLocation();
+		    	myLocation.getLocation(this, locationResult);
+		    	myLocation.execute();
+		    }	
 		    return bestLocation;
 		}
 	  
