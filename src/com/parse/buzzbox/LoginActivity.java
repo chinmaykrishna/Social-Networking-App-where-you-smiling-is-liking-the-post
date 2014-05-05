@@ -26,6 +26,9 @@ public class LoginActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    if (getIntent().getBooleanExtra("EXIT", false)) {
+        finish();
+    }
   //fullscreen 
     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.login);

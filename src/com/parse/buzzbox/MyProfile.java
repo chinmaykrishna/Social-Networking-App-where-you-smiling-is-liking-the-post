@@ -8,6 +8,7 @@ import com.parse.SaveCallback;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -29,6 +30,7 @@ public class MyProfile extends Activity {
 	 */
 	
 	TextView currnick;
+    MainActivity act;
 	
 	private Integer[] mImageIds = {
             R.drawable.avatar1,
@@ -43,6 +45,15 @@ public class MyProfile extends Activity {
     };
 	
 	ImageView selectedImage=null;
+
+	public MyProfile()
+	{
+		 
+	}
+	public MyProfile(MainActivity act)
+	{
+		this.act =act; 
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -217,9 +228,12 @@ public class MyProfile extends Activity {
 	
 	public void logout(View v){
 		ParseUser.getCurrentUser().logOut();
-		//MainActivity ma = new MainActivity();
-		MainActivity.logout=true;
-		finish();
+		Log.d("asdasd", "logout");
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("EXIT", true);
+		startActivity(intent);
+		
 	}
 	
 	

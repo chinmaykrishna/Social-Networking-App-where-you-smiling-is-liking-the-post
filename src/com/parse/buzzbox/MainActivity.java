@@ -63,13 +63,17 @@ public class MainActivity extends Activity {
     private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu;
-	protected static boolean logout=false;
+	private static boolean logout=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		if (getIntent().getBooleanExtra("EXIT", false)) {
+			 finish();
+			}
 		setContentView(R.layout.activity_main);
+		if(ParseUser.getCurrentUser()!=null)
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
 			finish();
 		//configure slider for comments
@@ -104,8 +108,11 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onRestart();
 		
-		if(!(ParseUser.getCurrentUser().isDataAvailable()))
-			finish();
+		
+		if(ParseUser.getCurrentUser()!=null)
+			if(!(ParseUser.getCurrentUser().isDataAvailable()))
+				finish();
+		
 	}
 
 
@@ -114,8 +121,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		if(!(ParseUser.getCurrentUser().isDataAvailable()))
-			finish();
+		
+		if(ParseUser.getCurrentUser()!=null)
+			if(!(ParseUser.getCurrentUser().isDataAvailable()))
+				finish();
+
 		
 		super.onResume();
 	}
@@ -471,12 +481,15 @@ public class MainActivity extends Activity {
 	  }
 	  
 	  public void myProfile(View v){
-		  Intent i = new Intent(MainActivity.this,MyProfile.class);
-		  MainActivity.this.startActivity(i);
+		  
+		  MyProfile my = new MyProfile(this);
+		 Intent i = new Intent(this,my.getClass());
+		  startActivity(i);
 		  if(logout){
 			  finish();
 		  }
 	  }
+	  
 	  
 	  public void PostBuzz(final ParseGeoPoint par){
 		  
