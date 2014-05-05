@@ -26,12 +26,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,7 +66,7 @@ public class MainActivity extends Activity {
     private Context con;
     private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
-	private SlidingMenu menu;
+	private SlidingMenu menu, menuleft, menuright;
 	private static boolean logout=false;
 
 	@Override
@@ -76,6 +80,7 @@ public class MainActivity extends Activity {
 		if(ParseUser.getCurrentUser()!=null)
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
 			finish();
+		
 		//configure slider for comments
 		config_slider();
 		
@@ -199,6 +204,30 @@ public class MainActivity extends Activity {
 	            // contentView.setBackground();  // We will do this to show the image.
 	            
 	            contentView.setText(post.getText());
+	            contentView.setOnTouchListener(new OnSwipeTouchListener(con){
+	            	
+	            	public void onSwipeTop() {
+	                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+	                }
+	                public void onSwipeRight() {
+	                    Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+	                }
+	                public void onSwipeLeft() {
+	                	menuleft.toggle();
+	                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
+	                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
+	                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
+	                	tv.setText(ParseUser.getCurrentUser().getUsername());
+	                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+	                }
+	                public void onSwipeBottom() {
+	                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+	                }
+
+	            public boolean onTouch(View v, MotionEvent event) {
+	                return gestureDetector.onTouchEvent(event);
+	            }
+	            });
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
 	            im.setImageResource(post.getUser().getInt("Avatar"));
@@ -483,7 +512,7 @@ public class MainActivity extends Activity {
 	  public void myProfile(View v){
 		  
 		  MyProfile my = new MyProfile(this);
-		 Intent i = new Intent(this,my.getClass());
+		  Intent i = new Intent(this,my.getClass());
 		  startActivity(i);
 		  if(logout){
 			  finish();
@@ -649,6 +678,76 @@ public class MainActivity extends Activity {
 		     
 		    	 
 		     }
+	  
+	  
+	  // This class will detect user's gestures of swiping left/Right.
+	  public class OnSwipeTouchListener implements OnTouchListener {
+
+		    protected final GestureDetector gestureDetector;
+
+		    public OnSwipeTouchListener (Context ctx){
+		        gestureDetector = new GestureDetector(ctx, new GestureListener());
+		    }
+
+		    private final class GestureListener extends SimpleOnGestureListener {
+
+		        private static final int SWIPE_THRESHOLD = 100;
+		        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+		        @Override
+		        public boolean onDown(MotionEvent e) {
+		            return true;
+		        }
+
+		        @Override
+		        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+		            boolean result = false;
+		            try {
+		                float diffY = e2.getY() - e1.getY();
+		                float diffX = e2.getX() - e1.getX();
+		                if (Math.abs(diffX) > Math.abs(diffY)) {
+		                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+		                        if (diffX > 0) {
+		                            onSwipeRight();
+		                        } else {
+		                            onSwipeLeft();
+		                        }
+		                    }
+		                } else {
+		                    if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+		                        if (diffY > 0) {
+		                            onSwipeBottom();
+		                        } else {
+		                            onSwipeTop();
+		                        }
+		                    }
+		                }
+		            } catch (Exception exception) {
+		                exception.printStackTrace();
+		            }
+		            return result;
+		        }
+		    }
+
+		    public void onSwipeRight() {
+		    }
+
+		    public void onSwipeLeft() {
+		    }
+
+		    public void onSwipeTop() {
+		    }
+
+		    public void onSwipeBottom() {
+		    }
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		}
+	  
 	  @Override
 		public boolean onOptionsItemSelected
 									    (MenuItem item) {
@@ -774,6 +873,16 @@ public class MainActivity extends Activity {
 	        menu.setFadeDegree(0.35f);
 	        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 	        menu.setMenu(R.layout.slider_layout);
+	        
+	        menuleft = new SlidingMenu(this);
+	        menuleft.setMode(SlidingMenu.LEFT);
+	        menuleft.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+	        menuleft.setShadowWidthRes(R.dimen.shadow_length);
+	        menuleft.setShadowDrawable(R.drawable.shadow);
+	        menuleft.setBehindOffsetRes(R.dimen.behind_offset);
+	        menuleft.setFadeDegree(0.35f);
+	        menuleft.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+	        menuleft.setMenu(R.layout.profile);
 	  }
 	  
 	  @Override
@@ -793,6 +902,13 @@ public class MainActivity extends Activity {
 			if (menu != null
 					&& menu.isMenuShowing()) {
 				menu.toggle();
+			} else {
+				this.onBackPressed();
+			}
+			
+			if (menuleft != null
+					&& menuleft.isMenuShowing()) {
+				menuleft.toggle();
 			} else {
 				this.onBackPressed();
 			}

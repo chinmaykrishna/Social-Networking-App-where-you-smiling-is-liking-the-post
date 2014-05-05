@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/abs__ab_bottom_solid_inverse_holo" >
+
+    <TextView
+        android:id="@+id/Nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/avatar"
+        android:layout_centerHorizontal="true"
+        android:text="Aashish"
+        android:textColor="@color/abs__background_holo_light"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/avatar1" />
+
+    <TextView
+        android:id="@+id/NoOfPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Nick"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/abs__background_holo_light"
+        android:text="24"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/postsMade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/NoOfPosts"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/abs__background_holo_light"
+        android:text="Posts Made"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/NoOfInvites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/NoOfPosts"
+        android:layout_below="@+id/postsMade"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/abs__background_holo_light"
+        android:text="25"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/NoOfInvites"
+        android:layout_centerHorizontal="true"
+        android:text="Invites Sent"
+        android:textColor="@color/abs__background_holo_light"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
