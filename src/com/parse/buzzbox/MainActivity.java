@@ -204,20 +204,21 @@ public class MainActivity extends Activity {
 	            // contentView.setBackground();  // We will do this to show the image.
 	            
 	            contentView.setText(post.getText());
-	            contentView.setOnTouchListener(new OnSwipeTouchListener(con){
+	            view.setOnTouchListener(new OnSwipeTouchListener(con){
 	            	
 	            	public void onSwipeTop() {
 	                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
 	                }
 	                public void onSwipeRight() {
-	                    Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-	                }
-	                public void onSwipeLeft() {
 	                	menuleft.toggle();
 	                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
 	                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
 	                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
 	                	tv.setText(ParseUser.getCurrentUser().getUsername());
+	                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+	                }
+	                public void onSwipeLeft() {
+	                	
 	                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
 	                }
 	                public void onSwipeBottom() {
@@ -228,6 +229,7 @@ public class MainActivity extends Activity {
 	                return gestureDetector.onTouchEvent(event);
 	            }
 	            });
+	            
 	            count.setText(""+post.no_of_empathizes());
 	            usernameView.setText(post.getUser().getUsername());
 	            im.setImageResource(post.getUser().getInt("Avatar"));
@@ -902,14 +904,11 @@ public class MainActivity extends Activity {
 			if (menu != null
 					&& menu.isMenuShowing()) {
 				menu.toggle();
-			} else {
-				this.onBackPressed();
-			}
-			
-			if (menuleft != null
+			} else if (menuleft != null
 					&& menuleft.isMenuShowing()) {
 				menuleft.toggle();
-			} else {
+			}			
+			 else {
 				this.onBackPressed();
 			}
 		}
