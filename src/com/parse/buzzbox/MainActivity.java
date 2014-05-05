@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
     private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu;
+	protected static boolean logout=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -284,7 +285,8 @@ public class MainActivity extends Activity {
 	            	    	      
 	            	    	    int temp = post.no_of_empathizes()+1;  
 	            	    	    newquery.put("NoOfEmpathizes",temp);
-	            	    	    count.setText(""+temp);
+	            	    	    int co = Integer.parseInt(count.getText().toString())+1;
+	            	    	    count.setText(""+co);
 	            	    	    newquery.saveInBackground();
 	            	    	    ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
 	            	    	    ParseUser.getCurrentUser().saveInBackground();
@@ -471,11 +473,13 @@ public class MainActivity extends Activity {
 	  public void myProfile(View v){
 		  Intent i = new Intent(MainActivity.this,MyProfile.class);
 		  MainActivity.this.startActivity(i);
-		  
-		  //finish();
+		  if(logout){
+			  finish();
+		  }
 	  }
 	  
 	  public void PostBuzz(final ParseGeoPoint par){
+		  
 		  	// Postflag=0;
 		  	 BuzzboxPost new_post = new BuzzboxPost();
 			 new_post.setUser(ParseUser.getCurrentUser());
@@ -485,6 +489,8 @@ public class MainActivity extends Activity {
 			 new_post.Init(ParseUser.getCurrentUser().getUsername());
 			 
 			 new_post.setLocation(par);
+			 final ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
+			 pdLoading.setMessage("\tPosting your Buzz...\n \t Please Wait!!");
 			 new_post.saveInBackground(new SaveCallback() {
 				
 				@Override
@@ -492,7 +498,8 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated method stub
 					if(e==null)
 					{
-						Toast.makeText(con, "Successfully posted", Toast.LENGTH_SHORT).show();
+						pdLoading.dismiss();
+						Toast.makeText(con, "Successfully posted.. Updating your List now!", Toast.LENGTH_SHORT).show();
 						setQuery(par);	// Update the List.
 					}
 					else
@@ -503,6 +510,8 @@ public class MainActivity extends Activity {
 					
 				}
 			});
+			 
+			 pdLoading.show();
 	  }
 	  
 	  //Menu configuration

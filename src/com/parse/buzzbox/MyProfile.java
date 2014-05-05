@@ -79,7 +79,7 @@ public class MyProfile extends Activity {
 	public void update(View v){
 		
 		final ProgressDialog pdLoading = new ProgressDialog(MyProfile.this);
-		pdLoading.setMessage("\tLoading...");
+		pdLoading.setMessage("\tUpdating...\n \t Please Wait!!");
 		
         ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
         	       	
@@ -217,6 +217,8 @@ public class MyProfile extends Activity {
 	
 	public void logout(View v){
 		ParseUser.getCurrentUser().logOut();
+		//MainActivity ma = new MainActivity();
+		MainActivity.logout=true;
 		finish();
 	}
 	
