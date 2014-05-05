@@ -43,6 +43,10 @@ public class BuzzboxPost extends ParseObject {
 	  put("IsEmpathized","false");
 	  //put("NoOfEmpathizes",val);
   }
+  
+  public int getNoofPosts(){
+	  return ParseUser.getCurrentUser().getInt("noOfPosts");
+  }
 
   public void setUser(ParseUser value) {
     put("user", value);

@@ -96,6 +96,7 @@ public class SignupActivity extends Activity{
 	        user.setUsername(usernameView.getText().toString());
 	        user.setPassword(passwordView.getText().toString());
 	        user.put("Avatar", R.drawable.avatar1);
+	        user.put("noOfPosts", 0);
 	        if(ti.change_to_international(phoneNumberView.getText().toString())==null)
 	        {
 	        	//wrong phone number

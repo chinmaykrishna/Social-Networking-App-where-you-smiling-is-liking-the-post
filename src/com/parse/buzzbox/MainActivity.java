@@ -215,6 +215,24 @@ public class MainActivity extends Activity {
 	                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
 	                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
 	                	tv.setText(ParseUser.getCurrentUser().getUsername());
+	                	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
+	                	tv2.setText(""+post.getNoofPosts());
+	                	
+	                	View view2 = (View)menuleft.getMenu();
+	                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+	                		public void onSwipeLeft() {
+	                			onCustomBackPressed();
+	    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+	    	                }
+	                		
+	                		public void onSwipeBottom() {
+	    	                    //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+	    	                }
+	                		
+	                		public boolean onTouch(View v, MotionEvent event) {
+	        	                return gestureDetector.onTouchEvent(event);
+	        	            }
+	                	});
 	                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
 	                }
 	                public void onSwipeLeft() {
@@ -531,6 +549,10 @@ public class MainActivity extends Activity {
 			 new_post.setText(Post);
 			 new_post.set_no_of_empathizes(0);
 			 new_post.Init(ParseUser.getCurrentUser().getUsername());
+			 
+			 int temp = new_post.getNoofPosts()+1;
+			 ParseUser.getCurrentUser().put("noOfPosts",temp);
+			 ParseUser.getCurrentUser().saveInBackground();
 			 
 			 new_post.setLocation(par);
 			 final ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
