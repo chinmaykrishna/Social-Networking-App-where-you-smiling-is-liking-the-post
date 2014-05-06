@@ -5,84 +5,86 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-     >
-    
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxHeight="5px"
-        android:src="@drawable/avatar1" />
-
-    <TextView
-        android:id="@+id/usernameView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:layout_toRightOf="@+id/imageView1"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/usernameView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1"
+            android:gravity="center_horizontal"
+            android:text="Username"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:maxHeight="5px"
+            android:src="@drawable/avatar1" />
+
     </RelativeLayout>
-        
 
-    <TextView
-        android:id="@+id/contentView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Message"
-        android:background="@drawable/background_without_logo"
-        android:textSize="30dp"
-        android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+        
+	    <TextView
+	        android:id="@+id/contentView"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="Message"
+	        android:background="@drawable/background_without_logo"
+	        android:textSize="24dp"
+	        android:gravity="center_vertical"
+	        
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	    
 
     
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        
-    <ImageButton
-        android:id="@+id/privatemessage"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/favourite"
-        android:onClick="private_message"
-        android:src="@android:drawable/sym_action_email" />
+        android:id="@+id/rlbtns" >
     
     <ImageButton
         android:id="@+id/favourite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
         android:src="@android:drawable/star_big_off" />
 
     <TextView
         android:id="@+id/Count_of_Empathizes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/privatemessage"
+        android:layout_toRightOf="@+id/btnEmpathize"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageButton
         android:id="@+id/btnEmpathize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/Count_of_Empathizes"
+        android:layout_alignParentLeft="true"
         android:src="@android:drawable/ic_menu_view" />
 
-    <Button
-        android:id="@+id/comment"
+    <ImageButton
+        android:id="@+id/privatemessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/btnEmpathize"
-        android:text="Comment" />
+        android:layout_alignParentRight="true"
+        android:onClick="private_message"
+        android:src="@android:drawable/sym_action_email" />
     
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Comment" />
 
 </LinearLayout>

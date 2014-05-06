@@ -57,7 +57,7 @@ import com.parse.buzzbox.FetchLocation.LocationResult;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
-	private static int SEARCH_RADIUS=100,flag=0, Postflag=0;
+	private static int SEARCH_RADIUS=100,flag=0, Postflag=0, index=0;
 	private Location lastLocation = null;
     private Location currentLocation = null;
     protected double Latitude,Longitude;
@@ -100,7 +100,82 @@ public class MainActivity extends Activity {
 			p = geoPointFromLocation(myLoc);
 			
 			setQuery(p);
-		
+//			ParseQueryAdapter.QueryFactory<BuzzboxPost> factory =
+//			        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
+//			          public ParseQuery<BuzzboxPost> create() {
+//			            
+//			            ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+//			            query.include("user");
+//			            
+//			            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
+//			            
+//			            else query.orderByDescending("NoOfEmpathizes");	// If the user has pressed the Featured Button.
+//			            
+//			            flag=0;
+//			            
+//			            query.whereWithinKilometers("location", p, SEARCH_RADIUS);
+//			            
+//			            query.setLimit(MAX_POST_SEARCH_RESULTS);
+//			            
+//			            return query;
+//			          }
+//			        };
+//			
+//			        setContentView(R.layout.buzzbox_post_item);
+//			        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory);
+//			        final BuzzboxPost currentPost = posts.getItem(index);
+//			        ImageView im = (ImageView) findViewById(R.id.imageView1);
+//			        im.setImageResource(currentPost.getUser().getInt("Avatar"));
+//			        TextView username = (TextView) findViewById(R.id.usernameView);
+//			        username.setText(currentPost.getText());
+//			        
+//			        View view = View.inflate(con, R.layout.buzzbox_post_item, null);
+//			        view.setOnTouchListener(new OnSwipeTouchListener(con){
+//			        	
+//			        	public void onSwipeTop() {
+//			        		
+//			        		index++;
+//			        		
+//		                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+//		                }
+//		                public void onSwipeRight() {
+//		                	menuleft.toggle();
+//		                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
+//		                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
+//		                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
+//		                	tv.setText(ParseUser.getCurrentUser().getUsername());
+//		                	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
+//		                	tv2.setText(""+currentPost.getNoofPosts());
+//		                	
+//		                	View view2 = (View)menuleft.getMenu();
+//		                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+//		                		public void onSwipeLeft() {
+//		                			onCustomBackPressed();
+//		    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+//		    	                }
+//		                		
+//		                		public void onSwipeBottom() {
+//		    	                    //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+//		    	                }
+//		                		
+//		                		public boolean onTouch(View v, MotionEvent event) {
+//		        	                return gestureDetector.onTouchEvent(event);
+//		        	            }
+//		                	});
+//		                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+//		                }
+//		                public void onSwipeLeft() {
+//		                	
+//		                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+//		                }
+//		                public void onSwipeBottom() {
+//		                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+//		                }
+//
+//		            public boolean onTouch(View v, MotionEvent event) {
+//		                return gestureDetector.onTouchEvent(event);
+//		            }
+//			        });
 		}
 				
 	}
@@ -140,292 +215,267 @@ public class MainActivity extends Activity {
 	// This method will Set up our customized query and will then update the List View.
 	public void setQuery(final ParseGeoPoint pgp){
 		// Set up a customized query
-	    ParseQueryAdapter.QueryFactory<BuzzboxPost> factory =
-	        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
-	          public ParseQuery<BuzzboxPost> create() {
-	            
-	            ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-	            query.include("user");
-	            
-	            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
-	            
-	            else query.orderByDescending("NoOfEmpathizes");	// If the user has pressed the Featured Button.
-	            
-	            flag=0;
-	            
-	            query.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
-	            
-	            query.setLimit(MAX_POST_SEARCH_RESULTS);
-	            
-//THIS CODE WAS REASON FOR CREATING APP LAG ON START. PLEASE FIND ALTERNATIVE FOR THIS.
-//	            try {
-//					if(query.count()==0){
-//						AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
-//						alert.setTitle("No Posts Found!!");
-//						alert.setMessage("Try changing Radius or search for Posts in a different Region..");
-//						alert.setButton(alert.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
-//									
-//							public void onClick(DialogInterface dialog, int which) {
-//								finish();
-//
-//							}
-//						});
-//						alert.setButton(alert.BUTTON_POSITIVE, "Okay!", new DialogInterface.OnClickListener() {
+		ParseQueryAdapter.QueryFactory<BuzzboxPost> factory =
+		        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
+		          public ParseQuery<BuzzboxPost> create() {
+		            
+		            ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+		            query.include("user");
+		            
+		            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
+		            
+		            else query.orderByDescending("NoOfEmpathizes");	// If the user has pressed the Featured Button.
+		            
+		            flag=0;
+		            
+		            query.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
+		            
+		            query.setLimit(MAX_POST_SEARCH_RESULTS);
+		            
+		            return query;
+		          }
+		        };
+		        
+		        
+		        
+		        // Set up the query adapter
+		        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
+		          @Override
+		          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
+		            
+		            view = View.inflate(getContext(), R.layout.buzzbox_post_item, null);
+		            
+		            TextView contentView = (TextView) view.findViewById(R.id.contentView);
+		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
+		            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
+		            ImageView im = (ImageView) view.findViewById(R.id.imageView1);
+		            
+		            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
+		            // contentView.setBackground();  // We will do this to show the image.
+		            
+		            contentView.setText(post.getText());
+		            view.setOnTouchListener(new OnSwipeTouchListener(con){
+		            	
+		            	public void onSwipeTop() {
+		                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+		                }
+		                public void onSwipeRight() {
+		                	menuleft.toggle();
+		                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
+		                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
+		                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
+		                	tv.setText(ParseUser.getCurrentUser().getUsername());
+		                	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
+		                	tv2.setText(""+post.getNoofPosts());
+		                	
+		                	View view2 = (View)menuleft.getMenu();
+		                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+		                		public void onSwipeLeft() {
+		                			onCustomBackPressed();
+		    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+		    	                }
+		                		
+		                		public void onSwipeBottom() {
+		    	                    //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+		    	                }
+		                		
+		                		public boolean onTouch(View v, MotionEvent event) {
+		        	                return gestureDetector.onTouchEvent(event);
+		        	            }
+		                	});
+		                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+		                }
+		                public void onSwipeLeft() {
+		                	
+		                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+		                }
+		                public void onSwipeBottom() {
+		                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+		                }
+
+		            public boolean onTouch(View v, MotionEvent event) {
+		                return gestureDetector.onTouchEvent(event);
+		            }
+		            });
+		            
+		            count.setText(""+post.no_of_empathizes());
+		            usernameView.setText(post.getUser().getUsername());
+		            im.setImageResource(post.getUser().getInt("Avatar"));
+		            
+		            //comment button pressed
+		            final Button comment_but = (Button)view.findViewById(R.id.comment);
+		            
+//		            comment_but.setOnClickListener(new OnClickListener() {
+//						
+//						@Override
+//						public void onClick(View v) {
+//							//toggle slider
+//							menu.toggle();
 //							
-//							public void onClick(DialogInterface dialog, int which) {
-//											
-//							}
-//						});
-//						alert.show();
-//					}
-//				} catch (ParseException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-	            
-	            return query;
-	          }
-	        };
-	        
-	        
-	        // Set up the query adapter
-	        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
-	          @Override
-	          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
-	            
-	            view = View.inflate(getContext(), R.layout.buzzbox_post_item, null);
-	            
-	            TextView contentView = (TextView) view.findViewById(R.id.contentView);
-	            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
-	            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
-	            ImageView im = (ImageView) view.findViewById(R.id.imageView1);
-	            
-	            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
-	            // contentView.setBackground();  // We will do this to show the image.
-	            
-	            contentView.setText(post.getText());
-	            view.setOnTouchListener(new OnSwipeTouchListener(con){
-	            	
-	            	public void onSwipeTop() {
-	                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
-	                }
-	                public void onSwipeRight() {
-	                	menuleft.toggle();
-	                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
-	                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
-	                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
-	                	tv.setText(ParseUser.getCurrentUser().getUsername());
-	                	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
-	                	tv2.setText(""+post.getNoofPosts());
-	                	
-	                	View view2 = (View)menuleft.getMenu();
-	                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
-	                		public void onSwipeLeft() {
-	                			onCustomBackPressed();
-	    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-	    	                }
-	                		
-	                		public void onSwipeBottom() {
-	    	                    //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-	    	                }
-	                		
-	                		public boolean onTouch(View v, MotionEvent event) {
-	        	                return gestureDetector.onTouchEvent(event);
-	        	            }
-	                	});
-	                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-	                }
-	                public void onSwipeLeft() {
-	                	
-	                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-	                }
-	                public void onSwipeBottom() {
-	                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-	                }
-
-	            public boolean onTouch(View v, MotionEvent event) {
-	                return gestureDetector.onTouchEvent(event);
-	            }
-	            });
-	            
-	            count.setText(""+post.no_of_empathizes());
-	            usernameView.setText(post.getUser().getUsername());
-	            im.setImageResource(post.getUser().getInt("Avatar"));
-	            
-	            //comment button pressed
-	            final Button comment_but = (Button)view.findViewById(R.id.comment);
-	            
-//	            comment_but.setOnClickListener(new OnClickListener() {
-//					
-//					@Override
-//					public void onClick(View v) {
-//						//toggle slider
-//						menu.toggle();
-//						
-//						//retrieve comments
-//						final ListView comments_list = (ListView)menu.getMenu().findViewById(R.id.comments_list);
-//						retrieve_comments(post, comments_list);
-//					        //sending a new comment
-//					        
-//					        final EditText ed = (EditText)menu.getMenu().findViewById(R.id.edit_comments);
-//					        Button ok = (Button)menu.getMenu().findViewById(R.id.ok_button);
-//					        ok.setOnClickListener(new OnClickListener() {
-//								
-//								@Override
-//								public void onClick(View v) {
-//									if(ed.getText().toString().trim().length()<1)
-//									 {
-//										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-//									 }
-//									 else
-//									 {
-//										 
-//										 CommentsObject new_comment = new CommentsObject();
-//										 new_comment.toPost(post.getObjectId());
-//										 new_comment.setText(ed.getText().toString().trim());
-//										 new_comment.saveInBackground(new SaveCallback() {
-//											
-//											@Override
-//											public void done(ParseException e) {
-//												// TODO Auto-generated method stub
-//												if(e==null)
-//												{
-//													retrieve_comments(post, comments_list);
-//													Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
-//												}
-//												else
-//												{
-//													Log.d("error while sending", e.getMessage().toString());
-//													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-//												}
+//							//retrieve comments
+//							final ListView comments_list = (ListView)menu.getMenu().findViewById(R.id.comments_list);
+//							retrieve_comments(post, comments_list);
+//						        //sending a new comment
+//						        
+//						        final EditText ed = (EditText)menu.getMenu().findViewById(R.id.edit_comments);
+//						        Button ok = (Button)menu.getMenu().findViewById(R.id.ok_button);
+//						        ok.setOnClickListener(new OnClickListener() {
+//									
+//									@Override
+//									public void onClick(View v) {
+//										if(ed.getText().toString().trim().length()<1)
+//										 {
+//											 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+//										 }
+//										 else
+//										 {
+//											 
+//											 CommentsObject new_comment = new CommentsObject();
+//											 new_comment.toPost(post.getObjectId());
+//											 new_comment.setText(ed.getText().toString().trim());
+//											 new_comment.saveInBackground(new SaveCallback() {
 //												
-//											}
-//										});
-//										 ed.setText("");
-//									 }
-//								}
-//							});
-//					}
-//				});
-	            
-	            //Favorite button
-	            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
-	            
-	            if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
-	            	bfav.setImageResource(drawable.star_big_on);
-	            }
-	            
-	            bfav.setOnClickListener(new OnClickListener(){
-	            	
-	            	public void onClick(View v){
-	            	    	
-	            		ParseUser.getCurrentUser().put(post.getObjectId(), 1);
-	            		ParseUser.getCurrentUser().saveInBackground();
-	            		bfav.setImageResource(drawable.star_big_on);
-	            	    		            		  
-	            	}
-	            });
-	            
-	            // Empathize Button.
-	            final ImageButton bemp = (ImageButton) view.findViewById(R.id.btnEmpathize);
-	            
-	            bemp.setOnClickListener(new OnClickListener(){
+//												@Override
+//												public void done(ParseException e) {
+//													// TODO Auto-generated method stub
+//													if(e==null)
+//													{
+//														retrieve_comments(post, comments_list);
+//														Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+//													}
+//													else
+//													{
+//														Log.d("error while sending", e.getMessage().toString());
+//														Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+//													}
+//													
+//												}
+//											});
+//											 ed.setText("");
+//										 }
+//									}
+//								});
+//						}
+//					});
+		            
+		            //Favorite button
+		            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
+		            
+		            if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
+		            	bfav.setImageResource(drawable.star_big_on);
+		            }
+		            
+		            bfav.setOnClickListener(new OnClickListener(){
+		            	
+		            	public void onClick(View v){
+		            	    	
+		            		ParseUser.getCurrentUser().put(post.getObjectId(), 1);
+		            		ParseUser.getCurrentUser().saveInBackground();
+		            		bfav.setImageResource(drawable.star_big_on);
+		            	    		            		  
+		            	}
+		            });
+		            
+		            // Empathize Button.
+		            final ImageButton bemp = (ImageButton) view.findViewById(R.id.btnEmpathize);
+		            
+		            bemp.setOnClickListener(new OnClickListener(){
 
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
-							ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-							count.setText(""+(post.no_of_empathizes()+1));
-	            	    	// Retrieve the object by id
-	            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
-	            	    	  public void done(BuzzboxPost newquery, ParseException e) {
-	            	    	    if (e == null) {
-	            	    	      
-	            	    	    int temp = post.no_of_empathizes()+1;  
-	            	    	    newquery.put("NoOfEmpathizes",temp);
-	            	    	    int co = Integer.parseInt(count.getText().toString())+1;
-	            	    	    count.setText(""+co);
-	            	    	    newquery.saveInBackground();
-	            	    	    ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
-	            	    	    ParseUser.getCurrentUser().saveInBackground();
-	            	    	   
-	            	    	    }
-	            	    	  }
-	            	    	});
-						
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
+								ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+								count.setText(""+(post.no_of_empathizes()+1));
+		            	    	// Retrieve the object by id
+		            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
+		            	    	  public void done(BuzzboxPost newquery, ParseException e) {
+		            	    	    if (e == null) {
+		            	    	      
+		            	    	    int temp = post.no_of_empathizes()+1;  
+		            	    	    newquery.put("NoOfEmpathizes",temp);
+		            	    	    int co = Integer.parseInt(count.getText().toString())+1;
+		            	    	    count.setText(""+co);
+		            	    	    newquery.saveInBackground();
+		            	    	    ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
+		            	    	    ParseUser.getCurrentUser().saveInBackground();
+		            	    	   
+		            	    	    }
+		            	    	  }
+		            	    	});
+							
+							}
+							else{
+								Toast mtoast = Toast.makeText(MainActivity.this, "This post is Already Empathized.", Toast.LENGTH_SHORT);
+					 		 	 mtoast.show();
+							}
 						}
-						else{
-							Toast mtoast = Toast.makeText(MainActivity.this, "This post is Already Empathized.", Toast.LENGTH_SHORT);
-				 		 	 mtoast.show();
-						}
-					}
-	            	
-	            });
-	            
-	            //Send private message
-	            final ImageButton message = (ImageButton) view.findViewById(R.id.privatemessage);
-	            
-	            message.setOnClickListener(new OnClickListener(){
+		            	
+		            });
+		            
+		            //Send private message
+		            final ImageButton message = (ImageButton) view.findViewById(R.id.privatemessage);
+		            
+		            message.setOnClickListener(new OnClickListener(){
 
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						
-						final Dialog dialog = new Dialog(con);
-						 dialog.setContentView(R.layout.new_message);
-						 dialog.setTitle("New Message");
-						 Button done_but = (Button) dialog.findViewById(R.id.done);
-						 final EditText message = (EditText)dialog.findViewById(R.id.message);
-						 
-						 	//send button clicked
-							 done_but.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							
+							final Dialog dialog = new Dialog(con);
+							 dialog.setContentView(R.layout.new_message);
+							 dialog.setTitle("New Message");
+							 Button done_but = (Button) dialog.findViewById(R.id.done);
+							 final EditText message = (EditText)dialog.findViewById(R.id.message);
+							 
+							 	//send button clicked
+								 done_but.setOnClickListener(new OnClickListener() {
 
-								 @Override
-								 public void onClick(View v) {
-									 //send function
-									 if(message.getText().toString().trim().length()<1)
-									 {
-										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-									 }
-									 else
-									 {
-										 MessageObject new_Message = new MessageObject();
-										 new_Message.toUserObjectID(post.getUser().getObjectId());
-										 new_Message.setText(message.getText().toString().trim());
-										 new_Message.setType("via_post");
-										 new_Message.setViaPost(post.getText());
-										 new_Message.saveInBackground(new SaveCallback() {
-											
-											@Override
-											public void done(ParseException e) {
-												// TODO Auto-generated method stub
-												if(e==null)
-												{
-													Toast.makeText(con, "Successfully Sent", Toast.LENGTH_SHORT).show();
-												}
-												else
-												{
-													Log.d("error while sending", e.getMessage().toString());
-													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-												}
+									 @Override
+									 public void onClick(View v) {
+										 //send function
+										 if(message.getText().toString().trim().length()<1)
+										 {
+											 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+										 }
+										 else
+										 {
+											 MessageObject new_Message = new MessageObject();
+											 new_Message.toUserObjectID(post.getUser().getObjectId());
+											 new_Message.setText(message.getText().toString().trim());
+											 new_Message.setType("via_post");
+											 new_Message.setViaPost(post.getText());
+											 new_Message.saveInBackground(new SaveCallback() {
 												
-											}
-										});
+												@Override
+												public void done(ParseException e) {
+													// TODO Auto-generated method stub
+													if(e==null)
+													{
+														Toast.makeText(con, "Successfully Sent", Toast.LENGTH_SHORT).show();
+													}
+													else
+													{
+														Log.d("error while sending", e.getMessage().toString());
+														Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+													}
+													
+												}
+											});
+										 }
+										 dialog.dismiss();
 									 }
-									 dialog.dismiss();
-								 }
-							 });
-							 dialog.show();
-//						
-					}
-	            	
-	            });
-	            return view;
-	          }
-	        };
-
-		        setList(posts);
+								 });
+								 dialog.show();
+//							
+						}
+		            	
+		            });
+		            return view;
+		          }
+		        };
+	        
+	        setList(posts);
 		        
 	}
 	
