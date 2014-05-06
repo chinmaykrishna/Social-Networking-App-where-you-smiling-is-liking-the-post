@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
     private Context con;
     private static String Post;
 	private ParseQueryAdapter<BuzzboxPost> posts;
-	private SlidingMenu menu, menuleft, menuright;
+	private SlidingMenu menu, menuleft, menuright , menuBottom;
 	private static boolean logout=false;
 
 	@Override
@@ -255,58 +255,58 @@ public class MainActivity extends Activity {
 	            //comment button pressed
 	            final Button comment_but = (Button)view.findViewById(R.id.comment);
 	            
-	            comment_but.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						//toggle slider
-						menu.toggle();
-						
-						//retrieve comments
-						final ListView comments_list = (ListView)menu.getMenu().findViewById(R.id.comments_list);
-						retrieve_comments(post, comments_list);
-					        //sending a new comment
-					        
-					        final EditText ed = (EditText)menu.getMenu().findViewById(R.id.edit_comments);
-					        Button ok = (Button)menu.getMenu().findViewById(R.id.ok_button);
-					        ok.setOnClickListener(new OnClickListener() {
-								
-								@Override
-								public void onClick(View v) {
-									if(ed.getText().toString().trim().length()<1)
-									 {
-										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-									 }
-									 else
-									 {
-										 
-										 CommentsObject new_comment = new CommentsObject();
-										 new_comment.toPost(post.getObjectId());
-										 new_comment.setText(ed.getText().toString().trim());
-										 new_comment.saveInBackground(new SaveCallback() {
-											
-											@Override
-											public void done(ParseException e) {
-												// TODO Auto-generated method stub
-												if(e==null)
-												{
-													retrieve_comments(post, comments_list);
-													Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
-												}
-												else
-												{
-													Log.d("error while sending", e.getMessage().toString());
-													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-												}
-												
-											}
-										});
-										 ed.setText("");
-									 }
-								}
-							});
-					}
-				});
+//	            comment_but.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View v) {
+//						//toggle slider
+//						menu.toggle();
+//						
+//						//retrieve comments
+//						final ListView comments_list = (ListView)menu.getMenu().findViewById(R.id.comments_list);
+//						retrieve_comments(post, comments_list);
+//					        //sending a new comment
+//					        
+//					        final EditText ed = (EditText)menu.getMenu().findViewById(R.id.edit_comments);
+//					        Button ok = (Button)menu.getMenu().findViewById(R.id.ok_button);
+//					        ok.setOnClickListener(new OnClickListener() {
+//								
+//								@Override
+//								public void onClick(View v) {
+//									if(ed.getText().toString().trim().length()<1)
+//									 {
+//										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+//									 }
+//									 else
+//									 {
+//										 
+//										 CommentsObject new_comment = new CommentsObject();
+//										 new_comment.toPost(post.getObjectId());
+//										 new_comment.setText(ed.getText().toString().trim());
+//										 new_comment.saveInBackground(new SaveCallback() {
+//											
+//											@Override
+//											public void done(ParseException e) {
+//												// TODO Auto-generated method stub
+//												if(e==null)
+//												{
+//													retrieve_comments(post, comments_list);
+//													Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+//												}
+//												else
+//												{
+//													Log.d("error while sending", e.getMessage().toString());
+//													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+//												}
+//												
+//											}
+//										});
+//										 ed.setText("");
+//									 }
+//								}
+//							});
+//					}
+//				});
 	            
 	            //Favorite button
 	            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
@@ -887,16 +887,16 @@ public class MainActivity extends Activity {
 	  //Function to configure slider
 	  private void config_slider()
 	  {
-		  	//configuring slider for comments
-			menu = new SlidingMenu(this);
-	        menu.setMode(SlidingMenu.RIGHT);
-	        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-	        menu.setShadowWidthRes(R.dimen.shadow_length);
-	        menu.setShadowDrawable(R.drawable.shadow);
-	        menu.setBehindOffsetRes(R.dimen.behind_offset);
-	        menu.setFadeDegree(0.35f);
-	        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-	        menu.setMenu(R.layout.slider_layout);
+//		  	//configuring slider for comments
+//			menu = new SlidingMenu(this);
+//	        menu.setMode(SlidingMenu.RIGHT);
+//	        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+//	        menu.setShadowWidthRes(R.dimen.shadow_length);
+//	        menu.setShadowDrawable(R.drawable.shadow);
+//	        menu.setBehindOffsetRes(R.dimen.behind_offset);
+//	        menu.setFadeDegree(0.35f);
+//	        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+//	        menu.setMenu(R.layout.slider_layout);
 	        
 	        menuleft = new SlidingMenu(this);
 	        menuleft.setMode(SlidingMenu.LEFT);
@@ -907,6 +907,7 @@ public class MainActivity extends Activity {
 	        menuleft.setFadeDegree(0.35f);
 	        menuleft.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 	        menuleft.setMenu(R.layout.profile);
+		    
 	  }
 	  
 	  @Override
