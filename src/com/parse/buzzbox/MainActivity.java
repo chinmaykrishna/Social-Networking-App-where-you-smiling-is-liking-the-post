@@ -240,7 +240,8 @@ public class MainActivity extends Activity {
 		        
 		        // Set up the query adapter
 		        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
-		          @Override
+		          @SuppressWarnings("deprecation")
+				@Override
 		          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
 		            
 		            view = View.inflate(getContext(), R.layout.buzzbox_post_item, null);
@@ -249,11 +250,15 @@ public class MainActivity extends Activity {
 		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
 		            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
 		            ImageView im = (ImageView) view.findViewById(R.id.imageView1);
+		            TextView date = (TextView) view.findViewById(R.id.date);
+		            TextView time = (TextView) view.findViewById(R.id.time);
 		            
 		            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 		            // contentView.setBackground();  // We will do this to show the image.
 		            
 		            contentView.setText(post.getText());
+		            date.setText(""+post.getCreatedAt().getDate()+"/"+post.getCreatedAt().getMonth()+"/"+post.getCreatedAt().getYear());
+		            time.setText(post.getCreatedAt().getHours()+":"+post.getCreatedAt().getMinutes());
 		            view.setOnTouchListener(new OnSwipeTouchListener(con){
 		            	
 		            	public void onSwipeTop() {
@@ -368,10 +373,17 @@ public class MainActivity extends Activity {
 		            bfav.setOnClickListener(new OnClickListener(){
 		            	
 		            	public void onClick(View v){
-		            	    	
-		            		ParseUser.getCurrentUser().put(post.getObjectId(), 1);
-		            		ParseUser.getCurrentUser().saveInBackground();
-		            		bfav.setImageResource(drawable.star_big_on);
+		            	    
+		            		if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
+		            			ParseUser.getCurrentUser().put(post.getObjectId(), 0);
+			            		ParseUser.getCurrentUser().saveInBackground();
+		            			bfav.setImageResource(drawable.star_big_off);
+				            }
+		            		else{
+			            		ParseUser.getCurrentUser().put(post.getObjectId(), 1);
+			            		ParseUser.getCurrentUser().saveInBackground();
+			            		bfav.setImageResource(drawable.star_big_on);
+		            		}
 		            	    		            		  
 		            	}
 		            });
@@ -880,6 +892,111 @@ public class MainActivity extends Activity {
 			 });
 
 			 dialog.show();
+		 }
+		 else if(item.getItemId()==R.id.exclusive){
+			 
+			 flag=1;
+			  setQuery(p);
+		 }
+		 
+		 else if(item.getItemId()==R.id.search){
+			 
+			 final Dialog dialog = new Dialog(this);
+			 dialog.setContentView(R.layout.change_loc);
+			 dialog.setTitle("Change Location");	
+			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
+			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+
+			 //cancel button clicked
+			 dialogButtonC.setOnClickListener(new OnClickListener() {
+
+				 @Override
+				 public void onClick(View v) {
+					 dialog.cancel();
+				 }
+			 });
+
+			 //Go button clicked
+			 dialogButtonA.setOnClickListener(new OnClickListener() {
+				 @Override
+				 public void onClick(View v) {
+					 EditText location = (EditText)dialog.findViewById(R.id.location);
+					 location.setInputType(InputType.TYPE_CLASS_TEXT);
+					 
+					 String loc = location.getText().toString();
+					 if(!(loc.isEmpty())){
+						 loc = loc.replace(" ", "+");
+						 new FindPlace().execute(loc);
+			
+					 }
+					 else{
+			 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
+			 		 	 mtoast.show();
+					 }
+				 dialog.dismiss();
+
+
+				 }
+
+			 });
+
+			 dialog.show();
+		 }
+		 
+		 else if(item.getItemId()==R.id.post){
+			 
+			 final Dialog dialog = new Dialog(this);
+			 dialog.setContentView(R.layout.new_post);
+			 dialog.setTitle("New Post");
+			 Button done_but = (Button) dialog.findViewById(R.id.done);
+			 final EditText message = (EditText)dialog.findViewById(R.id.message);
+			 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
+			 
+			 	//done button clicked
+				 done_but.setOnClickListener(new OnClickListener() {
+
+					 @Override
+					 public void onClick(View v) {
+						 //post function
+						 if(message.getText().toString().trim().length()<1)
+						 {
+							 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+						 }
+						 else
+						 {
+							 //Postflag=1;
+							 Post = message.getText().toString();
+							 PostBuzz(p);
+							 //String loc = (locat.getText().toString()).replace(" ","+");
+							 //new FindPlace().execute(loc);						 
+							
+						 }
+						 dialog.dismiss();
+					 }
+				 });
+
+				 //Choose background button clicked
+//				 choose_bg.setOnClickListener(new OnClickListener() {
+//					 @Override
+//					 public void onClick(View v) {
+//						 //choose_bg function
+//						 Intent i = new Intent(con,Choose_bg.class);
+//						 startActivity(i);
+//					 }
+	//
+//				 });
+
+				 dialog.show();	
+		 }
+		 
+		 else if(item.getItemId()==R.id.profile){
+			 
+			 MyProfile my = new MyProfile(this);
+			  Intent i = new Intent(this,my.getClass());
+			  startActivity(i);
+			  if(logout){
+				  finish();
+			  }
 		 }
 		 return true;
 		}

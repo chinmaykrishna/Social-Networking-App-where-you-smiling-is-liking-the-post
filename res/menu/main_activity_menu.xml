@@ -17,5 +17,17 @@
 	    android:title="Change Radius"
 	    android:id="@+id/changeradius"
 	    />
+	<item 
+	    android:title="Exclusive"
+	    android:id="@+id/exclusive"/>
+	<item 
+	    android:title="Search"
+	    android:id="@+id/search"/>
+	<item 
+	    android:title="Post"
+	    android:id="@+id/post"/>
+	<item 
+	    android:title="Profile"
+	    android:id="@+id/profile"/>
 	
 </menu>
