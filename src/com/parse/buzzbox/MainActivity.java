@@ -292,7 +292,52 @@ public class MainActivity extends Activity {
 		                }
 		                public void onSwipeLeft() {
 		                	
-		                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+		                    menuright.toggle();
+		                    //ParseQueryAdapter<MessageObject> Messages;
+		                	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
+		                 // Set up a customized query
+		        		    ParseQueryAdapter.QueryFactory<MessageObject> factory =
+		        		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
+		        		          public ParseQuery<MessageObject> create() {
+		        		            
+		        		            ParseQuery<MessageObject> query = MessageObject.getQuery();
+		        		            query.orderByDescending("createdAt");
+		        		            query.whereEqualTo("toobjectid", ParseUser.getCurrentUser().getObjectId());
+		        		            return query;
+		        		          }
+		        		        };
+		        		   
+		        		        // Set up the query adapter
+		        		        ParseQueryAdapter<MessageObject> Messages = new ParseQueryAdapter<MessageObject>(con, factory) {
+		        		        	@Override
+		        		          public View getItemView(final MessageObject message, View view, ViewGroup parent) {
+		        		            
+		        		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
+		        		            
+		        		            TextView message_text = (TextView) view.findViewById(R.id.message);
+		        		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
+		        		            
+		        		            message_text.setText(message.getText());
+		        		            if(message.getType().equals("via_post"))
+		        		            via_post.setText("Via Post: "+message.getViaPost());
+		        		            return view;
+		        		          }
+		        		        };
+		        			    list.setAdapter(Messages);
+		        			    
+		        			    View view2 = (View)menuright.getMenu();
+			                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+			                		public void onSwipeRight() {
+			                			onCustomBackPressed();
+			    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+			    	                }
+			                		
+			                		public boolean onTouch(View v, MotionEvent event) {
+			        	                return gestureDetector.onTouchEvent(event);
+			        	            }
+			                	});
+		        			    
+		                	//Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
 		                }
 		                public void onSwipeBottom() {
 		                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
@@ -1074,6 +1119,16 @@ public class MainActivity extends Activity {
 	        menuleft.setFadeDegree(0.35f);
 	        menuleft.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 	        menuleft.setMenu(R.layout.profile);
+	        
+	        menuright = new SlidingMenu(this);
+	        menuright.setMode(SlidingMenu.RIGHT);
+	        menuright.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+	        menuright.setShadowWidthRes(R.dimen.shadow_length);
+	        menuright.setShadowDrawable(R.drawable.shadow);
+	        menuright.setBehindOffsetRes(R.dimen.behind_offset);
+	        menuright.setFadeDegree(0.35f);
+	        menuright.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+	        menuright.setMenu(R.layout.my_messages);
 		    
 	  }
 	  
@@ -1097,7 +1152,11 @@ public class MainActivity extends Activity {
 			} else if (menuleft != null
 					&& menuleft.isMenuShowing()) {
 				menuleft.toggle();
-			}			
+			}
+			else if (menuright != null
+					&& menuright.isMenuShowing()) {
+				menuright.toggle();
+			}
 			 else {
 				this.onBackPressed();
 			}
