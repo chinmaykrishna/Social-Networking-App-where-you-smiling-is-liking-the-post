@@ -348,7 +348,7 @@ public class MainActivity extends Activity {
 		            }
 		            });
 		            
-		            count.setText(""+post.no_of_empathizes());
+		            
 		            usernameView.setText(post.getUser().getUsername());
 		            im.setImageResource(post.getUser().getInt("Avatar"));
 		            
@@ -435,7 +435,7 @@ public class MainActivity extends Activity {
 		            
 		            // Empathize Button.
 		            final ImageButton bemp = (ImageButton) view.findViewById(R.id.btnEmpathize);
-		            
+		            count.setText(""+post.no_of_empathizes());
 		            bemp.setOnClickListener(new OnClickListener(){
 
 						@Override
@@ -444,22 +444,12 @@ public class MainActivity extends Activity {
 							if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
 								ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
 								count.setText(""+(post.no_of_empathizes()+1));
-		            	    	// Retrieve the object by id
-		            	    	query.getInBackground(post.getObjectId(), new GetCallback<BuzzboxPost>() {
-		            	    	  public void done(BuzzboxPost newquery, ParseException e) {
-		            	    	    if (e == null) {
-		            	    	      
-		            	    	    int temp = post.no_of_empathizes()+1;  
-		            	    	    newquery.put("NoOfEmpathizes",temp);
-		            	    	    int co = Integer.parseInt(count.getText().toString())+1;
-		            	    	    count.setText(""+co);
-		            	    	    newquery.saveInBackground();
-		            	    	    ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
-		            	    	    ParseUser.getCurrentUser().saveInBackground();
-		            	    	   
-		            	    	    }
-		            	    	  }
-		            	    	});
+								
+								post.put("NoOfEmpathizes",(post.no_of_empathizes()+1));
+								post.saveInBackground();
+		            	    	
+		            	    	ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
+	            	    	    ParseUser.getCurrentUser().saveInBackground();
 							
 							}
 							else{
