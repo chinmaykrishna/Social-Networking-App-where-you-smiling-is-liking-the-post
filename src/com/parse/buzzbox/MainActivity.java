@@ -257,7 +257,7 @@ public class MainActivity extends Activity {
 		            // contentView.setBackground();  // We will do this to show the image.
 		            
 		            contentView.setText(post.getText());
-		            date.setText(""+post.getCreatedAt().getDate()+"/"+post.getCreatedAt().getMonth()+"/"+post.getCreatedAt().getYear());
+		            date.setText(""+post.get("createdAt"));
 		            time.setText(post.getCreatedAt().getHours()+":"+post.getCreatedAt().getMinutes());
 		            view.setOnTouchListener(new OnSwipeTouchListener(con){
 		            	
@@ -931,7 +931,7 @@ public class MainActivity extends Activity {
 		 else if(item.getItemId()==R.id.exclusive){
 			 
 			 flag=1;
-			  setQuery(p);
+			 setQuery(p);
 		 }
 		 
 		 else if(item.getItemId()==R.id.search){
@@ -984,6 +984,9 @@ public class MainActivity extends Activity {
 			 dialog.setContentView(R.layout.new_post);
 			 dialog.setTitle("New Post");
 			 Button done_but = (Button) dialog.findViewById(R.id.done);
+			 currentLocation = this.getLastKnownLocation();
+			 System.out.println(currentLocation.toString());
+			 p=geoPointFromLocation(currentLocation);
 			 final EditText message = (EditText)dialog.findViewById(R.id.message);
 			 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
 			 
@@ -1035,6 +1038,7 @@ public class MainActivity extends Activity {
 		 }
 		 return true;
 		}
+	  
 	  private Location getLastKnownLocation() {
 		    List<String> providers = locationManager.getProviders(true);
 		    Location bestLocation = null;
