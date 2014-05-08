@@ -2,7 +2,10 @@ package com.parse.buzzbox;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -257,8 +260,17 @@ public class MainActivity extends Activity {
 		            // contentView.setBackground();  // We will do this to show the image.
 		            
 		            contentView.setText(post.getText());
-		            date.setText(""+post.get("createdAt"));
-		            time.setText(post.getCreatedAt().getHours()+":"+post.getCreatedAt().getMinutes());
+		            Date dtime = post.getCreatedAt();
+		            Date ddate = dtime;
+		            SimpleDateFormat dateFormattime = new SimpleDateFormat("hh:mm");
+		            SimpleDateFormat dateFormatdate = new SimpleDateFormat("dd-MM-yyyy");
+		            dateFormattime.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+		            dateFormatdate.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+		            String timeString = dateFormattime.format(dtime);
+		            String dateString = dateFormatdate.format(ddate);
+		            		            
+		            date.setText(dateString);
+		            time.setText(timeString);
 		            view.setOnTouchListener(new OnSwipeTouchListener(con){
 		            	
 		            	public void onSwipeTop() {
