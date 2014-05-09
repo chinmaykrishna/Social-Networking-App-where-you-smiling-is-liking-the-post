@@ -41,10 +41,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,6 +78,7 @@ public class MainActivity extends Activity {
 	private ListView post_list; 
 	private SlidingUpPanelLayout comment_slider;
 	private com.parse.buzzbox.HorizontalListView hori_list;
+	private int height_actual;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,18 @@ public class MainActivity extends Activity {
 			 finish();
 			}
 		setContentView(R.layout.activity_main);
+		
+		
+		// to get actual screen size excluding paralax
+		final LinearLayout layout = (LinearLayout) findViewById(R.id.main_screen);
+		final ViewTreeObserver observer= layout.getViewTreeObserver();
+		observer.addOnGlobalLayoutListener(
+		    new ViewTreeObserver.OnGlobalLayoutListener() {
+		        @Override
+		            public void onGlobalLayout() {
+		                height_actual = layout.getHeight();
+		            }
+		        });
 		if(ParseUser.getCurrentUser()!=null)
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
 			finish();
@@ -292,7 +307,7 @@ public class MainActivity extends Activity {
 				@Override
 		          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
 		            
-		            view = View.inflate(getContext(), R.layout.buzzbox_post_item, null);
+		            view = new PostItem_custom(con, height_actual);
 		            
 		            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
@@ -1341,4 +1356,6 @@ public class MainActivity extends Activity {
 			        };
 			        comments_list.setAdapter(Comments_adapter);
 		}
+		
+		
 }

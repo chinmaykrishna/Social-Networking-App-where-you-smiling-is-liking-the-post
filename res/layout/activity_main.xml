@@ -20,6 +20,7 @@
     sothree:dragView="@+id/name">
 
     <LinearLayout
+        	android:id="@+id/main_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -27,7 +28,7 @@
 	    <ListView
 	        android:id="@+id/postsView"
 	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content" >
+	        android:layout_height="match_parent" >
 	    </ListView>
     </LinearLayout>
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp"
+        android:layout_weight="3" >
 
         <TextView
             android:id="@+id/usernameView"
@@ -19,8 +21,8 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:maxHeight="5px"
@@ -30,19 +32,19 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imageView1"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="34dp"
-            android:text="date" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="11dp"
+            android:text="11-11-2011" />
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imageView1"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="14dp"
-            android:text="time" />
+            android:layout_alignBaseline="@+id/date"
+            android:layout_alignBottom="@+id/date"
+            android:layout_alignParentRight="true"
+            android:text="11:11 Am" />
 
     </RelativeLayout>
 
@@ -51,11 +53,10 @@
 	    <TextView
 	        android:id="@+id/contentView"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="0dp"
+	        android:layout_weight="5"
 	        android:text="Message"
-	        android:textColor="@color/abs__background_holo_light"
 	        android:textStyle="bold"
-	        android:background="@drawable/hidden"
 	        android:textSize="24dp"
 	        android:gravity="center"	        
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -65,34 +66,35 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0sp"
+        android:layout_weight="1"
         android:id="@+id/rlbtns" >
     
     <ImageButton
         android:id="@+id/favourite"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:src="@android:drawable/star_big_off" />
 
     <TextView
         android:id="@+id/Count_of_Empathizes"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_toRightOf="@+id/btnEmpathize"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageButton
         android:id="@+id/btnEmpathize"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:src="@android:drawable/ic_menu_view" />
 
     <ImageButton
         android:id="@+id/privatemessage"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:onClick="private_message"
         android:src="@android:drawable/sym_action_email" />
@@ -102,8 +104,9 @@
     <Button
         android:id="@+id/comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:text="Comment" />
 
 </LinearLayout>
