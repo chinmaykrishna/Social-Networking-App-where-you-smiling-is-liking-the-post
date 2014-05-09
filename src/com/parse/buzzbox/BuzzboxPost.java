@@ -38,9 +38,10 @@ public class BuzzboxPost extends ParseObject {
 	  return getInt(key);
   }
   
-  public void Init(String key){
+  public void Init(String key, int mood){
 	  put(key,0);
 	  put("IsEmpathized","false");
+	  put("mood",mood);
 	  //put("NoOfEmpathizes",val);
   }
   

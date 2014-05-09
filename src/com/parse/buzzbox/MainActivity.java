@@ -3,6 +3,7 @@ package com.parse.buzzbox;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -19,10 +20,12 @@ import org.json.JSONObject;
 
 import android.R.drawable;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -31,7 +34,9 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,11 +45,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +68,7 @@ import com.parse.buzzbox.FetchLocation.LocationResult;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
-	private static int SEARCH_RADIUS=100,flag=0, Postflag=0, index=0;
+	private static int SEARCH_RADIUS=100,flag=0, Postflag=1, index=0;
 	private Location lastLocation = null;
     private Location currentLocation = null;
     protected double Latitude,Longitude;
@@ -260,6 +268,9 @@ public class MainActivity extends Activity {
 		            // contentView.setBackground();  // We will do this to show the image.
 		            
 		            contentView.setText(post.getText());
+		            
+		            contentView.setBackgroundResource(post.getInt("mood"));
+		            
 		            Date dtime = post.getCreatedAt();
 		            Date ddate = dtime;
 		            SimpleDateFormat dateFormattime = new SimpleDateFormat("hh:mm");
@@ -615,7 +626,7 @@ public class MainActivity extends Activity {
 					 {
 						 //Postflag=1;
 						 Post = message.getText().toString();
-						 PostBuzz(p);
+						 //PostBuzz(p);
 						 //String loc = (locat.getText().toString()).replace(" ","+");
 						 //new FindPlace().execute(loc);						 
 						
@@ -649,45 +660,45 @@ public class MainActivity extends Activity {
 	  }
 	  
 	  
-	  public void PostBuzz(final ParseGeoPoint par){
-		  
-		  	// Postflag=0;
-		  	 BuzzboxPost new_post = new BuzzboxPost();
-			 new_post.setUser(ParseUser.getCurrentUser());
-			 
-			 new_post.setText(Post);
-			 new_post.set_no_of_empathizes(0);
-			 new_post.Init(ParseUser.getCurrentUser().getUsername());
-			 
-			 int temp = new_post.getNoofPosts()+1;
-			 ParseUser.getCurrentUser().put("noOfPosts",temp);
-			 ParseUser.getCurrentUser().saveInBackground();
-			 
-			 new_post.setLocation(par);
-			 final ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
-			 pdLoading.setMessage("\tPosting your Buzz...\n \t Please Wait!!");
-			 new_post.saveInBackground(new SaveCallback() {
-				
-				@Override
-				public void done(ParseException e) {
-					// TODO Auto-generated method stub
-					if(e==null)
-					{
-						pdLoading.dismiss();
-						Toast.makeText(con, "Successfully posted.. Updating your List now!", Toast.LENGTH_SHORT).show();
-						setQuery(par);	// Update the List.
-					}
-					else
-					{
-						Log.d("error post", e.getMessage().toString());
-						Toast.makeText(con, "Posting failed. Please check internet connection"+e.toString(), Toast.LENGTH_LONG).show();
-					}
-					
-				}
-			});
-			 
-			 pdLoading.show();
-	  }
+//	  public void PostBuzz(final ParseGeoPoint par){
+//		  
+//		  	// Postflag=0;
+//		  	 BuzzboxPost new_post = new BuzzboxPost();
+//			 new_post.setUser(ParseUser.getCurrentUser());
+//			 
+//			 new_post.setText(Post);
+//			 new_post.set_no_of_empathizes(0);
+//			 new_post.Init(ParseUser.getCurrentUser().getUsername());
+//			 
+//			 int temp = new_post.getNoofPosts()+1;
+//			 ParseUser.getCurrentUser().put("noOfPosts",temp);
+//			 ParseUser.getCurrentUser().saveInBackground();
+//			 
+//			 new_post.setLocation(par);
+//			 final ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
+//			 pdLoading.setMessage("\tPosting your Buzz...\n \t Please Wait!!");
+//			 new_post.saveInBackground(new SaveCallback() {
+//				
+//				@Override
+//				public void done(ParseException e) {
+//					// TODO Auto-generated method stub
+//					if(e==null)
+//					{
+//						pdLoading.dismiss();
+//						Toast.makeText(con, "Successfully posted.. Updating your List now!", Toast.LENGTH_SHORT).show();
+//						setQuery(par);	// Update the List.
+//					}
+//					else
+//					{
+//						Log.d("error post", e.getMessage().toString());
+//						Toast.makeText(con, "Posting failed. Please check internet connection"+e.toString(), Toast.LENGTH_LONG).show();
+//					}
+//					
+//				}
+//			});
+//			 
+//			 pdLoading.show();
+//	  }
 	  
 	  //Menu configuration
 	  public boolean onCreateOptionsMenu(Menu menu){
@@ -780,15 +791,16 @@ public class MainActivity extends Activity {
 						ParseGeoPoint pa = new ParseGeoPoint(Latitude,Longitude);
 						add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
 			     		
-						if(Postflag==0){
+						
 							currentLocation.setLatitude(Latitude);
 							currentLocation.setLongitude(Longitude);
 							p=geoPointFromLocation(currentLocation);
+							Postflag=0;
 							setQuery(pa);
 							add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
 							Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
 				     		mtoast.show();
-						}
+						
 //						else{
 //							PostBuzz(pa);
 //							Toast mtoast = Toast.makeText(MainActivity.this,"Posting through: " +add, Toast.LENGTH_SHORT);
@@ -992,51 +1004,106 @@ public class MainActivity extends Activity {
 		 
 		 else if(item.getItemId()==R.id.post){
 			 
-			 final Dialog dialog = new Dialog(this);
-			 dialog.setContentView(R.layout.new_post);
-			 dialog.setTitle("New Post");
-			 Button done_but = (Button) dialog.findViewById(R.id.done);
-			 currentLocation = this.getLastKnownLocation();
-			 System.out.println(currentLocation.toString());
-			 p=geoPointFromLocation(currentLocation);
-			 final EditText message = (EditText)dialog.findViewById(R.id.message);
-			 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
+			 if(Postflag==0){
+				 currentLocation = this.getLastKnownLocation();
+				 System.out.println(currentLocation.toString());
+				 p=geoPointFromLocation(currentLocation);
+				 Postflag=1;
+			 }
 			 
-			 	//done button clicked
-				 done_but.setOnClickListener(new OnClickListener() {
+			 newPost np = new newPost(p);
+			 Intent intent = new Intent(MainActivity.this, newPost.class);
+			 MainActivity.this.startActivity(intent);
+			 
+			 setQuery(p);
+			 
+//			 final Dialog dialog = new Dialog(this);
+//			 dialog.setContentView(R.layout.new_post);
+//			 dialog.setTitle("New Post");
+//			 Button done_but = (Button) dialog.findViewById(R.id.done);
+//			 
+//			 
 
-					 @Override
-					 public void onClick(View v) {
-						 //post function
-						 if(message.getText().toString().trim().length()<1)
-						 {
-							 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-						 }
-						 else
-						 {
-							 //Postflag=1;
-							 Post = message.getText().toString();
-							 PostBuzz(p);
-							 //String loc = (locat.getText().toString()).replace(" ","+");
-							 //new FindPlace().execute(loc);						 
-							
-						 }
-						 dialog.dismiss();
-					 }
-				 });
-
-				 //Choose background button clicked
-//				 choose_bg.setOnClickListener(new OnClickListener() {
+//			 
+//			 final EditText message = (EditText)dialog.findViewById(R.id.message);
+//			 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
+//			 
+//			 	//done button clicked
+//				 done_but.setOnClickListener(new OnClickListener() {
+//
 //					 @Override
 //					 public void onClick(View v) {
-//						 //choose_bg function
-//						 Intent i = new Intent(con,Choose_bg.class);
-//						 startActivity(i);
+//						 //post function
+//						 if(message.getText().toString().trim().length()<1)
+//						 {
+//							 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+//						 }
+//						 else
+//						 {
+//							 //Postflag=1;
+////							 Post = message.getText().toString();
+////							 PostBuzz(p);
+//							 dialog.dismiss();
+//							 AlertDialog.Builder builder = new AlertDialog.Builder(con);
+//						        TextView title = new TextView(con);
+//						        title.setText("Select your mood:");
+//						        title.setPadding(10, 10, 10, 10);
+//						        title.setGravity(Gravity.CENTER);
+//						        title.setTextColor(Color.rgb(0, 153, 204));
+//						        title.setTextSize(23);
+//						        builder.setCustomTitle(title);
+//						        
+//						        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//						        View layout_spinners = inflater.inflate(R.layout.spinner_layout,null);
+//						        builder.setView(layout_spinners);
+//						        builder.setCancelable(false);
+//						        builder.show();
+//						        
+//						         Spinner moods = (Spinner) dialog.findViewById(R.id.moods);
+//								 final ArrayList<String> listmoods = new ArrayList<String>();
+//								 listmoods.add("No Feelings!");
+//								 listmoods.add("Happy");
+//								 listmoods.add("Sad");
+//								 
+//								 ArrayAdapter<String> aa = new ArrayAdapter<String>(con,   android.R.layout.simple_spinner_item, listmoods);
+//								 aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+//								 moods.setAdapter(aa);
+//								 
+//								 moods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//								        @Override
+//								        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//								        	
+//								        	TextView finalmood = (TextView) dialog.findViewById(R.id.finalmood);
+//								        	//finalmood.setText(listmoods.get(position));
+//								        	
+//								        }
+//
+//								        @Override
+//								        public void onNothingSelected(AdapterView<?> parent) {
+//
+//								        }
+//								    });
+//							 
+//							 //String loc = (locat.getText().toString()).replace(" ","+");
+//							 //new FindPlace().execute(loc);						 
+//							
+//						 }
+//						 dialog.dismiss();
 //					 }
-	//
 //				 });
-
-				 dialog.show();	
+//
+//				 //Choose background button clicked
+////				 choose_bg.setOnClickListener(new OnClickListener() {
+////					 @Override
+////					 public void onClick(View v) {
+////						 //choose_bg function
+////						 Intent i = new Intent(con,Choose_bg.class);
+////						 startActivity(i);
+////					 }
+//	//
+////				 });
+//
+//				 dialog.show();	
 		 }
 		 
 		 else if(item.getItemId()==R.id.profile){

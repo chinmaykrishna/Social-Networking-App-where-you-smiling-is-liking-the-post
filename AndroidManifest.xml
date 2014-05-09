@@ -44,6 +44,9 @@
         <activity
             android:name="com.parse.buzzbox.MainActivity">
         </activity>
+        <activity
+            android:name="com.parse.buzzbox.newPost">
+        </activity>
  
         <activity
             android:name="com.parse.buzzbox.Private_message"

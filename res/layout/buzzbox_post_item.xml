@@ -33,7 +33,7 @@
             android:layout_alignBottom="@+id/imageView1"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="34dp"
-            android:text="TextView" />
+            android:text="date" />
 
         <TextView
             android:id="@+id/time"
@@ -42,7 +42,7 @@
             android:layout_alignBottom="@+id/imageView1"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="14dp"
-            android:text="TextView" />
+            android:text="time" />
 
     </RelativeLayout>
 
@@ -53,10 +53,11 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:text="Message"
-	        android:background="@drawable/background_without_logo"
+	        android:textColor="@color/abs__background_holo_light"
+	        android:textStyle="bold"
+	        android:background="@drawable/hidden"
 	        android:textSize="24dp"
-	        android:gravity="center_vertical"
-	        
+	        android:gravity="center"	        
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
 	    
 

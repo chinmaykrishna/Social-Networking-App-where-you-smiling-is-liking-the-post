@@ -24,13 +24,45 @@
 
         <requestFocus />
     </EditText>
+    
+     <TextView
+        android:id="@+id/feelings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:text="What are you feeling?"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+         >
 
+    </TextView>
+    
+    <Spinner
+        android:id="@+id/moods"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        >
+        
+    </Spinner>
+    
+    <TextView
+        android:id="@+id/finalmood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:hint="Mood"
+         >
+
+    </TextView>
 
     <Button
         android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:text="Post" />
 
 </LinearLayout>
