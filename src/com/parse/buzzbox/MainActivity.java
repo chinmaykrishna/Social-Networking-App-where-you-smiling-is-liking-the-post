@@ -65,6 +65,8 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.buzzbox.FetchLocation.LocationResult;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
@@ -79,6 +81,9 @@ public class MainActivity extends Activity {
 	private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu, menuleft, menuright , menuBottom;
 	private static boolean logout=false;
+	private ListView post_list; 
+	private SlidingUpPanelLayout comment_slider;
+	private com.parse.buzzbox.HorizontalListView hori_list;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +96,46 @@ public class MainActivity extends Activity {
 		if(ParseUser.getCurrentUser()!=null)
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
 			finish();
+		
+		post_list = (ListView)findViewById(R.id.postsView);
+		
+		//comment slider configuration
+		comment_slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_up);
+		
+		hori_list = (com.parse.buzzbox.HorizontalListView)findViewById(R.id.horizaontal_comments);
+		comment_slider.setPanelSlideListener(new PanelSlideListener() {
+			
+			@Override
+			public void onPanelSlide(View panel, float slideOffset) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPanelExpanded(View panel) {
+				int pos = post_list.getFirstVisiblePosition();
+				int size = post_list.getCount();
+				if(size>=1)
+				{
+					
+						BuzzboxPost post = posts.getItem(pos);
+						retrieve_comments(post, hori_list);
+										
+				}
+			}
+			
+			@Override
+			public void onPanelCollapsed(View panel) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPanelAnchored(View panel) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		//configure slider for comments
 		config_slider();
@@ -375,61 +420,62 @@ public class MainActivity extends Activity {
 		            usernameView.setText(post.getUser().getUsername());
 		            im.setImageResource(post.getUser().getInt("Avatar"));
 		            
-		            //comment button pressed
+		          //comment button pressed
 		            final Button comment_but = (Button)view.findViewById(R.id.comment);
 		            
-//		            comment_but.setOnClickListener(new OnClickListener() {
-//						
-//						@Override
-//						public void onClick(View v) {
-//							//toggle slider
-//							menu.toggle();
-//							
-//							//retrieve comments
-//							final ListView comments_list = (ListView)menu.getMenu().findViewById(R.id.comments_list);
-//							retrieve_comments(post, comments_list);
-//						        //sending a new comment
-//						        
-//						        final EditText ed = (EditText)menu.getMenu().findViewById(R.id.edit_comments);
-//						        Button ok = (Button)menu.getMenu().findViewById(R.id.ok_button);
-//						        ok.setOnClickListener(new OnClickListener() {
-//									
-//									@Override
-//									public void onClick(View v) {
-//										if(ed.getText().toString().trim().length()<1)
-//										 {
-//											 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-//										 }
-//										 else
-//										 {
-//											 
-//											 CommentsObject new_comment = new CommentsObject();
-//											 new_comment.toPost(post.getObjectId());
-//											 new_comment.setText(ed.getText().toString().trim());
-//											 new_comment.saveInBackground(new SaveCallback() {
-//												
-//												@Override
-//												public void done(ParseException e) {
-//													// TODO Auto-generated method stub
-//													if(e==null)
-//													{
-//														retrieve_comments(post, comments_list);
-//														Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
-//													}
-//													else
-//													{
-//														Log.d("error while sending", e.getMessage().toString());
-//														Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-//													}
-//													
-//												}
-//											});
-//											 ed.setText("");
-//										 }
-//									}
-//								});
-//						}
-//					});
+		            comment_but.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+						
+							
+							final Dialog dialog = new Dialog(con);
+							 dialog.setContentView(R.layout.new_message);
+							 dialog.setTitle("Comment");
+							 Button done_but = (Button) dialog.findViewById(R.id.done);
+							 final EditText message = (EditText)dialog.findViewById(R.id.message);
+							 
+							 	//send button clicked
+								 done_but.setOnClickListener(new OnClickListener() {
+
+									 @Override
+									 public void onClick(View v) {
+										 //send function
+										 if(message.getText().toString().trim().length()<1)
+										 {
+											 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+										 }
+										 else
+										 {
+											 CommentsObject new_comment = new CommentsObject();
+											 new_comment.toPost(post.getObjectId());
+											 new_comment.setText(message.getText().toString().trim());
+											 new_comment.setAuthor(post.getUser());
+											 new_comment.saveInBackground(new SaveCallback() {
+												
+												@Override
+												public void done(ParseException e) {
+													// TODO Auto-generated method stub
+													if(e==null)
+													{
+														
+														Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+													}
+													else
+													{
+														Log.d("error while sending", e.getMessage().toString());
+														Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+													}
+													
+												}
+											});
+										 }
+										 dialog.dismiss();
+									 }
+								 });
+								 dialog.show();
+						}
+					});
 		            
 		            //Favorite button
 		            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
@@ -1234,7 +1280,7 @@ public class MainActivity extends Activity {
 				this.onBackPressed();
 			}
 		}
-		public void retrieve_comments(final BuzzboxPost post, ListView comments_list)
+		public void retrieve_comments(final BuzzboxPost post, com.parse.buzzbox.HorizontalListView comments_list)
 		{
 			ParseQueryAdapter.QueryFactory<CommentsObject> factory1 =
 			        new ParseQueryAdapter.QueryFactory<CommentsObject>() {
@@ -1252,8 +1298,54 @@ public class MainActivity extends Activity {
 			            
 			            view = View.inflate(con, R.layout.comments_element, null);
 			            
-			            TextView message_text = (TextView) view.findViewById(R.id.comment_text);
+			            TextView date = (TextView) view.findViewById(R.id.date);
+			            TextView time = (TextView) view.findViewById(R.id.time);
+			            final ImageView im = (ImageView) view.findViewById(R.id.avatar);
 			            
+			            
+			            message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
+		                    public void done(ParseUser object, ParseException e) {
+		                         if(e==null)
+		                         {
+		                        	 im.setImageResource(object.getInt("Avatar"));
+		                         }
+		                         else
+		                         {
+		                        	 im.setImageResource(R.drawable.error);
+		                         }
+		                      }
+		                  });
+			            
+			            final TextView username = (TextView) view.findViewById(R.id.username);
+			            TextView message_text = (TextView) view.findViewById(R.id.comment_text);
+			            Date dtime = message.getCreatedAt();
+			            Date ddate = dtime;
+			            SimpleDateFormat dateFormattime = new SimpleDateFormat("hh:mm");
+			            SimpleDateFormat dateFormatdate = new SimpleDateFormat("dd-MM-yyyy");
+			            dateFormattime.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+			            dateFormatdate.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+			            String timeString = dateFormattime.format(dtime);
+			            String dateString = dateFormatdate.format(ddate);
+			            		            
+			            date.setText(dateString);
+			            time.setText(timeString);
+			            
+			            
+		            	message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
+		                    public void done(ParseUser object, ParseException e) {
+		                         if(e==null)
+		                         {
+		                        	 username.setText(object.getUsername());
+		                        	 username.setGravity(Gravity.CENTER_HORIZONTAL);
+		                         }
+		                         else
+		                         {
+		                        	 username.setText("");
+		                        	 
+		                         }
+		                      }
+		                  });
+						
 			            message_text.setText(message.getText());
 			           
 			            return view;
