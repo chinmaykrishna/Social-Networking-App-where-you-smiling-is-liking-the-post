@@ -3,7 +3,6 @@ package com.parse.buzzbox;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -20,12 +19,10 @@ import org.json.JSONObject;
 
 import android.R.drawable;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -36,7 +33,6 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,14 +41,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,16 +63,15 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 public class MainActivity extends Activity {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
-	private static int SEARCH_RADIUS=100,flag=0, Postflag=1, index=0;
+	private static int SEARCH_RADIUS=100,flag=0, Postflag=1;
 	private Location lastLocation = null;
     private Location currentLocation = null;
     protected double Latitude,Longitude;
     private LocationManager locationManager;
     private static ParseGeoPoint p;
     private Context con;
-    private static String Post;
-	private ParseQueryAdapter<BuzzboxPost> posts;
-	private SlidingMenu menu, menuleft, menuright , menuBottom;
+    private ParseQueryAdapter<BuzzboxPost> posts;
+	private SlidingMenu menu, menuleft, menuright;
 	private static boolean logout=false;
 	private ListView post_list; 
 	private SlidingUpPanelLayout comment_slider;
@@ -450,7 +442,7 @@ public class MainActivity extends Activity {
 											 CommentsObject new_comment = new CommentsObject();
 											 new_comment.toPost(post.getObjectId());
 											 new_comment.setText(message.getText().toString().trim());
-											 new_comment.setAuthor(post.getUser());
+											 new_comment.setAuthor(ParseUser.getCurrentUser());
 											 new_comment.saveInBackground(new SaveCallback() {
 												
 												@Override
@@ -511,7 +503,7 @@ public class MainActivity extends Activity {
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
 							if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
-								ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
+								BuzzboxPost.getQuery();
 								count.setText(""+(post.no_of_empathizes()+1));
 								
 								post.put("NoOfEmpathizes",(post.no_of_empathizes()+1));
@@ -670,11 +662,7 @@ public class MainActivity extends Activity {
 					 }
 					 else
 					 {
-						 //Postflag=1;
-						 Post = message.getText().toString();
-						 //PostBuzz(p);
-						 //String loc = (locat.getText().toString()).replace(" ","+");
-						 //new FindPlace().execute(loc);						 
+						 message.getText().toString();
 						
 					 }
 					 dialog.dismiss();
@@ -1057,7 +1045,7 @@ public class MainActivity extends Activity {
 				 Postflag=1;
 			 }
 			 
-			 newPost np = new newPost(p);
+			 new newPost(p);
 			 Intent intent = new Intent(MainActivity.this, newPost.class);
 			 MainActivity.this.startActivity(intent);
 			 
@@ -1311,7 +1299,7 @@ public class MainActivity extends Activity {
 		                         }
 		                         else
 		                         {
-		                        	 im.setImageResource(R.drawable.error);
+		                        	 //im.setImageResource(R.drawable.error);
 		                         }
 		                      }
 		                  });
