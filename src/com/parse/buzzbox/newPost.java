@@ -29,6 +29,28 @@ public class newPost extends Activity {
 	
 	static ParseGeoPoint pgp=null;
 	
+	private Integer[] moodIds = {
+            R.drawable.noemotion,
+            R.drawable.anger,
+            R.drawable.fear,
+            R.drawable.love,
+            R.drawable.depression,
+            R.drawable.sadness,
+            R.drawable.curious,
+            R.drawable.irritation,
+            R.drawable.worry,
+            R.drawable.happy,
+            R.drawable.sympathy,
+            R.drawable.relief,
+            R.drawable.hyper,
+            R.drawable.secritive,
+            R.drawable.sick,
+            R.drawable.nervous,
+            R.drawable.sleepy
+    };
+	
+	private static int moodindex=0;
+	
 	public newPost(){
 		
 	}
@@ -75,6 +97,7 @@ public class newPost extends Activity {
 		        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		        			        	
 		        	finalmood.setText(listmoods.get(position));
+		        	moodindex=position;
 		        			        	
 		        }
 
@@ -107,7 +130,7 @@ public class newPost extends Activity {
 					 
 					 new_post.setText(Post);
 					 new_post.set_no_of_empathizes(0);
-					 new_post.Init(ParseUser.getCurrentUser().getUsername(),R.drawable.hidden);
+					 new_post.Init(ParseUser.getCurrentUser().getUsername(),moodIds[moodindex]);
 					 
 					 int temp = new_post.getNoofPosts()+1;
 					 ParseUser.getCurrentUser().put("noOfPosts",temp);

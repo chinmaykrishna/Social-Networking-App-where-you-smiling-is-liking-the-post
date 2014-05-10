@@ -18,7 +18,7 @@ public final class R {
 	}
 	public static final class drawable {
 		public static final int above_shadow = 0x7f020000;
-		public static final int below_shadow = 0x7f02007c;
+		public static final int below_shadow = 0x7f02007d;
 	}
 	public static final class styleable {
 		public static final int[] SlidingUpPanelLayout = { 0x7f01000e, 0x7f01000f, 0x7f010010, 0x7f010011, 0x7f010012, 0x7f010013, 0x7f010014 };
