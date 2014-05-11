@@ -27,6 +27,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -79,10 +81,13 @@ public class MainActivity extends Activity {
 	private SlidingUpPanelLayout comment_slider;
 	private com.parse.buzzbox.HorizontalListView hori_list;
 	private int height_actual;
+	private Handler hm;
+	private MainActivity main;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		main = this;
 		super.onCreate(savedInstanceState);
 		if (getIntent().getBooleanExtra("EXIT", false)) {
 			 finish();
@@ -148,6 +153,12 @@ public class MainActivity extends Activity {
 		config_slider();
 		
 		con = this;
+		hm = new Handler() {
+            public void handleMessage(Message m) {
+            	Toast.makeText(con, "Can not find location. Please check your network provider or GPS.", Toast.LENGTH_LONG).show();
+            	
+            }
+        };
 		
 		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 	    
@@ -877,6 +888,7 @@ public class MainActivity extends Activity {
 	  // This class will detect user's gestures of swiping left/Right.
 	  public class OnSwipeTouchListener implements OnTouchListener {
 
+		  
 		    protected final GestureDetector gestureDetector;
 
 		    public OnSwipeTouchListener (Context ctx){
@@ -1195,7 +1207,8 @@ public class MainActivity extends Activity {
 		    	    	pdLoading.dismiss();
 		    	    	if(location==null)
 		    	    	{
-		    	    		Toast.makeText(con, "Failed to retreive location. Please check network connections.", Toast.LENGTH_SHORT).show();
+		    	    		//Toast.makeText(con, "Failed to retreive location. Please check network connections.", Toast.LENGTH_SHORT).show();
+		    	    		main.returnHandler().sendEmptyMessage(0);
 		    	    		finish();
 		    	    		
 		    	    	}
@@ -1217,6 +1230,7 @@ public class MainActivity extends Activity {
 		    }	
 		    return bestLocation;
 		}
+	  
 	  
 	  //Function to configure slider
 	  private void config_slider()
@@ -1357,5 +1371,7 @@ public class MainActivity extends Activity {
 			        comments_list.setAdapter(Comments_adapter);
 		}
 		
-		
+		public Handler returnHandler(){
+	        return hm;
+	    }
 }
