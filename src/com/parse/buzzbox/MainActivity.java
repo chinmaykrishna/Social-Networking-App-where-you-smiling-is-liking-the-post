@@ -19,16 +19,20 @@ import org.json.JSONObject;
 
 import android.R.drawable;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -65,11 +69,11 @@ import com.parse.buzzbox.FetchLocation.LocationResult;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements LocationListener {
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
 	private static int SEARCH_RADIUS=100,flag=0, Postflag=1;
-	private Location lastLocation = null;
-    private Location currentLocation = null;
+	private static Location lastLocation = null;
+    private static Location currentLocation = null;
     protected double Latitude,Longitude;
     private LocationManager locationManager;
     private static ParseGeoPoint p;
@@ -160,7 +164,7 @@ public class MainActivity extends Activity {
             }
         };
 		
-		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		//locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 	    
 		currentLocation = this.getLastKnownLocation();
 		
@@ -1180,55 +1184,103 @@ public class MainActivity extends Activity {
 		}
 	  
 	  private Location getLastKnownLocation() {
-		    List<String> providers = locationManager.getProviders(true);
-		    Location bestLocation = null;
-		    for (String provider : providers) {
-		        Location l = locationManager.getLastKnownLocation(provider);
-
-		        if (l == null) {
-		            continue;
-		        }
-		        if (bestLocation == null
-		                || l.getAccuracy() < bestLocation.getAccuracy()) {
-		            bestLocation = l;
-		        }
-		    }
-		    
-		    if(bestLocation==null)
-		    {
-		    	final ProgressDialog pdLoading = new ProgressDialog(con);
-				 pdLoading.setMessage("Please wait while retreiving location...");
-			     pdLoading.show();
-			     pdLoading.setCancelable(false);
-		    	LocationResult locationResult = new LocationResult(){
-		    	    @Override
-		    	    public void gotLocation(Location location){
-		    	    	
-		    	    	pdLoading.dismiss();
-		    	    	if(location==null)
-		    	    	{
-		    	    		//Toast.makeText(con, "Failed to retreive location. Please check network connections.", Toast.LENGTH_SHORT).show();
-		    	    		main.returnHandler().sendEmptyMessage(0);
-		    	    		finish();
-		    	    		
-		    	    	}
-		    	    	else
-		    	    	{
-		    	    		//got location :)
-			    			p = geoPointFromLocation(location);
-			    			setQuery(p);
-		    	    	}
-		    	    	
-		    	    }
-		    	};
-		    	
-		    	
-		    	
-		    	FetchLocation myLocation = new FetchLocation();
-		    	myLocation.getLocation(this, locationResult);
-		    	myLocation.execute();
-		    }	
-		    return bestLocation;
+		  
+		  Location temp = null;
+		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
+		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+		  
+		  if(!gpsenabled){
+			  System.out.println("=======> GPS not enabled me aya");
+			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+			  alert.setTitle("GPS Settings");
+			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
+			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog , int which){
+					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					  MainActivity.this.startActivity(i);
+					  finish();
+				  }
+			  });
+			  
+			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog , int which){
+					  finish();
+				  }
+			  });
+			  
+			  alert.show();
+		  
+			  
+		  }
+		  
+		  if(netwrkenabled){
+			  locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, this);
+			  if(locationManager != null){
+				  currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+				  System.out.println("Network me aya" + currentLocation.getLatitude());
+			  }
+			  
+		  }
+		  else if(gpsenabled){
+			  locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, this);
+			  if(locationManager != null){
+				  currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+				  System.out.println("Gps me aya"+currentLocation.getLatitude());
+			  }
+		  }
+		  
+		  return currentLocation;
+		  
+//		    List<String> providers = locationManager.getProviders(true);
+//		    Location bestLocation = null;
+//		    for (String provider : providers) {
+//		        Location l = locationManager.getLastKnownLocation(provider);
+//
+//		        if (l == null) {
+//		            continue;
+//		        }
+//		        if (bestLocation == null
+//		                || l.getAccuracy() < bestLocation.getAccuracy()) {
+//		            bestLocation = l;
+//		        }
+//		    }
+//		    
+//		    if(bestLocation==null)
+//		    {
+//		    	final ProgressDialog pdLoading = new ProgressDialog(con);
+//				 pdLoading.setMessage("Please wait while retreiving location...");
+//			     pdLoading.show();
+//			     pdLoading.setCancelable(false);
+//		    	LocationResult locationResult = new LocationResult(){
+//		    	    @Override
+//		    	    public void gotLocation(Location location){
+//		    	    	
+//		    	    	pdLoading.dismiss();
+//		    	    	if(location==null)
+//		    	    	{
+//		    	    		//Toast.makeText(con, "Failed to retreive location. Please check network connections.", Toast.LENGTH_SHORT).show();
+//		    	    		main.returnHandler().sendEmptyMessage(0);
+//		    	    		finish();
+//		    	    		
+//		    	    	}
+//		    	    	else
+//		    	    	{
+//		    	    		//got location :)
+//			    			p = geoPointFromLocation(location);
+//			    			setQuery(p);
+//		    	    	}
+//		    	    	
+//		    	    }
+//		    	};
+//		    	
+//		    	
+//		    	
+//		    	FetchLocation myLocation = new FetchLocation();
+//		    	myLocation.getLocation(this, locationResult);
+//		    	myLocation.execute();
+//		    }	
+//		    return bestLocation;
 		}
 	  
 	  
@@ -1374,4 +1426,40 @@ public class MainActivity extends Activity {
 		public Handler returnHandler(){
 	        return hm;
 	    }
+
+
+
+
+		@Override
+		public void onLocationChanged(Location location) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
 }
