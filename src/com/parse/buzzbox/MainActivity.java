@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
@@ -37,6 +36,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -45,6 +45,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -54,6 +55,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,12 +83,14 @@ public class MainActivity extends Activity implements LocationListener {
     private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu, menuleft, menuright;
 	private static boolean logout=false;
-	private ListView post_list; 
+	private ScrollDisabledListView post_list; 
 	private SlidingUpPanelLayout comment_slider;
 	private com.parse.buzzbox.HorizontalListView hori_list;
 	private int height_actual;
 	private Handler hm;
 	private MainActivity main;
+	private int position_shown = 0;
+	private int no_of_post = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +105,8 @@ public class MainActivity extends Activity implements LocationListener {
 		
 		// to get actual screen size excluding paralax
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.main_screen);
+		
+		
 		final ViewTreeObserver observer= layout.getViewTreeObserver();
 		observer.addOnGlobalLayoutListener(
 		    new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -113,7 +119,7 @@ public class MainActivity extends Activity implements LocationListener {
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
 			finish();
 		
-		post_list = (ListView)findViewById(R.id.postsView);
+		post_list = (ScrollDisabledListView)findViewById(R.id.postsView);
 		
 		//comment slider configuration
 		comment_slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_up);
@@ -255,7 +261,96 @@ public class MainActivity extends Activity implements LocationListener {
 //		            }
 //			        });
 		}
-				
+		
+		LinearLayout layout_temp = new LinearLayout(this);
+		layout_temp = (LinearLayout) findViewById(R.id.list_container);
+		layout_temp.setOnTouchListener(new OnSwipeTouchListener(con){
+			
+			public void onSwipeRight() {
+            	menuleft.toggle();
+            	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
+            	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
+            	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
+            	tv.setText(ParseUser.getCurrentUser().getUsername());
+            	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
+            	tv2.setText(""+no_of_post);
+            	
+            	View view2 = (View)menuleft.getMenu();
+            	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+            		public void onSwipeLeft() {
+            			onCustomBackPressed();
+	                }
+            		
+            		public void onSwipeBottom() {
+	                }
+            		
+            		public boolean onTouch(View v, MotionEvent event) {
+    	                return gestureDetector.onTouchEvent(event);
+    	            }
+            	});
+                //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+			public void onSwipeLeft() {
+            	
+                menuright.toggle();
+                //ParseQueryAdapter<MessageObject> Messages;
+            	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
+             // Set up a customized query
+    		    ParseQueryAdapter.QueryFactory<MessageObject> factory =
+    		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
+    		          public ParseQuery<MessageObject> create() {
+    		            
+    		            ParseQuery<MessageObject> query = MessageObject.getQuery();
+    		            query.orderByDescending("createdAt");
+    		            query.whereEqualTo("toobjectid", ParseUser.getCurrentUser().getObjectId());
+    		            return query;
+    		          }
+    		        };
+    		   
+    		        // Set up the query adapter
+    		        ParseQueryAdapter<MessageObject> Messages = new ParseQueryAdapter<MessageObject>(con, factory) {
+    		        	@Override
+    		          public View getItemView(final MessageObject message, View view, ViewGroup parent) {
+    		            
+    		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
+    		            
+    		            TextView message_text = (TextView) view.findViewById(R.id.message);
+    		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
+    		            
+    		            message_text.setText(message.getText());
+    		            if(message.getType().equals("via_post"))
+    		            via_post.setText("Via Post: "+message.getViaPost());
+    		            return view;
+    		          }
+    		        };
+    			    list.setAdapter(Messages);
+    			    
+    			    View view2 = (View)menuright.getMenu();
+                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+                		public void onSwipeRight() {
+                			onCustomBackPressed();
+    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+    	                }
+                		
+                		public boolean onTouch(View v, MotionEvent event) {
+        	                return gestureDetector.onTouchEvent(event);
+        	            }
+                	});
+    			    
+            	//Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+            }
+    		@Override
+    		public void onSwipeBottom() {
+    			scroll_function(1);
+    		}
+    		@Override
+    		public void onSwipeTop() {
+    			scroll_function(0);
+    		}
+    		public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+    	});
 	}
 	
 	
@@ -319,11 +414,13 @@ public class MainActivity extends Activity implements LocationListener {
 		        // Set up the query adapter
 		        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
 		          @SuppressWarnings("deprecation")
+		          
 				@Override
 		          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
 		            
 		            view = new PostItem_custom(con, height_actual);
 		            
+		            no_of_post = post.getNoofPosts();
 		            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
 		            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
@@ -349,94 +446,7 @@ public class MainActivity extends Activity implements LocationListener {
 		            		            
 		            date.setText(dateString);
 		            time.setText(timeString);
-		            view.setOnTouchListener(new OnSwipeTouchListener(con){
-		            	
-		            	public void onSwipeTop() {
-		                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
-		                }
-		                public void onSwipeRight() {
-		                	menuleft.toggle();
-		                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
-		                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
-		                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
-		                	tv.setText(ParseUser.getCurrentUser().getUsername());
-		                	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
-		                	tv2.setText(""+post.getNoofPosts());
-		                	
-		                	View view2 = (View)menuleft.getMenu();
-		                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
-		                		public void onSwipeLeft() {
-		                			onCustomBackPressed();
-		    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-		    	                }
-		                		
-		                		public void onSwipeBottom() {
-		    	                    //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-		    	                }
-		                		
-		                		public boolean onTouch(View v, MotionEvent event) {
-		        	                return gestureDetector.onTouchEvent(event);
-		        	            }
-		                	});
-		                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-		                }
-		                public void onSwipeLeft() {
-		                	
-		                    menuright.toggle();
-		                    //ParseQueryAdapter<MessageObject> Messages;
-		                	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
-		                 // Set up a customized query
-		        		    ParseQueryAdapter.QueryFactory<MessageObject> factory =
-		        		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
-		        		          public ParseQuery<MessageObject> create() {
-		        		            
-		        		            ParseQuery<MessageObject> query = MessageObject.getQuery();
-		        		            query.orderByDescending("createdAt");
-		        		            query.whereEqualTo("toobjectid", ParseUser.getCurrentUser().getObjectId());
-		        		            return query;
-		        		          }
-		        		        };
-		        		   
-		        		        // Set up the query adapter
-		        		        ParseQueryAdapter<MessageObject> Messages = new ParseQueryAdapter<MessageObject>(con, factory) {
-		        		        	@Override
-		        		          public View getItemView(final MessageObject message, View view, ViewGroup parent) {
-		        		            
-		        		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
-		        		            
-		        		            TextView message_text = (TextView) view.findViewById(R.id.message);
-		        		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
-		        		            
-		        		            message_text.setText(message.getText());
-		        		            if(message.getType().equals("via_post"))
-		        		            via_post.setText("Via Post: "+message.getViaPost());
-		        		            return view;
-		        		          }
-		        		        };
-		        			    list.setAdapter(Messages);
-		        			    
-		        			    View view2 = (View)menuright.getMenu();
-			                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
-			                		public void onSwipeRight() {
-			                			onCustomBackPressed();
-			    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-			    	                }
-			                		
-			                		public boolean onTouch(View v, MotionEvent event) {
-			        	                return gestureDetector.onTouchEvent(event);
-			        	            }
-			                	});
-		        			    
-		                	//Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-		                }
-		                public void onSwipeBottom() {
-		                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-		                }
-
-		            public boolean onTouch(View v, MotionEvent event) {
-		                return gestureDetector.onTouchEvent(event);
-		            }
-		            });
+		            
 		            
 		            
 		            usernameView.setText(post.getUser().getUsername());
@@ -620,7 +630,7 @@ public class MainActivity extends Activity implements LocationListener {
 	// Attach the query Adapter to the View.
 	public void setList(ParseQueryAdapter<BuzzboxPost> Po){
 		
-		ListView postsView = (ListView) this.findViewById(R.id.postsView);
+		ScrollDisabledListView postsView = (ScrollDisabledListView) this.findViewById(R.id.postsView);
         postsView.setAdapter(Po);
 	}
 	
@@ -1462,4 +1472,30 @@ public class MainActivity extends Activity implements LocationListener {
 			// TODO Auto-generated method stub
 			
 		}
+		
+		// scroll list on gesture
+		//1 = up scroll
+		//0 = down scroll
+		public void scroll_function(int up_or_down)
+		{
+			if(up_or_down==1)
+			{
+				if(position_shown>0)
+				{
+					position_shown-=1;
+					post_list.smoothScrollToPosition(position_shown);
+				}
+			}
+			else
+			{
+				int size = post_list.getCount()-1;
+				if(position_shown<size)
+				{
+					position_shown+=1;
+					post_list.smoothScrollToPosition(position_shown);
+				}
+			}
+		}
+		
+		
 }
