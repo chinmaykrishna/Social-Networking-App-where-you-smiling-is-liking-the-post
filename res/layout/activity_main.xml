@@ -26,23 +26,14 @@
             android:orientation="vertical"
              >
              
-	         <RelativeLayout 
-	           				 android:layout_width="match_parent"
-            				 android:layout_height="match_parent">
-	         <com.parse.buzzbox.ScrollDisabledListView
+	        
+	         <ListView
 			        android:id="@+id/postsView"
 			        android:layout_width="fill_parent"
 			        android:layout_height="match_parent" >
-			    </com.parse.buzzbox.ScrollDisabledListView>
+			    </ListView>
 
-	         <LinearLayout
-	        	android:id="@+id/list_container"
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:orientation="vertical"
-             />
-             			        
-	         </RelativeLayout>
+	        
 	    
     </LinearLayout>
 
