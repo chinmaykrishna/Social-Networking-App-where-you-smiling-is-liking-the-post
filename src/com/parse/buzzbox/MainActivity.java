@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
@@ -64,6 +65,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.buzzbox.FetchLocation.LocationResult;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
@@ -86,11 +88,13 @@ public class MainActivity extends Activity implements LocationListener {
 	private int height_actual;
 	private Handler hm;
 	private int no_of_post = 0;
+	private MainActivity main;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		main = this;
 		if (getIntent().getBooleanExtra("EXIT", false)) {
 			 finish();
 			}
@@ -252,11 +256,28 @@ public class MainActivity extends Activity implements LocationListener {
 		hm = new Handler() {
             public void handleMessage(Message m) {
             	Toast.makeText(con, "Can not find location. Please check your network provider or GPS.", Toast.LENGTH_LONG).show();
-            	
+            	AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+	  			  alert.setTitle("GPS Settings");
+	  			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
+	  			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+	  				  public void onClick(DialogInterface dialog , int which){
+	  					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+	  					  MainActivity.this.startActivity(i);
+	  					  finish();
+	  				  }
+	  			  });
+	  			  
+	  			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	  				  public void onClick(DialogInterface dialog , int which){
+	  					  finish();
+	  				  }
+	  			  });
+	  			  
+	  			  alert.show();
             }
         };
 		
-		//locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 	    
 		currentLocation = this.getLastKnownLocation();
 		
@@ -1119,101 +1140,100 @@ public class MainActivity extends Activity implements LocationListener {
 	  
 	  private Location getLastKnownLocation() {
 		  
-		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
-		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
-		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+//		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+//		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
+//		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+//		  
+//		  if(!gpsenabled){
+//			  System.out.println("=======> GPS not enabled me aya");
+//			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+//			  alert.setTitle("GPS Settings");
+//			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
+//			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+//				  public void onClick(DialogInterface dialog , int which){
+//					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//					  MainActivity.this.startActivity(i);
+//					  finish();
+//				  }
+//			  });
+//			  
+//			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//				  public void onClick(DialogInterface dialog , int which){
+//					  finish();
+//				  }
+//			  });
+//			  
+//			  alert.show();
+//		  
+//			  
+//		  }
+//		  
+//		  if(netwrkenabled){
+//			  locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, this);
+//			  if(locationManager != null){
+//				  currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+//				  System.out.println("Network me aya" + currentLocation.getLatitude());
+//			  }
+//			  
+//		  }
+//		  else if(gpsenabled){
+//			  locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, this);
+//			  if(locationManager != null){
+//				  currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+//				  System.out.println("Gps me aya"+currentLocation.getLatitude());
+//			  }
+//		  }
+//		  
+//		  return currentLocation;
 		  
-		  if(!gpsenabled){
-			  System.out.println("=======> GPS not enabled me aya");
-			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-			  alert.setTitle("GPS Settings");
-			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
-			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-				  public void onClick(DialogInterface dialog , int which){
-					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-					  MainActivity.this.startActivity(i);
-					  finish();
-				  }
-			  });
-			  
-			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				  public void onClick(DialogInterface dialog , int which){
-					  finish();
-				  }
-			  });
-			  
-			  alert.show();
-		  
-			  
-		  }
-		  
-		  if(netwrkenabled){
-			  locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, this);
-			  if(locationManager != null){
-				  currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
-				  System.out.println("Network me aya" + currentLocation.getLatitude());
-			  }
-			  
-		  }
-		  else if(gpsenabled){
-			  locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, this);
-			  if(locationManager != null){
-				  currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-				  System.out.println("Gps me aya"+currentLocation.getLatitude());
-			  }
-		  }
-		  
-		  return currentLocation;
-		  
-//		    List<String> providers = locationManager.getProviders(true);
-//		    Location bestLocation = null;
-//		    for (String provider : providers) {
-//		        Location l = locationManager.getLastKnownLocation(provider);
-//
-//		        if (l == null) {
-//		            continue;
-//		        }
-//		        if (bestLocation == null
-//		                || l.getAccuracy() < bestLocation.getAccuracy()) {
-//		            bestLocation = l;
-//		        }
-//		    }
-//		    
-//		    if(bestLocation==null)
-//		    {
-//		    	final ProgressDialog pdLoading = new ProgressDialog(con);
-//				 pdLoading.setMessage("Please wait while retreiving location...");
-//			     pdLoading.show();
-//			     pdLoading.setCancelable(false);
-//		    	LocationResult locationResult = new LocationResult(){
-//		    	    @Override
-//		    	    public void gotLocation(Location location){
-//		    	    	
-//		    	    	pdLoading.dismiss();
-//		    	    	if(location==null)
-//		    	    	{
-//		    	    		//Toast.makeText(con, "Failed to retreive location. Please check network connections.", Toast.LENGTH_SHORT).show();
-//		    	    		main.returnHandler().sendEmptyMessage(0);
-//		    	    		finish();
-//		    	    		
-//		    	    	}
-//		    	    	else
-//		    	    	{
-//		    	    		//got location :)
-//			    			p = geoPointFromLocation(location);
-//			    			setQuery(p);
-//		    	    	}
-//		    	    	
-//		    	    }
-//		    	};
-//		    	
-//		    	
-//		    	
-//		    	FetchLocation myLocation = new FetchLocation();
-//		    	myLocation.getLocation(this, locationResult);
-//		    	myLocation.execute();
-//		    }	
-//		    return bestLocation;
+		    List<String> providers = locationManager.getProviders(true);
+		    Location bestLocation = null;
+		    for (String provider : providers) {
+		        Location l = locationManager.getLastKnownLocation(provider);
+
+		        if (l == null) {
+		            continue;
+		        }
+		        if (bestLocation == null
+		                || l.getAccuracy() < bestLocation.getAccuracy()) {
+		            bestLocation = l;
+		        }
+		    }
+		    
+		    if(bestLocation==null)
+		    {
+		    	final ProgressDialog pdLoading = new ProgressDialog(con);
+				 pdLoading.setMessage("Please wait while retreiving location...");
+			     pdLoading.show();
+			     pdLoading.setCancelable(false);
+		    	LocationResult locationResult = new LocationResult(){
+		    	    @Override
+		    	    public void gotLocation(Location location){
+		    	    	
+		    	    	pdLoading.dismiss();
+		    	    	if(location==null)
+		    	    	{
+		    	    		main.returnHandler().sendEmptyMessage(0);
+		    	    		//finish();
+		    	    		
+		    	    	}
+		    	    	else
+		    	    	{
+		    	    		//got location :)
+			    			p = geoPointFromLocation(location);
+			    			setQuery(p);
+		    	    	}
+		    	    	
+		    	    }
+		    	};
+		    	
+		    	
+		    	
+		    	FetchLocation myLocation = new FetchLocation();
+		    	myLocation.getLocation(this, locationResult);
+		    	myLocation.execute();
+		    }	
+		    return bestLocation;
 		}
 	  
 	  
