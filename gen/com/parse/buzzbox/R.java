@@ -1103,17 +1103,18 @@ containing a value of this type.
         public static final int love=0x7f020088;
         public static final int nervous=0x7f020089;
         public static final int noemotion=0x7f02008a;
-        public static final int rect_round_corners=0x7f02008b;
-        public static final int relief=0x7f02008c;
-        public static final int rounded_edittext=0x7f02008d;
-        public static final int sadness=0x7f02008e;
-        public static final int secritive=0x7f02008f;
-        public static final int shadow=0x7f020090;
-        public static final int sick=0x7f020091;
-        public static final int signup_button=0x7f020092;
-        public static final int sleepy=0x7f020093;
-        public static final int sympathy=0x7f020094;
-        public static final int worry=0x7f020095;
+        public static final int rect_round_2=0x7f02008b;
+        public static final int rect_round_corners=0x7f02008c;
+        public static final int relief=0x7f02008d;
+        public static final int rounded_edittext=0x7f02008e;
+        public static final int sadness=0x7f02008f;
+        public static final int secritive=0x7f020090;
+        public static final int shadow=0x7f020091;
+        public static final int sick=0x7f020092;
+        public static final int signup_button=0x7f020093;
+        public static final int sleepy=0x7f020094;
+        public static final int sympathy=0x7f020095;
+        public static final int worry=0x7f020096;
     }
     public static final class id {
         public static final int Count_of_Empathizes=0x7f04004f;

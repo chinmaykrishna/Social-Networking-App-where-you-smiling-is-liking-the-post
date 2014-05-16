@@ -36,7 +36,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -45,7 +44,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -55,7 +53,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,11 +64,11 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.buzzbox.FetchLocation.LocationResult;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 public class MainActivity extends Activity implements LocationListener {
+	
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
 	private static int SEARCH_RADIUS=100,flag=0, Postflag=1;
 	private static Location lastLocation = null;
@@ -88,15 +85,12 @@ public class MainActivity extends Activity implements LocationListener {
 	private com.parse.buzzbox.HorizontalListView hori_list;
 	private int height_actual;
 	private Handler hm;
-	private MainActivity main;
-	private int position_shown = 0;
 	private int no_of_post = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		main = this;
 		super.onCreate(savedInstanceState);
+		
 		if (getIntent().getBooleanExtra("EXIT", false)) {
 			 finish();
 			}
@@ -115,10 +109,14 @@ public class MainActivity extends Activity implements LocationListener {
 		                height_actual = layout.getHeight();
 		            }
 		        });
+		
+		//finish if user has been logged out
 		if(ParseUser.getCurrentUser()!=null)
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
 			finish();
 		
+		
+		// Configure gestures over post_list element.
 		post_list = (ListView)findViewById(R.id.postsView);
 		post_list.setOnTouchListener(new OnSwipeTouchListener(con){
 			
@@ -207,6 +205,8 @@ public class MainActivity extends Activity implements LocationListener {
                 return gestureDetector.onTouchEvent(event);
             }
     	});
+		
+		
 		//comment slider configuration
 		comment_slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_up);
 		
@@ -270,82 +270,7 @@ public class MainActivity extends Activity implements LocationListener {
 			p = geoPointFromLocation(myLoc);
 			
 			setQuery(p);
-//			ParseQueryAdapter.QueryFactory<BuzzboxPost> factory =
-//			        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
-//			          public ParseQuery<BuzzboxPost> create() {
-//			            
-//			            ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-//			            query.include("user");
-//			            
-//			            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
-//			            
-//			            else query.orderByDescending("NoOfEmpathizes");	// If the user has pressed the Featured Button.
-//			            
-//			            flag=0;
-//			            
-//			            query.whereWithinKilometers("location", p, SEARCH_RADIUS);
-//			            
-//			            query.setLimit(MAX_POST_SEARCH_RESULTS);
-//			            
-//			            return query;
-//			          }
-//			        };
-//			
-//			        setContentView(R.layout.buzzbox_post_item);
-//			        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory);
-//			        final BuzzboxPost currentPost = posts.getItem(index);
-//			        ImageView im = (ImageView) findViewById(R.id.imageView1);
-//			        im.setImageResource(currentPost.getUser().getInt("Avatar"));
-//			        TextView username = (TextView) findViewById(R.id.usernameView);
-//			        username.setText(currentPost.getText());
-//			        
-//			        View view = View.inflate(con, R.layout.buzzbox_post_item, null);
-//			        view.setOnTouchListener(new OnSwipeTouchListener(con){
-//			        	
-//			        	public void onSwipeTop() {
-//			        		
-//			        		index++;
-//			        		
-//		                    Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
-//		                }
-//		                public void onSwipeRight() {
-//		                	menuleft.toggle();
-//		                	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
-//		                	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
-//		                	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
-//		                	tv.setText(ParseUser.getCurrentUser().getUsername());
-//		                	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
-//		                	tv2.setText(""+currentPost.getNoofPosts());
-//		                	
-//		                	View view2 = (View)menuleft.getMenu();
-//		                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
-//		                		public void onSwipeLeft() {
-//		                			onCustomBackPressed();
-//		    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-//		    	                }
-//		                		
-//		                		public void onSwipeBottom() {
-//		    	                    //Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-//		    	                }
-//		                		
-//		                		public boolean onTouch(View v, MotionEvent event) {
-//		        	                return gestureDetector.onTouchEvent(event);
-//		        	            }
-//		                	});
-//		                    //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-//		                }
-//		                public void onSwipeLeft() {
-//		                	
-//		                    Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-//		                }
-//		                public void onSwipeBottom() {
-//		                    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-//		                }
-//
-//		            public boolean onTouch(View v, MotionEvent event) {
-//		                return gestureDetector.onTouchEvent(event);
-//		            }
-//			        });
+
 		}
 		
 		
@@ -909,8 +834,8 @@ public class MainActivity extends Activity implements LocationListener {
 
 		    private final class GestureListener extends SimpleOnGestureListener {
 
-		        private static final int SWIPE_THRESHOLD = 100;
-		        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+		        private static final int SWIPE_THRESHOLD = 50;
+		        private static final int SWIPE_VELOCITY_THRESHOLD = 50;
 
 		        
 		        @Override
@@ -1194,7 +1119,6 @@ public class MainActivity extends Activity implements LocationListener {
 	  
 	  private Location getLastKnownLocation() {
 		  
-		  Location temp = null;
 		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
 		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
@@ -1479,15 +1403,17 @@ public class MainActivity extends Activity implements LocationListener {
 		{
 			if(up_or_down==1)
 			{
+				Log.d("blag", "down");
 					post_list.smoothScrollToPosition(post_list.getLastVisiblePosition()-1);
 				
 			}
 			else
 			{
-				
+				Log.d("blag", "up");
 					post_list.smoothScrollToPosition(post_list.getFirstVisiblePosition()+1);
 			}
 		}
+		
 		
 		
 }
