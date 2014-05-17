@@ -68,6 +68,8 @@ import com.parse.SaveCallback;
 import com.parse.buzzbox.FetchLocation.LocationResult;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+import com.twotoasters.jazzylistview.JazzyHelper;
+import com.twotoasters.jazzylistview.JazzyListView;
 
 public class MainActivity extends Activity implements LocationListener {
 	
@@ -82,7 +84,7 @@ public class MainActivity extends Activity implements LocationListener {
     private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu, menuleft, menuright;
 	private static boolean logout=false;
-	private ListView post_list; 
+	private JazzyListView post_list; 
 	private SlidingUpPanelLayout comment_slider;
 	private com.parse.buzzbox.HorizontalListView hori_list;
 	private int height_actual;
@@ -121,7 +123,7 @@ public class MainActivity extends Activity implements LocationListener {
 		
 		
 		// Configure gestures over post_list element.
-		post_list = (ListView)findViewById(R.id.postsView);
+		post_list = (JazzyListView)findViewById(R.id.postsView);
 		post_list.setOnTouchListener(new OnSwipeTouchListener(con){
 			
 			public void onSwipeRight() {
@@ -574,8 +576,9 @@ public class MainActivity extends Activity implements LocationListener {
 	// Attach the query Adapter to the View.
 	public void setList(ParseQueryAdapter<BuzzboxPost> Po){
 		
-		ListView postsView = (ListView) this.findViewById(R.id.postsView);
+		JazzyListView postsView = (JazzyListView) this.findViewById(R.id.postsView);
         postsView.setAdapter(Po);
+        postsView.setTransitionEffect(JazzyHelper.GROW);
 	}
 	
 	public void change_location(View v){
