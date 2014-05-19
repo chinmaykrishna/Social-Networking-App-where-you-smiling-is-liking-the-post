@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/abs__ab_bottom_solid_inverse_holo" >
 
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/avatar1" />
+    
     <TextView
         android:id="@+id/Nick"
         android:layout_width="wrap_content"
@@ -14,23 +22,24 @@
         android:textColor="@color/abs__background_holo_light"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/avatar1" />
+    
+    <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/posts"
+                android:layout_centerInParent="true" >
 
+    
     <TextView
         android:id="@+id/NoOfPosts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Nick"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:textColor="@color/abs__background_holo_dark"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:textColor="@color/abs__background_holo_light"
+        android:gravity="center"
         android:text="24"
+        android:background="@drawable/posts_made"
+        android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -42,16 +51,27 @@
         android:textColor="@color/abs__background_holo_light"
         android:text="Posts Made"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    </RelativeLayout>
+    
+    <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/invites"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true" >
 
     <TextView
         android:id="@+id/NoOfInvites"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/NoOfPosts"
-        android:layout_below="@+id/postsMade"
-        android:layout_marginTop="25dp"
-        android:textColor="@color/abs__background_holo_light"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:background="@drawable/invites_sent"
+        android:textColor="@color/abs__background_holo_dark"
         android:text="25"
+        android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -63,5 +83,6 @@
         android:text="Invites Sent"
         android:textColor="@color/abs__background_holo_light"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
 
 </RelativeLayout>

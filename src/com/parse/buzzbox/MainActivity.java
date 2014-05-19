@@ -399,7 +399,7 @@ public class MainActivity extends Activity implements LocationListener {
 		            im.setImageResource(post.getUser().getInt("Avatar"));
 		            
 		          //comment button pressed
-		            final Button comment_but = (Button)view.findViewById(R.id.comment);
+		            final ImageView comment_but = (ImageView)view.findViewById(R.id.comment);
 		            
 		            comment_but.setOnClickListener(new OnClickListener() {
 						
@@ -456,7 +456,7 @@ public class MainActivity extends Activity implements LocationListener {
 					});
 		            
 		            //Favorite button
-		            final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
+		           /* final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
 		            
 		            if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
 		            	bfav.setImageResource(drawable.star_big_on);
@@ -478,10 +478,10 @@ public class MainActivity extends Activity implements LocationListener {
 		            		}
 		            	    		            		  
 		            	}
-		            });
+		            });*/
 		            
 		            // Empathize Button.
-		            final ImageButton bemp = (ImageButton) view.findViewById(R.id.btnEmpathize);
+		            final ImageView bemp = (ImageView) view.findViewById(R.id.btnEmpathize);
 		            count.setText(""+post.no_of_empathizes());
 		            bemp.setOnClickListener(new OnClickListener(){
 
@@ -489,7 +489,7 @@ public class MainActivity extends Activity implements LocationListener {
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
 							if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
-								BuzzboxPost.getQuery();
+								//BuzzboxPost.getQuery();
 								count.setText(""+(post.no_of_empathizes()+1));
 								
 								post.put("NoOfEmpathizes",(post.no_of_empathizes()+1));
@@ -508,7 +508,7 @@ public class MainActivity extends Activity implements LocationListener {
 		            });
 		            
 		            //Send private message
-		            final ImageButton message = (ImageButton) view.findViewById(R.id.privatemessage);
+		            final ImageView message = (ImageView) view.findViewById(R.id.privatemessage);
 		            
 		            message.setOnClickListener(new OnClickListener(){
 
@@ -1143,53 +1143,53 @@ public class MainActivity extends Activity implements LocationListener {
 	  
 	  private Location getLastKnownLocation() {
 		  
-//		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
-//		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
-//		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
-//		  
-//		  if(!gpsenabled){
-//			  System.out.println("=======> GPS not enabled me aya");
-//			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-//			  alert.setTitle("GPS Settings");
-//			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
-//			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-//				  public void onClick(DialogInterface dialog , int which){
-//					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//					  MainActivity.this.startActivity(i);
-//					  finish();
-//				  }
-//			  });
-//			  
-//			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//				  public void onClick(DialogInterface dialog , int which){
-//					  finish();
-//				  }
-//			  });
-//			  
-//			  alert.show();
-//		  
-//			  
-//		  }
-//		  
-//		  if(netwrkenabled){
-//			  locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, this);
-//			  if(locationManager != null){
-//				  currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
-//				  System.out.println("Network me aya" + currentLocation.getLatitude());
-//			  }
-//			  
-//		  }
-//		  else if(gpsenabled){
-//			  locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, this);
-//			  if(locationManager != null){
-//				  currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-//				  System.out.println("Gps me aya"+currentLocation.getLatitude());
-//			  }
-//		  }
-//		  
-//		  return currentLocation;
+		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
+		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
 		  
-		    List<String> providers = locationManager.getProviders(true);
+		  if(!gpsenabled){
+			  System.out.println("=======> GPS not enabled me aya");
+			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+			  alert.setTitle("GPS Settings");
+			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
+			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog , int which){
+					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					  MainActivity.this.startActivity(i);
+					  finish();
+				  }
+			  });
+			  
+			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog , int which){
+					  finish();
+				  }
+			  });
+			  
+			  alert.show();
+		  
+			  
+		  }
+		  
+		  if(netwrkenabled){
+			  locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, this);
+			  if(locationManager != null){
+				  currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+				  System.out.println("Network me aya" + currentLocation.getLatitude());
+			  }
+			  
+		  }
+		  else if(gpsenabled){
+			  locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, this);
+			  if(locationManager != null){
+				  currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+				  System.out.println("Gps me aya"+currentLocation.getLatitude());
+			  }
+		  }
+		  
+		  return currentLocation;
+		  
+		   /* List<String> providers = locationManager.getProviders(true);
 		    Location bestLocation = null;
 		    for (String provider : providers) {
 		        Location l = locationManager.getLastKnownLocation(provider);
@@ -1236,7 +1236,7 @@ public class MainActivity extends Activity implements LocationListener {
 		    	myLocation.getLocation(this, locationResult);
 		    	myLocation.execute();
 		    }	
-		    return bestLocation;
+		    return bestLocation;*/
 		}
 	  
 	  
