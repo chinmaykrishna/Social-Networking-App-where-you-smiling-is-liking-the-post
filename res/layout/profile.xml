@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/abs__ab_bottom_solid_inverse_holo" >
+    android:background="#443f3c" >
 
     <ImageView
         android:id="@+id/avatar"
