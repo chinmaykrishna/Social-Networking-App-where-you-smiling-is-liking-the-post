@@ -42,8 +42,7 @@
             android:name="com.parse.buzzbox.SignupOrLogin">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.MainActivity"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:name="com.parse.buzzbox.MainActivity">
         </activity>
         <activity
             android:name="com.parse.buzzbox.newPost">
