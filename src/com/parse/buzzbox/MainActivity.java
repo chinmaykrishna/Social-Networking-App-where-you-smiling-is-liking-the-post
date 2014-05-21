@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
@@ -17,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.drawable;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -48,12 +46,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +62,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.buzzbox.FetchLocation.LocationResult;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.twotoasters.jazzylistview.JazzyHelper;
@@ -91,6 +87,7 @@ public class MainActivity extends Activity implements LocationListener {
 	private Handler hm;
 	private int no_of_post = 0;
 	private MainActivity main;
+	private int temp =0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +109,13 @@ public class MainActivity extends Activity implements LocationListener {
 		    new ViewTreeObserver.OnGlobalLayoutListener() {
 		        @Override
 		            public void onGlobalLayout() {
-		                height_actual = layout.getHeight();
+		        		if(temp==0)
+		                {
+		        			height_actual = layout.getHeight();
+		        			temp++;
+		                }
+	        			Log.d("asdasdasd", "asdasdasd");
+
 		            }
 		        });
 		
@@ -305,6 +308,7 @@ public class MainActivity extends Activity implements LocationListener {
 	@Override
 	protected void onRestart() {
 		// TODO Auto-generated method stub
+		Log.d("onRestart", "onRestart");
 		super.onRestart();
 		
 		
@@ -321,6 +325,7 @@ public class MainActivity extends Activity implements LocationListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		
+		Log.d("onResume", "onResume");
 		if(ParseUser.getCurrentUser()!=null)
 			if(!(ParseUser.getCurrentUser().isDataAvailable()))
 				finish();
@@ -359,13 +364,15 @@ public class MainActivity extends Activity implements LocationListener {
 		        
 		        // Set up the query adapter
 		        posts = new ParseQueryAdapter<BuzzboxPost>(this, factory) {
-		          @SuppressWarnings("deprecation")
-		          
-				@Override
+		          @Override
 		          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
 		            
-		            view = new PostItem_custom(con, height_actual);
-		            
+			        view = View.inflate(con, R.layout.buzzbox_post_item, null);
+			        
+			        LinearLayout lin = (LinearLayout)view.findViewById(R.id.complete_item);
+			        lin.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height_actual));
+			        
+			        
 		            no_of_post = post.getNoofPosts();
 		            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
