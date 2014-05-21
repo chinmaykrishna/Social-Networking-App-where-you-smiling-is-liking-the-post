@@ -52,6 +52,9 @@
             android:name="com.parse.buzzbox.Private_message"
             >
         </activity>
+        <activity
+        	android:name="com.parse.buzzbox.Create_Message">
+        </activity>
  
     </application>
 

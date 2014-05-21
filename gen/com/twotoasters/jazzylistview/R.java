@@ -8,22 +8,11 @@ package com.twotoasters.jazzylistview;
 
 public final class R {
 	public static final class attr {
-		public static final int dragView = 0x7f010005;
 		public static final int effect = 0x7f010007;
-		public static final int fadeColor = 0x7f010003;
-		public static final int flingVelocity = 0x7f010004;
 		public static final int max_velocity = 0x7f01000b;
 		public static final int only_animate_fling = 0x7f010009;
 		public static final int only_animate_new_items = 0x7f010008;
-		public static final int overlay = 0x7f010006;
-		public static final int panelHeight = 0x7f010000;
-		public static final int paralaxOffset = 0x7f010002;
-		public static final int shadowHeight = 0x7f010001;
 		public static final int simulate_grid_with_list = 0x7f01000a;
-	}
-	public static final class drawable {
-		public static final int above_shadow = 0x7f020000;
-		public static final int below_shadow = 0x7f02007d;
 	}
 	public static final class id {
 		public static final int cards = 0x7f040002;
@@ -49,13 +38,5 @@ public final class R {
 		public static final int JazzyListView_only_animate_fling = 2;
 		public static final int JazzyListView_only_animate_new_items = 1;
 		public static final int JazzyListView_simulate_grid_with_list = 3;
-		public static final int[] SlidingUpPanelLayout = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006 };
-		public static final int SlidingUpPanelLayout_dragView = 5;
-		public static final int SlidingUpPanelLayout_fadeColor = 3;
-		public static final int SlidingUpPanelLayout_flingVelocity = 4;
-		public static final int SlidingUpPanelLayout_overlay = 6;
-		public static final int SlidingUpPanelLayout_panelHeight = 0;
-		public static final int SlidingUpPanelLayout_paralaxOffset = 2;
-		public static final int SlidingUpPanelLayout_shadowHeight = 1;
 	}
 }

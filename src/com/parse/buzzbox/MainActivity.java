@@ -152,52 +152,52 @@ public class MainActivity extends Activity implements LocationListener {
             }
 			public void onSwipeLeft() {
             	
-                menuright.toggle();
-                //ParseQueryAdapter<MessageObject> Messages;
-            	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
-             // Set up a customized query
-    		    ParseQueryAdapter.QueryFactory<MessageObject> factory =
-    		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
-    		          public ParseQuery<MessageObject> create() {
-    		            
-    		            ParseQuery<MessageObject> query = MessageObject.getQuery();
-    		            query.orderByDescending("createdAt");
-    		            query.whereEqualTo("toobjectid", ParseUser.getCurrentUser().getObjectId());
-    		            return query;
-    		          }
-    		        };
-    		   
-    		        // Set up the query adapter
-    		        ParseQueryAdapter<MessageObject> Messages = new ParseQueryAdapter<MessageObject>(con, factory) {
-    		        	@Override
-    		          public View getItemView(final MessageObject message, View view, ViewGroup parent) {
-    		            
-    		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
-    		            
-    		            TextView message_text = (TextView) view.findViewById(R.id.message);
-    		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
-    		            
-    		            message_text.setText(message.getText());
-    		            if(message.getType().equals("via_post"))
-    		            via_post.setText("Via Post: "+message.getViaPost());
-    		            return view;
-    		          }
-    		        };
-    			    list.setAdapter(Messages);
-    			    
-    			    View view2 = (View)menuright.getMenu();
-                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
-                		public void onSwipeRight() {
-                			onCustomBackPressed();
-    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-    	                }
-                		
-                		public boolean onTouch(View v, MotionEvent event) {
-        	                return gestureDetector.onTouchEvent(event);
-        	            }
-                	});
-    			    
-            	//Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+//                menuright.toggle();
+//                //ParseQueryAdapter<MessageObject> Messages;
+//            	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
+//             // Set up a customized query
+//    		    ParseQueryAdapter.QueryFactory<MessageObject> factory =
+//    		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
+//    		          public ParseQuery<MessageObject> create() {
+//    		            
+//    		            ParseQuery<MessageObject> query = MessageObject.getQuery();
+//    		            query.orderByDescending("createdAt");
+//    		            query.whereEqualTo("toobjectid", ParseUser.getCurrentUser().getObjectId());
+//    		            return query;
+//    		          }
+//    		        };
+//    		   
+//    		        // Set up the query adapter
+//    		        ParseQueryAdapter<MessageObject> Messages = new ParseQueryAdapter<MessageObject>(con, factory) {
+//    		        	@Override
+//    		          public View getItemView(final MessageObject message, View view, ViewGroup parent) {
+//    		            
+//    		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
+//    		            
+//    		            TextView message_text = (TextView) view.findViewById(R.id.message);
+//    		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
+//    		            
+//    		            message_text.setText(message.getText());
+//    		            if(message.getType().equals("via_post"))
+//    		            via_post.setText("Via Post: "+message.getViaPost());
+//    		            return view;
+//    		          }
+//    		        };
+//    			    list.setAdapter(Messages);
+//    			    
+//    			    View view2 = (View)menuright.getMenu();
+//                	view2.setOnTouchListener(new OnSwipeTouchListener(con){
+//                		public void onSwipeRight() {
+//                			onCustomBackPressed();
+//    	                    //Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+//    	                }
+//                		
+//                		public boolean onTouch(View v, MotionEvent event) {
+//        	                return gestureDetector.onTouchEvent(event);
+//        	            }
+//                	});
+//    			    
+//            	//Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
     		@Override
     		public void onSwipeBottom() {
@@ -515,53 +515,10 @@ public class MainActivity extends Activity implements LocationListener {
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							
-							final Dialog dialog = new Dialog(con);
-							 dialog.setContentView(R.layout.new_message);
-							 dialog.setTitle("New Message");
-							 Button done_but = (Button) dialog.findViewById(R.id.done);
-							 final EditText message = (EditText)dialog.findViewById(R.id.message);
-							 
-							 	//send button clicked
-								 done_but.setOnClickListener(new OnClickListener() {
-
-									 @Override
-									 public void onClick(View v) {
-										 //send function
-										 if(message.getText().toString().trim().length()<1)
-										 {
-											 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-										 }
-										 else
-										 {
-											 MessageObject new_Message = new MessageObject();
-											 new_Message.toUserObjectID(post.getUser().getObjectId());
-											 new_Message.setText(message.getText().toString().trim());
-											 new_Message.setType("via_post");
-											 new_Message.setViaPost(post.getText());
-											 new_Message.saveInBackground(new SaveCallback() {
-												
-												@Override
-												public void done(ParseException e) {
-													// TODO Auto-generated method stub
-													if(e==null)
-													{
-														Toast.makeText(con, "Successfully Sent", Toast.LENGTH_SHORT).show();
-													}
-													else
-													{
-														Log.d("error while sending", e.getMessage().toString());
-														Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-													}
-													
-												}
-											});
-										 }
-										 dialog.dismiss();
-									 }
-								 });
-								 dialog.show();
-//							
+							Intent i = new Intent(MainActivity.this, Create_Message.class);
+							 i.putExtra("obj_id", post.getUser().getObjectId());
+							 i.putExtra("viaPost", post.getText());
+							 startActivity(i);
 						}
 		            	
 		            });
@@ -924,10 +881,7 @@ public class MainActivity extends Activity implements LocationListener {
 			 p=geoPointFromLocation(currentLocation);
 			 setQuery(p);
 		 }
-		 else if(item.getItemId()==R.id.MyMessages){
-			  Intent i = new Intent(this,My_messages.class);
-			  startActivity(i);
-		 }
+		 
 		 else if(item.getItemId()==R.id.private_message){
 			  Intent i = new Intent(this,Private_message.class);
 			  startActivity(i);

@@ -12,12 +12,9 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,14 +22,10 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class Private_message extends SherlockActivity{
 	
@@ -80,14 +73,14 @@ public class Private_message extends SherlockActivity{
 
 		people.moveToFirst();
 		do {
-		    String name   = people.getString(indexName);
-		    String number = people.getString(indexNumber);
-		    number = (new To_international(con)).change_to_international(number);
-		    if(number!=null)
-		    {
-		    	valid_name.add(name);
-		    	valid_number.add(number);
-		    }
+			    String name   = people.getString(indexName);
+			    String number = people.getString(indexNumber);
+			    number = (new To_international(con)).change_to_international(number);
+			    if(number!=null)
+			    {
+			    	valid_name.add(name);
+			    	valid_number.add(number);
+			    }
 		} while (people.moveToNext());
 		
 		Log.d("size", ""+valid_name.size());
@@ -183,64 +176,19 @@ public class Private_message extends SherlockActivity{
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				          android.R.layout.simple_list_item_1, android.R.id.text1, names);
 				lv.setAdapter(adapter);
+				
+				// contact list item clicked
 				lv.setOnItemClickListener(new OnItemClickListener() {
 					 
 		            
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 				               final int position, long id) {
-						//Send message when user clicks on a contact
-						final Dialog dialog = new Dialog(con);
-						 dialog.setContentView(R.layout.new_message);
-						 dialog.setTitle("New Message");
-						 Button done_but = (Button) dialog.findViewById(R.id.done);
-						 final EditText message = (EditText)dialog.findViewById(R.id.message);
-						 
-						 	//send button clicked
-							 done_but.setOnClickListener(new OnClickListener() {
-
-								 @Override
-								 public void onClick(View v) {
-									 //send function
-									 if(message.getText().toString().trim().length()<1)
-									 {
-										 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-									 }
-									 else
-									 {
-										 final ProgressDialog pdLoading = new ProgressDialog(con);
-										 pdLoading.setMessage("Sending. please wait...");
-									     pdLoading.show();
-										 MessageObject new_Message = new MessageObject();
-										 new_Message.toUserObjectID(object_ids[position]);
-										 new_Message.setText(message.getText().toString().trim());
-										 new_Message.setType("personal");
-										 new_Message.setViaPost("blah");
-										 new_Message.saveInBackground(new SaveCallback() {
-											
-											@Override
-											public void done(ParseException e) {
-												// TODO Auto-generated method stub
-												pdLoading.dismiss();
-												if(e==null)
-												{
-													Toast.makeText(con, "Successfully Sent", Toast.LENGTH_SHORT).show();
-												}
-												else
-												{
-													
-													Log.d("error while sending", e.getMessage().toString());
-													Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
-												}
-												
-											}
-										});
-									 }
-									 dialog.dismiss();
-								 }
-							 });
-							 dialog.show();
-//						
+						
+							 Intent i = new Intent(Private_message.this, Create_Message.class);
+							 i.putExtra("obj_id", object_ids[position]);
+							 i.putExtra("viaPost", "");
+							 startActivity(i);
 					}
 
 		       }); 
