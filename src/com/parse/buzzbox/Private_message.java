@@ -13,13 +13,16 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.CalendarContract.Reminders;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,13 +32,17 @@ import android.widget.ListView;
 
 public class Private_message extends SherlockActivity{
 	
-	private int find_threads = 0;
 	private Context con;
 	private LinkedList<String> valid_name = new LinkedList<String>();
 	private LinkedList<String> valid_number = new LinkedList<String>();
 	String names[], numbers[], object_ids[];
 	SharedPreferences sp_parse;
 	SharedPreferences.Editor prefEdit;
+	private int remaining= -9999999;
+	private int index;
+	AlertDialog alertDialog;
+	private int flag;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +60,23 @@ public class Private_message extends SherlockActivity{
 			  prefEdit.commit();
 			  setSupportProgressBarIndeterminateVisibility(true);
 			  chekcAllPhoneNumbers();
+			  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+						con);
+		 
+						// create alert dialog
+			  			alertDialog = alertDialogBuilder.setTitle("Please wait")
+							.setMessage("It will little longer while we are loading your friends from your contacts. You can close this screen if you want.\nYou can also update friends list from update option in options menu.")
+							.setCancelable(false)
+							.setPositiveButton("Ok, I got it.",new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,int id) {
+									alertDialog.dismiss();
+								}
+							  }).create();
+		 
+						// show it
+						alertDialog.show();
 		  }
+		  
 		  load_contacts();
 }
 	
@@ -61,80 +84,72 @@ public class Private_message extends SherlockActivity{
 	//and add new users who are registered on app to database
 	public void chekcAllPhoneNumbers() {
 		
-		
-		Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-		String[] projection    = new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-		                ContactsContract.CommonDataKinds.Phone.NUMBER};
-
-		Cursor people = getContentResolver().query(uri, projection, null, null, null);
-
-		int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-		int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-
-		people.moveToFirst();
-		do {
-			    String name   = people.getString(indexName);
-			    String number = people.getString(indexNumber);
-			    number = (new To_international(con)).change_to_international(number);
-			    if(number!=null)
-			    {
-			    	valid_name.add(name);
-			    	valid_number.add(number);
-			    }
-		} while (people.moveToNext());
-		
-		Log.d("size", ""+valid_name.size());
-		for(int i=0;i<valid_name.size();i++)
+		if(remaining!=-9999999 && remaining!=0)
 		{
-			
-			find_threads++;
-			ParseQuery<ParseUser> query = ParseUser.getQuery();
-			query.whereEqualTo("phone_number", valid_number.get(i));
-			query.findInBackground(new FindCallback<ParseUser>() {
-			@Override
-			public void done(List<ParseUser> objects, ParseException e) {
-				// TODO Auto-generated method stub
-				find_threads--;
-				if(find_threads==0)
-					{
-						setSupportProgressBarIndeterminateVisibility(false);
-						load_contacts();
-					}
-				if (e == null) {
-			        // The query was successful.
-					//new user found
-					
-					if(objects.size()!=0)
-					{
-						int flag=0;
-						//got the number using buzzbox
-						String phone_number = objects.get(0).getString("phone_number");
-						String object_id = objects.get(0).getObjectId();
-						for(int temp = 0;temp <numbers.length;temp++)
-						{
-							if(numbers[temp].equals(phone_number))
-								{
-									flag=1;
-									Log.d("User", "Already Present");
-								}
-						}
-						if(flag==0)
-						{
-							Contacts_database db = new Contacts_database(con);
-							int index = valid_number.indexOf(phone_number);
-							Contact contact = new Contact(valid_number.get(index), valid_name.get(index),object_id);
-							db.addContact(contact);
-						}
-						
-					}
-			    } else {
-			        // Something went wrong.
-			    	
-			    }
-			}
-		  });
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					con);
+	 
+					// create alert dialog
+		  			alertDialog = alertDialogBuilder.setTitle("Please wait")
+						.setMessage("Already an update is going on.")
+						.setCancelable(false)
+						.setPositiveButton("Ok.",new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,int id) {
+								alertDialog.dismiss();
+							}
+						  }).create();
+	 
+					// show it
+					alertDialog.show();
 		}
-		
+		else
+		{
+			Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+			String[] projection    = new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+			                ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+			Cursor people = getContentResolver().query(uri, projection, null, null, null);
+
+			int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+			int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+			people.moveToFirst();
+			do {
+				    String name   = people.getString(indexName);
+				    String number = people.getString(indexNumber);
+				    number = (new To_international(con)).change_to_international(number);
+				    if(number!=null)
+				    {
+				    	valid_name.add(name);
+				    	valid_number.add(number);
+				    }
+			} while (people.moveToNext());
+			
+			Log.d("size", ""+valid_name.size());
+			
+			if(valid_name.size()>10)
+			{
+				flag = valid_name.size();
+				remaining = valid_name.size();
+				index = -1;
+				for(int i=0;i<valid_name.size();i++)
+				{
+					parse_phone_number_query();
+				}
+			}
+			else
+			{
+				flag = valid_name.size();
+				remaining = valid_name.size();
+				index = -1;
+				for(int i=0;i<valid_name.size();i++)
+				{
+					parse_phone_number_query();
+				}
+			}
+
+		}
+				
 	}
 	
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu){
@@ -186,6 +201,7 @@ public class Private_message extends SherlockActivity{
 				               final int position, long id) {
 						
 							 Intent i = new Intent(Private_message.this, Create_Message.class);
+							 Log.d("obj id", object_ids[position]);
 							 i.putExtra("obj_id", object_ids[position]);
 							 i.putExtra("viaPost", "");
 							 startActivity(i);
@@ -193,5 +209,69 @@ public class Private_message extends SherlockActivity{
 
 		       }); 
 
+	}
+	
+	public void parse_phone_number_query()
+	{
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		index++;
+		remaining--;
+		Log.d("remaining and index", remaining+" "+index);
+		query.whereEqualTo("phone_number", valid_number.get(index));
+		query.findInBackground(new FindCallback<ParseUser>() {
+		@Override
+		public void done(List<ParseUser> objects, ParseException e) {
+			// TODO Auto-generated method stub
+			
+			if(remaining==0)
+				{
+					//setSupportProgressBarIndeterminateVisibility(false);
+					load_contacts();
+				}
+			else
+			{
+				parse_phone_number_query();
+			}
+			flag--;
+			if(flag==0)
+			{
+				setSupportProgressBarIndeterminateVisibility(false);
+				load_contacts();
+			}
+			if (e == null) {
+		        // The query was successful.
+				//new user found
+				
+				if(objects.size()!=0)
+				{
+					
+					int flag=0;
+					//got the number using buzzbox
+					String phone_number = objects.get(0).getString("phone_number");
+					String object_id = objects.get(0).getObjectId();
+					for(int temp = 0;temp <numbers.length;temp++)
+					{
+						if(numbers[temp].equals(phone_number))
+							{
+								flag=1;
+								Log.d("User", "Already Present");
+							}
+					}
+					if(flag==0)
+					{
+						Contacts_database db = new Contacts_database(con);
+						int index = valid_number.indexOf(phone_number);
+						Contact contact = new Contact(valid_number.get(index), valid_name.get(index),object_id);
+						db.addContact(contact);
+						load_contacts();
+					}
+					
+				}
+		    } else {
+		        Log.d("error", e.getMessage());
+		        
+		    }
+		}
+	  });
 	}
 }

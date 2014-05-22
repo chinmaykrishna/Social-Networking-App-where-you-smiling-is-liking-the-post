@@ -115,7 +115,7 @@ public class Create_Message extends Activity{
 				 else
 				 {
 					 
-						 String message_text = message.getText().toString();
+						 String message_text = message.getText().toString().trim();
 						 
 						 MessageObject mo = new MessageObject();
 						 

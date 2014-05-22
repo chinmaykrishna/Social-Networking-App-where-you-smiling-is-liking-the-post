@@ -3,21 +3,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/rect_round_corners" >
+    android:background="#443f3c"
+     >
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:padding="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:weightSum="10" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="7"
+            android:weightSum="10" >
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="User"
+                android:layout_weight="5"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:text="Medium Text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/white"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+            
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="3" >
+
+            <ImageView
+                android:id="@+id/author_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/avatar1" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/via_post"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="" />
+        android:text="Medium Text"
+        android:layout_marginTop="5dp" 
+        android:paddingLeft="10dp"
+        android:textColor="@android:color/white"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
