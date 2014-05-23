@@ -1,5 +1,6 @@
 package com.parse.buzzbox;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.parse.ParseClassName;
@@ -8,7 +9,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 @ParseClassName("Messages_Thread")
-public class MessageObject extends ParseObject {
+public class MessageObject extends ParseObject implements Serializable{
 
 	//Default constructor
 	public MessageObject() 
@@ -42,6 +43,22 @@ public class MessageObject extends ParseObject {
 	    put("user", value);
 	  }
 	  
+	  public String getAuthorName() {
+		    return getString("user_name");
+		  }
+		  
+		  public void setAuthorName(String value) {
+		    put("user_name", value);
+		  }
+		  
+		  public String getAuthorAvatar() {
+			    return getString("user_avatar");
+			  }
+			  
+			  public void setAuthorAvatar(String value) {
+			    put("user_avatar", value);
+			  }
+			  
 	  public void setEmpathised(boolean bool)
 	  {
 		  put("emp",bool);
@@ -73,7 +90,7 @@ public class MessageObject extends ParseObject {
 		return getList("comments");  
 	  }
 	  
-	  public List<String> getCommentAuthors()
+	  public List<ParseUser> getCommentAuthors()
 	  {
 		return getList("comment_authors");  
 	  }

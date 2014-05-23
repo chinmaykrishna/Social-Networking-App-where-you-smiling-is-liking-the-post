@@ -2,9 +2,9 @@ package com.parse.buzzbox;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
@@ -58,7 +58,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -90,14 +89,12 @@ public class MainActivity extends Activity implements LocationListener {
 	private int height_actual;
 	private Handler hm;
 	private int no_of_post = 0;
-	private MainActivity main;
 	private int temp =0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		main = this;
 		if (getIntent().getBooleanExtra("EXIT", false)) {
 			 finish();
 			}
@@ -162,6 +159,16 @@ public class MainActivity extends Activity implements LocationListener {
                 menuright.toggle();
                 //ParseQueryAdapter<MessageObject> Messages;
             	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
+            	list.setOnTouchListener(new OnSwipeTouchListener(con){
+            		public void onSwipeRight() {
+            			onCustomBackPressed();
+	                }
+            		
+            		
+            		public boolean onTouch(View v, MotionEvent event) {
+    	                return gestureDetector.onTouchEvent(event);
+    	            }
+            	});
             	final ProgressBar pb = (ProgressBar) menuright.getMenu().findViewById(R.id.progressBar1);
             	
             	// Set up a customized query
@@ -195,7 +202,14 @@ public class MainActivity extends Activity implements LocationListener {
     		            via_post.setText("");
     		            else
     		            via_post.setText("Via Post: "+message.getViaPost());
-    		            
+    		            if(message.getAuthorName()!=null)
+    		            {
+    		            	message_author.setText(message.getAuthorName());
+    		            }
+    		            if(message.getAuthorAvatar()!=null)
+    		            {
+    		            	author_avatar.setImageResource(Integer.parseInt(message.getAuthorAvatar()));
+    		            }
     		            message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
     		            	  public void done(ParseUser object, ParseException e) {
     		            		    if (e == null) {
@@ -206,6 +220,29 @@ public class MainActivity extends Activity implements LocationListener {
     		            		    }
     		            		  }
     		            		});
+    		            view.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								
+								Intent intent = new Intent(con, Message_complete.class);
+								intent.putExtra("text", message.getText());
+								intent.putExtra("mood", message.getMood());
+								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
+								intent.putExtra("author_name", message.getAuthorName());
+								intent.putExtra("author_avatar", message.getAuthorAvatar());
+								Custom_comments_list comments = new Custom_comments_list();
+								comments = (Custom_comments_list) message.getCommentList();
+								intent.putExtra("comments_list", comments);
+								Custom_authors_list authors = new Custom_authors_list();
+								authors = (Custom_authors_list) message.getCommentAuthors();
+								intent.putExtra("comment_authors", authors);
+								intent.putExtra("date", message.getCreatedAt());
+								intent.putExtra("Message_object", message.getObjectId());
+								startActivity(intent);
+							}
+						});
     		            return view;
     		          }
     		        };
@@ -303,7 +340,7 @@ public class MainActivity extends Activity implements LocationListener {
             }
         };
 		
-		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    
 		currentLocation = this.getLastKnownLocation();
 		
@@ -1126,9 +1163,9 @@ public class MainActivity extends Activity implements LocationListener {
 	  
 	  private Location getLastKnownLocation() {
 		  
-		  locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
-		  boolean netwrkenabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
-		  boolean gpsenabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		  boolean netwrkenabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		  boolean gpsenabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		  
 		  if(!gpsenabled){
 			  System.out.println("=======> GPS not enabled me aya");
@@ -1155,17 +1192,17 @@ public class MainActivity extends Activity implements LocationListener {
 		  }
 		  
 		  if(netwrkenabled){
-			  locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0, this);
+			  locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 			  if(locationManager != null){
-				  currentLocation = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+				  currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 				  System.out.println("Network me aya" + currentLocation.getLatitude());
 			  }
 			  
 		  }
 		  else if(gpsenabled){
-			  locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, this);
+			  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 			  if(locationManager != null){
-				  currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+				  currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				  System.out.println("Gps me aya"+currentLocation.getLatitude());
 			  }
 		  }

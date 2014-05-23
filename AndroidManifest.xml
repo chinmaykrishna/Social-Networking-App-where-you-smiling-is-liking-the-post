@@ -55,7 +55,9 @@
         <activity
         	android:name="com.parse.buzzbox.Create_Message">
         </activity>
- 
+ 		<activity
+        	android:name="com.parse.buzzbox.Message_complete">
+        </activity>
     </application>
 
 </manifest>

@@ -120,6 +120,8 @@ public class Create_Message extends Activity{
 						 MessageObject mo = new MessageObject();
 						 
 						 mo.setAuthor(ParseUser.getCurrentUser());
+						 mo.setAuthorAvatar(String.valueOf(ParseUser.getCurrentUser().getInt("Avatar")));
+						 mo.setAuthorName(ParseUser.getCurrentUser().getUsername());
 						 mo.setEmpathised(false);
 						 mo.setMood(mood_id);
 						 mo.setReceipentObjID(parse_user_obj_id);

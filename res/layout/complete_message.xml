@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#443f3c" >
+    
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_up"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:panelHeight="68dp"
+    sothree:shadowHeight="4dp"
+    sothree:paralaxOffset="100dp"
+    sothree:dragView="@+id/name">
+
+    <LinearLayout
+        	android:id="@+id/main_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+             >
+	    
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/abs__ab_bottom_solid_inverse_holo"
+             >
+	     <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="25dp"
+                    android:gravity="center"
+                    android:text="Comments"
+                    />
+            </LinearLayout>
+            
+             <com.twotoasters.jazzylistview.JazzyListView
+			        android:id="@+id/message_comments"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        app:effect="helix"
+			        app:only_animate_new_items="false"
+			        app:only_animate_fling="false"
+			        app:max_velocity="0"
+			         >
+			    </com.twotoasters.jazzylistview.JazzyListView>
+	  
+	    
+    </LinearLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</LinearLayout>
