@@ -2,9 +2,9 @@ package com.parse.buzzbox;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
@@ -47,6 +47,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +65,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -157,18 +160,16 @@ public class MainActivity extends Activity implements LocationListener {
 			public void onSwipeLeft() {
             	
                 menuright.toggle();
-                //ParseQueryAdapter<MessageObject> Messages;
             	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
-            	list.setOnTouchListener(new OnSwipeTouchListener(con){
-            		public void onSwipeRight() {
-            			onCustomBackPressed();
-	                }
-            		
-            		
-            		public boolean onTouch(View v, MotionEvent event) {
-    	                return gestureDetector.onTouchEvent(event);
-    	            }
-            	});
+            	ImageView back = (ImageView)menuright.getMenu().findViewById(R.id.back);
+            	back.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						onCustomBackPressed();
+					}
+				});
             	final ProgressBar pb = (ProgressBar) menuright.getMenu().findViewById(R.id.progressBar1);
             	
             	// Set up a customized query
@@ -192,7 +193,7 @@ public class MainActivity extends Activity implements LocationListener {
     		            
     		        	
     		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
-    		            pb.setVisibility(View.GONE);
+    		            //pb.setVisibility(View.GONE);
     		            TextView message_text = (TextView) view.findViewById(R.id.message_text);
     		            final TextView message_author = (TextView) view.findViewById(R.id.author);
     		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
@@ -216,6 +217,7 @@ public class MainActivity extends Activity implements LocationListener {
     		            		    	message_author.setText(object.getUsername());
     		            		    	author_avatar.setImageResource(object.getInt("Avatar"));
     		            		    } else {
+    		            		    	
     		            		      // Failure!
     		            		    }
     		            		  }
@@ -232,12 +234,16 @@ public class MainActivity extends Activity implements LocationListener {
 								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
 								intent.putExtra("author_name", message.getAuthorName());
 								intent.putExtra("author_avatar", message.getAuthorAvatar());
-								Custom_comments_list comments = new Custom_comments_list();
-								comments = (Custom_comments_list) message.getCommentList();
-								intent.putExtra("comments_list", comments);
-								Custom_authors_list authors = new Custom_authors_list();
-								authors = (Custom_authors_list) message.getCommentAuthors();
-								intent.putExtra("comment_authors", authors);
+								intent.putExtra("receipent", message.getReceipentObjID());
+								if(message.getCommentList()!=null)
+								{
+									String[] comments = message.getCommentList().toArray(new String[message.getCommentList().size()]);
+									intent.putExtra("comments_list", comments);
+									
+									String[] authors = message.getCommentAuthors().toArray(new String[message.getCommentAuthors().size()]);
+									intent.putExtra("comments_authors", authors);
+								}
+								
 								intent.putExtra("date", message.getCreatedAt());
 								intent.putExtra("Message_object", message.getObjectId());
 								startActivity(intent);
@@ -246,6 +252,21 @@ public class MainActivity extends Activity implements LocationListener {
     		            return view;
     		          }
     		        };
+    		        Messages.addOnQueryLoadListener(new OnQueryLoadListener<MessageObject>() {
+
+						@Override
+						public void onLoaded(List<MessageObject> arg0,
+								Exception arg1) {
+							// TODO Auto-generated method stub
+							pb.setVisibility(View.INVISIBLE);
+						}
+
+						@Override
+						public void onLoading() {
+							// TODO Auto-generated method stub
+							
+						}
+					});
     			    list.setAdapter(Messages);
     			    
     			    View view2 = (View)menuright.getMenu();
@@ -260,7 +281,6 @@ public class MainActivity extends Activity implements LocationListener {
         	            }
                 	});
     			    
-            	//Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
     		@Override
     		public void onSwipeBottom() {
@@ -473,8 +493,11 @@ public class MainActivity extends Activity implements LocationListener {
 						
 							
 							final Dialog dialog = new Dialog(con);
-							 dialog.setContentView(R.layout.new_message);
-							 dialog.setTitle("Comment");
+							dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+							
+							 dialog.setContentView(R.layout.comment_layout);
+							 
+							 
 							 Button done_but = (Button) dialog.findViewById(R.id.done);
 							 final EditText message = (EditText)dialog.findViewById(R.id.message);
 							 
@@ -517,6 +540,13 @@ public class MainActivity extends Activity implements LocationListener {
 									 }
 								 });
 								 dialog.show();
+								 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+									Window window = dialog.getWindow();
+									lp.copyFrom(window.getAttributes());
+									//This makes the dialog take up the full width
+									lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+									lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+									window.setAttributes(lp);
 						}
 					});
 		            
@@ -581,7 +611,6 @@ public class MainActivity extends Activity implements LocationListener {
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
 							Intent i = new Intent(MainActivity.this, Create_Message.class);
-							Log.d("obj id", post.getUser().getObjectId());
 							 i.putExtra("obj_id", post.getUser().getObjectId());
 							 i.putExtra("viaPost", post.getText());
 							 startActivity(i);

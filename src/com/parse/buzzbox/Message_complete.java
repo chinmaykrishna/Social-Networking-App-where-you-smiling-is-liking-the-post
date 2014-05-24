@@ -1,6 +1,7 @@
 package com.parse.buzzbox;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -9,21 +10,30 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.twotoasters.jazzylistview.JazzyListView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
 public class Message_complete extends Activity{
@@ -31,10 +41,13 @@ public class Message_complete extends Activity{
 	String message_id;
 	MessageObject message;
 	View viewToLoad;
+	Context con;
+	String receipent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.complete_message);
+		con = this;
 		viewToLoad = LayoutInflater.from(
 	            getApplicationContext()).inflate(
 	            R.layout.complete_message_element, null);
@@ -47,6 +60,7 @@ public class Message_complete extends Activity{
         TextView date = (TextView) viewToLoad.findViewById(R.id.date);
         TextView time = (TextView) viewToLoad.findViewById(R.id.time);
         
+        receipent = this.getIntent().getExtras().getString("receipent");
         contentView.setText(this.getIntent().getExtras().getString("text"));
         contentView.setBackgroundResource(this.getIntent().getExtras().getInt("mood"));
         
@@ -62,8 +76,6 @@ public class Message_complete extends Activity{
         time.setText(timeString);
         
         
-        
-        
         if(this.getIntent().getExtras().getString("author_name")!=null)
         {
         	usernameView.setText(this.getIntent().getExtras().getString("author_name"));
@@ -73,10 +85,11 @@ public class Message_complete extends Activity{
         	im.setImageResource(Integer.parseInt(this.getIntent().getExtras().getString("author_avatar")));
         }
         
-        if((List<String>)this.getIntent().getSerializableExtra("comments_list")!=null)
+        
+        if(this.getIntent().getExtras().getStringArray("comments_list")!=null)
         {
-        	ListView comments = (ListView)findViewById(R.id.message_comments);
-            yourAdapter adapter = new yourAdapter(getApplicationContext(), (List<String>)this.getIntent().getSerializableExtra("comments_list"), (List<ParseUser>)this.getIntent().getSerializableExtra("comments_list"));
+        	JazzyListView comments = (JazzyListView)findViewById(R.id.message_comments);
+            yourAdapter adapter = new yourAdapter(con, Arrays.asList(this.getIntent().getExtras().getStringArray("comments_list")), Arrays.asList(this.getIntent().getExtras().getStringArray("comments_authors")));
             comments.setAdapter(adapter);
         }
         
@@ -98,10 +111,117 @@ public class Message_complete extends Activity{
 				}
 			}
 		});
-		
-		
-//		load_screen();
 //		
+		final ImageView comment_but = (ImageView)viewToLoad.findViewById(R.id.comment);
+        
+        comment_but.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			
+				
+				final Dialog dialog = new Dialog(con);
+				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				 dialog.setContentView(R.layout.comment_layout);
+				 Button done_but = (Button) dialog.findViewById(R.id.done);
+				 final EditText ed = (EditText)dialog.findViewById(R.id.message);
+				 
+				 	//send button clicked
+					 done_but.setOnClickListener(new OnClickListener() {
+
+						 @Override
+						 public void onClick(View v) {
+							 //send function
+							 
+							 if(ed.getText().toString().trim().length()<1)
+							 {
+								 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+							 }
+							 else
+							 {
+								 
+								 if(message==null)
+								 {
+									 ParseQuery<MessageObject> q = MessageObject.getQuery();
+										q.getInBackground(message_id, new GetCallback<MessageObject>() {
+											
+											@Override
+											public void done(final MessageObject me, ParseException e) {
+												// TODO Auto-generated method stub
+												if(e==null)
+												{
+													
+													me.addComment(ed.getText().toString().trim(), ParseUser.getCurrentUser().getObjectId());
+													me.saveInBackground(new SaveCallback() {
+														
+														@Override
+														public void done(ParseException arg0) {
+															// TODO Auto-generated method stub
+															if(arg0==null)
+															{
+																Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+																message = me;
+																load_screen();
+															}
+															else
+															{
+																Toast.makeText(con, "Comment unsuccessful. Please check your internet connection.", Toast.LENGTH_SHORT).show();
+															}
+														}
+													});
+												}
+												else
+												{
+													
+												}
+											}
+										});
+
+								 }
+								 else
+								 {
+									 message.addComment(ed.getText().toString().trim(), ParseUser.getCurrentUser().getObjectId());
+										message.saveInBackground(new SaveCallback() {
+											
+											@Override
+											public void done(ParseException arg0) {
+												// TODO Auto-generated method stub
+												Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+												load_screen();
+											}
+										});
+										 
+
+								 }
+								 
+							 }
+							 dialog.dismiss();
+						 }
+					 });
+					 dialog.show();
+					 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+						Window window = dialog.getWindow();
+						lp.copyFrom(window.getAttributes());
+						//This makes the dialog take up the full width
+						lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+						lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+						window.setAttributes(lp);
+			}
+		});
+        
+        ((ImageView)viewToLoad.findViewById(R.id.privatemessage)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(con, Create_Message.class);
+				 i.putExtra("obj_id", receipent);
+				 i.putExtra("viaPost", "");
+				 startActivity(i);
+			}
+		});
+        
+		
 	}
 	
 	private void load_screen()
@@ -153,7 +273,7 @@ public class Message_complete extends Activity{
       		});
         if(message.getCommentList()!=null)
         {
-        	ListView comments = (ListView)findViewById(R.id.message_comments);
+        	JazzyListView comments = (JazzyListView)findViewById(R.id.message_comments);
             yourAdapter adapter = new yourAdapter(getApplicationContext(), message.getCommentList(), message.getCommentAuthors());
             comments.setAdapter(adapter);
         }
@@ -165,11 +285,11 @@ public class Message_complete extends Activity{
 
 	    Context context;
 	    List<String> comments;
-	    List<ParseUser> author;
+	    List<String> author;
 	    private LayoutInflater inflater = null;
 
 	    
-	    public yourAdapter(Context context, List<String> comments, List<ParseUser> author) {
+	    public yourAdapter(Context context, List<String> comments, List<String> author) {
 	        // TODO Auto-generated constructor stub
 	        this.context = context;
 	        this.comments = comments;
@@ -205,17 +325,22 @@ public class Message_complete extends Activity{
 	        	
 	        TextView text = (TextView) vi.findViewById(R.id.comment_text);
 	        text.setText(comments.get(position));
-	        if(author.get(position)==ParseUser.getCurrentUser())
-	        {
-	        	vi.setBackgroundColor(Color.parseColor("#8B7D7B"));
-	        	text.setTextColor(Color.WHITE);
-	        }
-	        else
-	        {
-	        	vi.setBackgroundColor(Color.parseColor("#F3F2F1"));
-	        	text.setTextColor(Color.BLACK);
-	        }
+	        
+	        	if(author.get(position)==ParseUser.getCurrentUser().getObjectId())
+		        {
+		        	vi.setBackgroundColor(Color.parseColor("#8B7D7B"));
+		        	text.setTextColor(Color.WHITE);
+		        }
+		        else
+		        {
+		        	vi.setBackgroundColor(Color.parseColor("#F3F2F1"));
+		        	text.setTextColor(Color.BLACK);
+		        }
+	        
+	        
+	        
 	        return vi;
 	    }
 	}
+	
 }

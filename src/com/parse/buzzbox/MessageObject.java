@@ -1,6 +1,5 @@
 package com.parse.buzzbox;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.parse.ParseClassName;
@@ -8,8 +7,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-@ParseClassName("Messages_Thread")
-public class MessageObject extends ParseObject implements Serializable{
+@ParseClassName("Messages_Thread_object")
+public class MessageObject extends ParseObject{
 
 	//Default constructor
 	public MessageObject() 
@@ -74,15 +73,15 @@ public class MessageObject extends ParseObject implements Serializable{
 		  put("receipent",user);
 	  }
 	  
-	  public String getReceipent()
+	  public String getReceipentObjID()
 	  {
 		  return getString("receipent");
 	  }
 	  
-	  public void addComment(String comment, ParseUser user)
+	  public void addComment(String comment, String user)
 	  {
 		  add("comments", comment);
-		  add("comment_author",user);
+		  add("comment_author_id",user);
 	  }
 	  
 	  public List<String> getCommentList()
@@ -90,9 +89,9 @@ public class MessageObject extends ParseObject implements Serializable{
 		return getList("comments");  
 	  }
 	  
-	  public List<ParseUser> getCommentAuthors()
+	  public List<String> getCommentAuthors()
 	  {
-		return getList("comment_authors");  
+		return getList("comment_author_id");  
 	  }
 	  
 	  public void setViaPost(String str)

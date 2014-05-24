@@ -19,22 +19,33 @@
              android:background="#8B7D7B"
               >
 
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_centerHorizontal="true"
-                  android:layout_centerVertical="true"
-                  android:text="My Messages"
-                  android:textColor="@android:color/white"
-                  android:textAppearance="?android:attr/textAppearanceLarge" />
+             <TextView
+                 android:id="@+id/textView1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+                 android:layout_centerVertical="true"
+                 android:text="My Messages"
+                 android:textAppearance="?android:attr/textAppearanceLarge"
+                 android:textColor="@android:color/white" />
 
-              <ProgressBar
-                  android:id="@+id/progressBar1"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentRight="true"
-                  android:layout_alignParentTop="true"
-                  android:visibility="gone" />
+             <ProgressBar
+                 android:id="@+id/progressBar1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginRight="10dp"
+                 android:visibility="gone" />
+
+             <ImageView
+                 android:id="@+id/back"
+                 android:layout_width="30dp"
+                 android:layout_height="30dp"
+                 android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginLeft="10dp"
+                 android:src="@drawable/back_button" />
 
          </RelativeLayout>
 

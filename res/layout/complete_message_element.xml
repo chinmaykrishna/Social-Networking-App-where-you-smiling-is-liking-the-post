@@ -95,7 +95,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:onClick="private_message"
         android:src="@drawable/private_message" />
 
     <ImageView
