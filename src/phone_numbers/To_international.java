@@ -7,6 +7,7 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 
 //Class to convert any phone number 
@@ -28,6 +29,7 @@ public class To_international {
 	      ph_no = phoneUtil.format(swissNumberProto, PhoneNumberFormat.E164);
 	      return ph_no;
 	    } catch (NumberParseException e) {
+	    	Log.d("error in phone number", e.getMessage());
 	    	return null;	
 	    }
 	}

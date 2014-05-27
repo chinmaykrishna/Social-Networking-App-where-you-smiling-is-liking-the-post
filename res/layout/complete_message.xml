@@ -16,7 +16,7 @@
     sothree:panelHeight="68dp"
     sothree:shadowHeight="4dp"
     sothree:paralaxOffset="100dp"
-    sothree:dragView="@+id/name">
+    sothree:dragView="@+id/drag_layout">
 
     <LinearLayout
         	android:id="@+id/main_screen"
@@ -31,21 +31,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/abs__ab_bottom_solid_inverse_holo"
+            android:background="@android:color/transparent"
              >
 	     <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="68dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/drag_layout"
+           		android:background="@android:color/transparent" 	    
+                >
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="25dp"
-                    android:gravity="center"
-                    android:text="Comments"
-                    />
+
+              <ImageView
+			        android:id="@+id/imageView1"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:src="@drawable/comments"
+			        android:scaleType="fitXY"
+			        android:background="@android:color/transparent" 	
+			         />
+
             </LinearLayout>
             
              <com.twotoasters.jazzylistview.JazzyListView
@@ -56,6 +61,7 @@
 			        app:only_animate_new_items="false"
 			        app:only_animate_fling="false"
 			        app:max_velocity="0"
+			        android:background="#564e4c"
 			         >
 			    </com.twotoasters.jazzylistview.JazzyListView>
 	  

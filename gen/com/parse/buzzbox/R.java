@@ -167,6 +167,39 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
         public static final int backgroundStacked=0x7f010069;
+        /**  Use this attribute to customize the background color of your action item
+             badges. By default it is a semitransparent red 
+         <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int badgeBackgroundColor=0x7f010082;
+        /**  Use this attribute to customize the position of your action item
+             badges. The default value is "topRight" 
+         <p>Must be one or more (separated by '|') of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>topLeft</code></td><td>1</td><td></td></tr>
+<tr><td><code>topRight</code></td><td>2</td><td></td></tr>
+<tr><td><code>bottomLeft</code></td><td>3</td><td></td></tr>
+<tr><td><code>bottomRight</code></td><td>4</td><td></td></tr>
+<tr><td><code>center</code></td><td>5</td><td></td></tr>
+</table>
+         */
+        public static final int badgePosition=0x7f010084;
+        /**  Use this attribute to customize the text styles of your action item
+             badges. By default it uses a white, 12dp, bold typeface 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int badgeTextStyle=0x7f010083;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -559,6 +592,55 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int progressBarStyle=0x7f01006c;
+        /**  Background color for the progress indicator bar. The default value
+             has been carefully tuned to look like the other action bar items, so
+             you probably don't wan to change this value unless you want your 
+             progress indicator to stand out (in a negative way). Please note that
+             this has no effect on the indeterminate progress indicator  
+         <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int progressIndicatorBackgroundColor=0x7f01007f;
+        /**  Foreground color for the progress indicator bar. The default value
+             has been carefully tuned to look like the other action bar items, so
+             you probably don't wan to change this value unless you want your 
+             progress indicator to stand out (in a negative way). Please note that
+             this has no effect on the indeterminate progress indicator  
+         <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int progressIndicatorForegroundColor=0x7f010080;
+        /**  The progress indicator type for newly created items. The three supported
+             types are "wheel", "pie", and "indeterminate". By default the wheel type
+             is used. Changing it to "pie" is basically a aesthetical decision, whereas
+             the determinate type is different in that it does not show a specific 
+             progress value, it just spins to give the impression that the app is working. 
+             Use this attribute in your theme if you want to change the type of 
+             ALL your action items, otherwise it is much simpler to just invoke
+             the setProgressIndicatorType() method on your action item once it's been
+             inflated  
+         <p>Must be one or more (separated by '|') of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>wheel</code></td><td>0</td><td></td></tr>
+<tr><td><code>pie</code></td><td>1</td><td></td></tr>
+<tr><td><code>indeterminate</code></td><td>2</td><td></td></tr>
+</table>
+         */
+        public static final int progressIndicatorType=0x7f010081;
         /**  An optional query hint string to be displayed in the empty query field. 
          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
@@ -568,6 +650,29 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int queryHint=0x7f01007b;
+        /**  Background selector for the refresh button. By default it uses
+             the same background of all other action bar buttons, which is
+             what you'll need 99% of the time 
+         <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+         */
+        public static final int refreshActionItemBackground=0x7f01007d;
+        /**  Icon that is shown when the action item is not in progress mode.
+             By default it is a refresh icon. Use this attribute in your theme
+             if you want to change the icon of ALL your action items, otherwise
+             it is much simpler to use the "android:icon" attribute in the menu
+             element for your action item (just like you would do for any other
+             action item)  
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int refreshActionItemIcon=0x7f01007e;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int refreshActionItemStyle=0x7f01007c;
         /**  SearchView AutoCompleteTextView style 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1148,184 +1253,196 @@ containing a value of this type.
         public static final int background_without_logo=0x7f02007d;
         public static final int below_shadow=0x7f02007e;
         public static final int comment=0x7f02007f;
-        public static final int curious=0x7f020080;
-        public static final int custom_edittext=0x7f020081;
-        public static final int depression=0x7f020082;
-        public static final int empathize=0x7f020083;
-        public static final int empathize_1=0x7f020084;
-        public static final int fear=0x7f020085;
-        public static final int happy=0x7f020086;
-        public static final int hidden=0x7f020087;
-        public static final int hyper=0x7f020088;
-        public static final int ic_launcher=0x7f020089;
-        public static final int invites_sent=0x7f02008a;
-        public static final int irritation=0x7f02008b;
-        public static final int login_button=0x7f02008c;
-        public static final int love=0x7f02008d;
-        public static final int nervous=0x7f02008e;
-        public static final int noemotion=0x7f02008f;
-        public static final int posts_made=0x7f020090;
-        public static final int private_message=0x7f020091;
-        public static final int rect_round_2=0x7f020092;
-        public static final int rect_round_corners=0x7f020093;
-        public static final int relief=0x7f020094;
-        public static final int rounded_edittext=0x7f020095;
-        public static final int sadness=0x7f020096;
-        public static final int secritive=0x7f020097;
-        public static final int shadow=0x7f020098;
-        public static final int sick=0x7f020099;
-        public static final int signup_button=0x7f02009a;
-        public static final int sleepy=0x7f02009b;
-        public static final int sympathy=0x7f02009c;
-        public static final int worry=0x7f02009d;
+        public static final int comments=0x7f020080;
+        public static final int curious=0x7f020081;
+        public static final int custom_edittext=0x7f020082;
+        public static final int depression=0x7f020083;
+        public static final int empathize=0x7f020084;
+        public static final int empathize_1=0x7f020085;
+        public static final int fear=0x7f020086;
+        public static final int happy=0x7f020087;
+        public static final int hidden=0x7f020088;
+        public static final int hyper=0x7f020089;
+        public static final int ic_launcher=0x7f02008a;
+        public static final int ic_navigation_refresh_dark=0x7f02008b;
+        public static final int ic_navigation_refresh_light=0x7f02008c;
+        public static final int invites_sent=0x7f02008d;
+        public static final int irritation=0x7f02008e;
+        public static final int login_button=0x7f02008f;
+        public static final int love=0x7f020090;
+        public static final int nervous=0x7f020091;
+        public static final int noemotion=0x7f020092;
+        public static final int posts_made=0x7f020093;
+        public static final int private_flag=0x7f020094;
+        public static final int private_message=0x7f020095;
+        public static final int rect_round_2=0x7f020096;
+        public static final int rect_round_corners=0x7f020097;
+        public static final int relief=0x7f020098;
+        public static final int rounded_edittext=0x7f020099;
+        public static final int sadness=0x7f02009a;
+        public static final int secritive=0x7f02009b;
+        public static final int shadow=0x7f02009c;
+        public static final int sick=0x7f02009d;
+        public static final int signup_button=0x7f02009e;
+        public static final int signup_login_bg=0x7f02009f;
+        public static final int sleepy=0x7f0200a0;
+        public static final int sympathy=0x7f0200a1;
+        public static final int transparent_img=0x7f0200a2;
+        public static final int worry=0x7f0200a3;
     }
     public static final class id {
-        public static final int Count_of_Empathizes=0x7f04005f;
-        public static final int Featured=0x7f04004f;
-        public static final int LinearLayout1=0x7f04004c;
-        public static final int Nick=0x7f04007c;
-        public static final int NoOfInvites=0x7f040081;
-        public static final int NoOfPosts=0x7f04007e;
-        public static final int RelativeLayout1=0x7f040062;
-        public static final int abs__action_bar=0x7f040035;
-        public static final int abs__action_bar_container=0x7f040034;
-        public static final int abs__action_bar_subtitle=0x7f040026;
-        public static final int abs__action_bar_title=0x7f040025;
-        public static final int abs__action_context_bar=0x7f040036;
+        public static final int Count_of_Empathizes=0x7f040063;
+        public static final int LinearLayout1=0x7f040072;
+        public static final int Nick=0x7f040082;
+        public static final int NoOfInvites=0x7f040087;
+        public static final int NoOfPosts=0x7f040084;
+        public static final int RelativeLayout1=0x7f040066;
+        public static final int abs__action_bar=0x7f04003d;
+        public static final int abs__action_bar_container=0x7f04003c;
+        public static final int abs__action_bar_subtitle=0x7f04002e;
+        public static final int abs__action_bar_title=0x7f04002d;
+        public static final int abs__action_context_bar=0x7f04003e;
         public static final int abs__action_menu_divider=0x7f040021;
         public static final int abs__action_menu_presenter=0x7f040022;
-        public static final int abs__action_mode_bar=0x7f04003a;
-        public static final int abs__action_mode_bar_stub=0x7f040039;
-        public static final int abs__action_mode_close_button=0x7f040029;
-        public static final int abs__activity_chooser_view_content=0x7f04002a;
-        public static final int abs__checkbox=0x7f040031;
-        public static final int abs__content=0x7f040037;
-        public static final int abs__default_activity_button=0x7f04002d;
-        public static final int abs__expand_activities_button=0x7f04002b;
+        public static final int abs__action_mode_bar=0x7f040042;
+        public static final int abs__action_mode_bar_stub=0x7f040041;
+        public static final int abs__action_mode_close_button=0x7f040031;
+        public static final int abs__activity_chooser_view_content=0x7f040032;
+        public static final int abs__checkbox=0x7f040039;
+        public static final int abs__content=0x7f04003f;
+        public static final int abs__default_activity_button=0x7f040035;
+        public static final int abs__expand_activities_button=0x7f040033;
         public static final int abs__home=0x7f04001f;
-        public static final int abs__icon=0x7f04002f;
-        public static final int abs__image=0x7f04002c;
-        public static final int abs__imageButton=0x7f040027;
-        public static final int abs__list_item=0x7f04002e;
+        public static final int abs__icon=0x7f040037;
+        public static final int abs__image=0x7f040034;
+        public static final int abs__imageButton=0x7f04002f;
+        public static final int abs__list_item=0x7f040036;
         public static final int abs__progress_circular=0x7f040023;
         public static final int abs__progress_horizontal=0x7f040024;
-        public static final int abs__radio=0x7f040032;
-        public static final int abs__search_badge=0x7f04003d;
-        public static final int abs__search_bar=0x7f04003c;
-        public static final int abs__search_button=0x7f04003e;
-        public static final int abs__search_close_btn=0x7f040043;
-        public static final int abs__search_edit_frame=0x7f04003f;
-        public static final int abs__search_go_btn=0x7f040045;
-        public static final int abs__search_mag_icon=0x7f040040;
-        public static final int abs__search_plate=0x7f040041;
-        public static final int abs__search_src_text=0x7f040042;
-        public static final int abs__search_voice_btn=0x7f040046;
-        public static final int abs__shortcut=0x7f040033;
-        public static final int abs__split_action_bar=0x7f040038;
-        public static final int abs__submit_area=0x7f040044;
-        public static final int abs__textButton=0x7f040028;
-        public static final int abs__title=0x7f040030;
+        public static final int abs__radio=0x7f04003a;
+        public static final int abs__search_badge=0x7f040045;
+        public static final int abs__search_bar=0x7f040044;
+        public static final int abs__search_button=0x7f040046;
+        public static final int abs__search_close_btn=0x7f04004b;
+        public static final int abs__search_edit_frame=0x7f040047;
+        public static final int abs__search_go_btn=0x7f04004d;
+        public static final int abs__search_mag_icon=0x7f040048;
+        public static final int abs__search_plate=0x7f040049;
+        public static final int abs__search_src_text=0x7f04004a;
+        public static final int abs__search_voice_btn=0x7f04004e;
+        public static final int abs__shortcut=0x7f04003b;
+        public static final int abs__split_action_bar=0x7f040040;
+        public static final int abs__submit_area=0x7f04004c;
+        public static final int abs__textButton=0x7f040030;
+        public static final int abs__title=0x7f040038;
         public static final int abs__up=0x7f040020;
-        public static final int action_button=0x7f040056;
-        public static final int author=0x7f040074;
-        public static final int author_avatar=0x7f040076;
-        public static final int avatar=0x7f04006b;
-        public static final int back=0x7f040072;
-        public static final int btnEmpathize=0x7f040060;
-        public static final int buttonNick=0x7f040084;
-        public static final int buttonPassword=0x7f040085;
-        public static final int buttonlogout=0x7f040087;
-        public static final int buttonupdate=0x7f040086;
+        public static final int action_button=0x7f04005b;
+        public static final int author=0x7f04007a;
+        public static final int author_avatar=0x7f04007b;
+        public static final int avatar=0x7f04006f;
+        public static final int back=0x7f040077;
+        public static final int bottomLeft=0x7f04002a;
+        public static final int bottomRight=0x7f04002b;
+        public static final int btnEmpathize=0x7f040064;
+        public static final int buttonNick=0x7f04008a;
+        public static final int buttonPassword=0x7f04008b;
+        public static final int buttonlogout=0x7f04008d;
+        public static final int buttonupdate=0x7f04008c;
         public static final int cards=0x7f040002;
-        public static final int changeLocation=0x7f04004d;
-        public static final int changeradius=0x7f04008e;
-        public static final int comment=0x7f04005e;
-        public static final int comment_text=0x7f04006c;
-        public static final int comments_list=0x7f04008a;
-        public static final int complete_item=0x7f040057;
-        public static final int contact_list=0x7f04007b;
-        public static final int contentView=0x7f04005c;
+        public static final int center=0x7f04002c;
+        public static final int changeradius=0x7f040097;
+        public static final int comment=0x7f040062;
+        public static final int comment_text=0x7f040070;
+        public static final int comments_list=0x7f040093;
+        public static final int comments_loader=0x7f040054;
+        public static final int complete_item=0x7f04005c;
+        public static final int contact_list=0x7f040081;
+        public static final int contentView=0x7f040060;
         public static final int curl=0x7f040003;
-        public static final int currentnick=0x7f040083;
-        public static final int date=0x7f04005a;
-        public static final int dialogButtonCancel=0x7f040065;
-        public static final int dialogButtonOK=0x7f040066;
+        public static final int currentnick=0x7f040089;
+        public static final int date=0x7f04005e;
+        public static final int determinate_progress_indicator=0x7f040090;
+        public static final int dialogButtonCancel=0x7f040069;
+        public static final int dialogButtonOK=0x7f04006a;
         public static final int disableHome=0x7f04001e;
-        public static final int done=0x7f04006a;
-        public static final int edit_comments=0x7f040088;
-        public static final int edit_query=0x7f04003b;
-        public static final int exclusive=0x7f04008f;
+        public static final int done=0x7f04006e;
+        public static final int drag_layout=0x7f040050;
+        public static final int edit_comments=0x7f040091;
+        public static final int edit_query=0x7f040043;
         public static final int fade=0x7f04000c;
         public static final int fan=0x7f040009;
-        public static final int feelings=0x7f040078;
-        public static final int finalmood=0x7f04007a;
+        public static final int feelings=0x7f04007e;
+        public static final int finalmood=0x7f040080;
         public static final int flip=0x7f040005;
         public static final int fly=0x7f040006;
         public static final int fullscreen=0x7f040012;
-        public static final int gallery=0x7f040082;
+        public static final int gallery=0x7f040088;
         public static final int grow=0x7f040001;
         public static final int helix=0x7f040008;
         public static final int homeAsUp=0x7f04001b;
-        public static final int horizaontal_comments=0x7f04004b;
-        public static final int imageView1=0x7f040058;
-        public static final int invites=0x7f040080;
+        public static final int horizaontal_comments=0x7f040055;
+        public static final int imageView1=0x7f040053;
+        public static final int indeterminate=0x7f040027;
+        public static final int indeterminate_progress_indicator=0x7f04008f;
+        public static final int invites=0x7f040086;
         public static final int left=0x7f04000f;
         public static final int listMode=0x7f040017;
-        public static final int location=0x7f040064;
-        public static final int loginButton=0x7f04006e;
-        public static final int main_screen=0x7f040049;
+        public static final int location=0x7f040068;
+        public static final int loginButton=0x7f040073;
+        public static final int main_screen=0x7f040051;
         public static final int margin=0x7f040011;
-        public static final int message=0x7f040069;
-        public static final int message_comment_element=0x7f040070;
-        public static final int message_comments=0x7f04006d;
-        public static final int message_text=0x7f040075;
-        public static final int messages=0x7f040073;
-        public static final int moods=0x7f040079;
-        public static final int myprofile=0x7f040050;
-        public static final int name=0x7f040048;
-        public static final int newPost=0x7f04004e;
-        public static final int nick=0x7f040067;
+        public static final int message=0x7f04006d;
+        public static final int message_comment_element=0x7f040075;
+        public static final int message_comments=0x7f040071;
+        public static final int message_text=0x7f040079;
+        public static final int messages=0x7f040078;
+        public static final int moods=0x7f04007f;
+        public static final int nick=0x7f04006b;
         public static final int none=0x7f040013;
         public static final int normal=0x7f040016;
-        public static final int ok_button=0x7f040089;
-        public static final int pass=0x7f040068;
-        public static final int password=0x7f040053;
-        public static final int passwordAgain=0x7f040055;
-        public static final int phone_number=0x7f040052;
-        public static final int post=0x7f040091;
-        public static final int posts=0x7f04007d;
-        public static final int postsMade=0x7f04007f;
-        public static final int postsView=0x7f04004a;
-        public static final int private_message=0x7f04008c;
-        public static final int privatemessage=0x7f040061;
-        public static final int profile=0x7f040092;
-        public static final int progressBar1=0x7f040071;
-        public static final int refresh=0x7f04008d;
-        public static final int relativeLayout1=0x7f040051;
+        public static final int ok_button=0x7f040092;
+        public static final int pass=0x7f04006c;
+        public static final int password=0x7f040058;
+        public static final int passwordAgain=0x7f04005a;
+        public static final int phone_number=0x7f040057;
+        public static final int pie=0x7f040026;
+        public static final int post=0x7f040098;
+        public static final int posts=0x7f040083;
+        public static final int postsMade=0x7f040085;
+        public static final int postsView=0x7f040052;
+        public static final int private_flag=0x7f04007d;
+        public static final int private_message=0x7f040095;
+        public static final int privatemessage=0x7f040065;
+        public static final int progressBar1=0x7f040076;
+        public static final int refresh_button=0x7f04008e;
+        public static final int refreshbutton=0x7f040096;
+        public static final int relativeLayout1=0x7f040056;
         public static final int reverse_fly=0x7f040007;
         public static final int right=0x7f040010;
-        public static final int rlbtns=0x7f04005d;
-        public static final int search=0x7f040090;
+        public static final int rlbtns=0x7f040061;
         public static final int selected_view=0x7f040014;
         public static final int showCustom=0x7f04001d;
         public static final int showHome=0x7f04001a;
         public static final int showTitle=0x7f04001c;
-        public static final int signupButton=0x7f04006f;
+        public static final int signupButton=0x7f040074;
         public static final int slide_in=0x7f04000e;
-        public static final int sliding_up=0x7f040047;
-        public static final int slidingmenumain=0x7f04008b;
+        public static final int sliding_up=0x7f04004f;
+        public static final int slidingmenumain=0x7f040094;
         public static final int standard=0x7f040000;
         public static final int tabMode=0x7f040018;
-        public static final int textView1=0x7f040063;
+        public static final int textView1=0x7f040067;
         public static final int tilt=0x7f04000a;
-        public static final int time=0x7f04005b;
+        public static final int time=0x7f04005f;
+        public static final int topLeft=0x7f040028;
+        public static final int topRight=0x7f040029;
         public static final int twirl=0x7f04000d;
-        public static final int update=0x7f040093;
+        public static final int update=0x7f040099;
         public static final int useLogo=0x7f040019;
-        public static final int username=0x7f040054;
-        public static final int usernameView=0x7f040059;
-        public static final int via_post=0x7f040077;
+        public static final int username=0x7f040059;
+        public static final int usernameView=0x7f04005d;
+        public static final int via_post=0x7f04007c;
         public static final int wave=0x7f040004;
+        public static final int wheel=0x7f040025;
         public static final int wrap_content=0x7f040015;
         public static final int zipper=0x7f04000b;
     }
@@ -1355,32 +1472,31 @@ containing a value of this type.
         public static final int abs__search_view=0x7f030013;
         public static final int abs__simple_dropdown_hint=0x7f030014;
         public static final int activity_main=0x7f030015;
-        public static final int activity_main2=0x7f030016;
-        public static final int activity_signup=0x7f030017;
-        public static final int buzzbox_post_item=0x7f030018;
-        public static final int change_loc=0x7f030019;
-        public static final int change_radius=0x7f03001a;
-        public static final int changenick=0x7f03001b;
-        public static final int changepass=0x7f03001c;
-        public static final int comment_layout=0x7f03001d;
-        public static final int comments_element=0x7f03001e;
-        public static final int complete_message=0x7f03001f;
-        public static final int complete_message_element=0x7f030020;
-        public static final int login=0x7f030021;
-        public static final int login_or_signup=0x7f030022;
-        public static final int message_comment=0x7f030023;
-        public static final int my_messages=0x7f030024;
-        public static final int my_messages_element=0x7f030025;
-        public static final int new_message=0x7f030026;
-        public static final int new_post=0x7f030027;
-        public static final int private_message=0x7f030028;
-        public static final int profile=0x7f030029;
-        public static final int profilechanger=0x7f03002a;
-        public static final int sherlock_spinner_dropdown_item=0x7f03002b;
-        public static final int sherlock_spinner_item=0x7f03002c;
-        public static final int slider_layout=0x7f03002d;
-        public static final int slidingmenumain=0x7f03002e;
-        public static final int spinner_layout=0x7f03002f;
+        public static final int activity_signup=0x7f030016;
+        public static final int buzzbox_post_item=0x7f030017;
+        public static final int change_radius=0x7f030018;
+        public static final int changenick=0x7f030019;
+        public static final int changepass=0x7f03001a;
+        public static final int comment_layout=0x7f03001b;
+        public static final int comments_element=0x7f03001c;
+        public static final int complete_message=0x7f03001d;
+        public static final int complete_message_element=0x7f03001e;
+        public static final int login=0x7f03001f;
+        public static final int login_or_signup=0x7f030020;
+        public static final int message_comment=0x7f030021;
+        public static final int my_messages=0x7f030022;
+        public static final int my_messages_element=0x7f030023;
+        public static final int new_message=0x7f030024;
+        public static final int new_post=0x7f030025;
+        public static final int private_message=0x7f030026;
+        public static final int profile=0x7f030027;
+        public static final int profilechanger=0x7f030028;
+        public static final int rai__action_item=0x7f030029;
+        public static final int sherlock_spinner_dropdown_item=0x7f03002a;
+        public static final int sherlock_spinner_item=0x7f03002b;
+        public static final int slider_layout=0x7f03002c;
+        public static final int slidingmenumain=0x7f03002d;
+        public static final int spinner_layout=0x7f03002e;
     }
     public static final class menu {
         public static final int main_activity_menu=0x7f0b0000;
@@ -1458,11 +1574,11 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0a0059;
+        public static final int AppBaseTheme=0x7f0a005d;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f0a005a;
+        public static final int AppTheme=0x7f0a005e;
         public static final int Sherlock___TextAppearance_Small=0x7f0a0046;
         public static final int Sherlock___Theme=0x7f0a0051;
         public static final int Sherlock___Theme_DarkActionBar=0x7f0a0053;
@@ -1506,6 +1622,10 @@ containing a value of this type.
         public static final int Theme_Sherlock_Light_NoActionBar=0x7f0a0058;
         public static final int Theme_Sherlock_NoActionBar=0x7f0a0057;
         public static final int Widget=0x7f0a0000;
+        public static final int Widget_RefreshActionItem=0x7f0a0059;
+        public static final int Widget_RefreshActionItem_Dark=0x7f0a005c;
+        public static final int Widget_RefreshActionItem_Light=0x7f0a005b;
+        public static final int Widget_RefreshActionItem_TextAppearance=0x7f0a005a;
         public static final int Widget_Sherlock_ActionBar=0x7f0a0002;
         public static final int Widget_Sherlock_ActionBar_Solid=0x7f0a0003;
         public static final int Widget_Sherlock_ActionBar_TabBar=0x7f0a000a;
@@ -1662,6 +1782,194 @@ containing a value of this type.
           @attr name com.parse.buzzbox:simulate_grid_with_list
         */
         public static final int JazzyListView_simulate_grid_with_list = 3;
+        /** Attributes that can be used with a RefreshActionItem.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #RefreshActionItem_badgeBackgroundColor com.parse.buzzbox:badgeBackgroundColor}</code></td><td> Use this attribute to customize the background color of your action item
+             badges.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_badgePosition com.parse.buzzbox:badgePosition}</code></td><td> Use this attribute to customize the position of your action item
+             badges.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_badgeTextStyle com.parse.buzzbox:badgeTextStyle}</code></td><td> Use this attribute to customize the text styles of your action item
+             badges.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_progressIndicatorBackgroundColor com.parse.buzzbox:progressIndicatorBackgroundColor}</code></td><td> Background color for the progress indicator bar.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_progressIndicatorForegroundColor com.parse.buzzbox:progressIndicatorForegroundColor}</code></td><td> Foreground color for the progress indicator bar.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_progressIndicatorType com.parse.buzzbox:progressIndicatorType}</code></td><td> The progress indicator type for newly created items.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_refreshActionItemBackground com.parse.buzzbox:refreshActionItemBackground}</code></td><td> Background selector for the refresh button.</td></tr>
+           <tr><td><code>{@link #RefreshActionItem_refreshActionItemIcon com.parse.buzzbox:refreshActionItemIcon}</code></td><td> Icon that is shown when the action item is not in progress mode.</td></tr>
+           </table>
+           @see #RefreshActionItem_badgeBackgroundColor
+           @see #RefreshActionItem_badgePosition
+           @see #RefreshActionItem_badgeTextStyle
+           @see #RefreshActionItem_progressIndicatorBackgroundColor
+           @see #RefreshActionItem_progressIndicatorForegroundColor
+           @see #RefreshActionItem_progressIndicatorType
+           @see #RefreshActionItem_refreshActionItemBackground
+           @see #RefreshActionItem_refreshActionItemIcon
+         */
+        public static final int[] RefreshActionItem = {
+            0x7f01007d, 0x7f01007e, 0x7f01007f, 0x7f010080,
+            0x7f010081, 0x7f010082, 0x7f010083, 0x7f010084
+        };
+        /**
+          <p>
+          @attr description
+           Use this attribute to customize the background color of your action item
+             badges. By default it is a semitransparent red 
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:badgeBackgroundColor
+        */
+        public static final int RefreshActionItem_badgeBackgroundColor = 5;
+        /**
+          <p>
+          @attr description
+           Use this attribute to customize the position of your action item
+             badges. The default value is "topRight" 
+
+
+          <p>Must be one or more (separated by '|') of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>topLeft</code></td><td>1</td><td></td></tr>
+<tr><td><code>topRight</code></td><td>2</td><td></td></tr>
+<tr><td><code>bottomLeft</code></td><td>3</td><td></td></tr>
+<tr><td><code>bottomRight</code></td><td>4</td><td></td></tr>
+<tr><td><code>center</code></td><td>5</td><td></td></tr>
+</table>
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:badgePosition
+        */
+        public static final int RefreshActionItem_badgePosition = 7;
+        /**
+          <p>
+          @attr description
+           Use this attribute to customize the text styles of your action item
+             badges. By default it uses a white, 12dp, bold typeface 
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:badgeTextStyle
+        */
+        public static final int RefreshActionItem_badgeTextStyle = 6;
+        /**
+          <p>
+          @attr description
+           Background color for the progress indicator bar. The default value
+             has been carefully tuned to look like the other action bar items, so
+             you probably don't wan to change this value unless you want your 
+             progress indicator to stand out (in a negative way). Please note that
+             this has no effect on the indeterminate progress indicator  
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:progressIndicatorBackgroundColor
+        */
+        public static final int RefreshActionItem_progressIndicatorBackgroundColor = 2;
+        /**
+          <p>
+          @attr description
+           Foreground color for the progress indicator bar. The default value
+             has been carefully tuned to look like the other action bar items, so
+             you probably don't wan to change this value unless you want your 
+             progress indicator to stand out (in a negative way). Please note that
+             this has no effect on the indeterminate progress indicator  
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:progressIndicatorForegroundColor
+        */
+        public static final int RefreshActionItem_progressIndicatorForegroundColor = 3;
+        /**
+          <p>
+          @attr description
+           The progress indicator type for newly created items. The three supported
+             types are "wheel", "pie", and "indeterminate". By default the wheel type
+             is used. Changing it to "pie" is basically a aesthetical decision, whereas
+             the determinate type is different in that it does not show a specific 
+             progress value, it just spins to give the impression that the app is working. 
+             Use this attribute in your theme if you want to change the type of 
+             ALL your action items, otherwise it is much simpler to just invoke
+             the setProgressIndicatorType() method on your action item once it's been
+             inflated  
+
+
+          <p>Must be one or more (separated by '|') of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>wheel</code></td><td>0</td><td></td></tr>
+<tr><td><code>pie</code></td><td>1</td><td></td></tr>
+<tr><td><code>indeterminate</code></td><td>2</td><td></td></tr>
+</table>
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:progressIndicatorType
+        */
+        public static final int RefreshActionItem_progressIndicatorType = 4;
+        /**
+          <p>
+          @attr description
+           Background selector for the refresh button. By default it uses
+             the same background of all other action bar buttons, which is
+             what you'll need 99% of the time 
+
+
+          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:refreshActionItemBackground
+        */
+        public static final int RefreshActionItem_refreshActionItemBackground = 0;
+        /**
+          <p>
+          @attr description
+           Icon that is shown when the action item is not in progress mode.
+             By default it is a refresh icon. Use this attribute in your theme
+             if you want to change the icon of ALL your action items, otherwise
+             it is much simpler to use the "android:icon" attribute in the menu
+             element for your action item (just like you would do for any other
+             action item)  
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.parse.buzzbox:refreshActionItemIcon
+        */
+        public static final int RefreshActionItem_refreshActionItemIcon = 1;
         /**  Attributes used to style the Action Bar. 
            <p>Includes the following attributes:</p>
            <table>

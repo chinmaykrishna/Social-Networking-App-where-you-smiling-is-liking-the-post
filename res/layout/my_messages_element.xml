@@ -2,24 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:background="#443f3c"
+    android:weightSum="10"
      >
 
+    
     <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:layout_weight="9.2" >
+        
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="10" >
+        android:weightSum="10"
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="7"
+            android:layout_weight="8"
             android:weightSum="10" >
 
             <TextView
-                android:id="@+id/author"
+                android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:text="User"
@@ -28,10 +37,11 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/white"
                 android:singleLine="true"
+                
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/message_text"
+                android:id="@+id/author"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="5"
@@ -40,7 +50,8 @@
                 android:layout_marginTop="5dp"
                 android:textColor="@android:color/white"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
             
         </LinearLayout>
         
@@ -49,12 +60,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_weight="3" >
+            android:layout_weight="2" >
 
             <ImageView
                 android:id="@+id/author_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@drawable/avatar1" />
 
         </LinearLayout>
@@ -69,6 +80,17 @@
         android:paddingLeft="10dp"
         android:textColor="@android:color/white"
         android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textStyle="italic"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/private_flag"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_weight="0.8"
+        android:src="@drawable/private_flag"
+        android:scaleType="fitXY" />
 
 </LinearLayout>

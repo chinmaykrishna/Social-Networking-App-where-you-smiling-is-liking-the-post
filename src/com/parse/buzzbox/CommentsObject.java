@@ -27,15 +27,22 @@ public class CommentsObject extends ParseObject {
 	}
 	
 	//author name
-	public void setAuthorName(String value) 
-	{
-	    put("username", value);
-	}
-	
-	public String getAuthorName() 
-	{    
-		return getString("username");
-	}
+	public String getAuthorName() {
+	    return getString("user_name");
+	  }
+	  
+	  public void setAuthorName(String value) {
+	    put("user_name", value);
+	  }
+	  
+	  //author_avatar
+	  public String getAuthorAvatar() {
+		    return getString("user_avatar");
+		  }
+		  
+		  public void setAuthorAvatar(String value) {
+		    put("user_avatar", value);
+		  }
 	
 	//Comment Text
 	public String getText() 
@@ -53,7 +60,8 @@ public class CommentsObject extends ParseObject {
 	{
 		put("topost", postId);
 	}
-
+	
+	
 	
 	public static ParseQuery<CommentsObject> getQuery() {
 	    return ParseQuery.getQuery(CommentsObject.class);

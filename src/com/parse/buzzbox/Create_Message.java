@@ -24,6 +24,7 @@ public class Create_Message extends Activity{
 	
 	private String parse_user_obj_id;
 	private String viaPost;
+	private String viaPostReceipentName;
 	private Integer[] moodIds = {
             R.drawable.noemotion,
             R.drawable.anger,
@@ -56,6 +57,12 @@ public class Create_Message extends Activity{
 		
 		parse_user_obj_id = this.getIntent().getExtras().getString("obj_id");
 		
+		if(this.getIntent().getExtras().getString("viaPostReceipent")!=null)
+		{
+			viaPostReceipentName =  this.getIntent().getExtras().getString("viaPostReceipent");
+		}
+		else
+			viaPostReceipentName = "";
 		
 		Spinner moods = (Spinner)findViewById(R.id.moods);
 		 final ArrayList<String> listmoods = new ArrayList<String>();
@@ -127,7 +134,7 @@ public class Create_Message extends Activity{
 						 mo.setReceipentObjID(parse_user_obj_id);
 						 mo.setText(message_text);
 						 mo.setViaPost(viaPost);
-						 
+						 mo.setViaPostReceipentName(viaPostReceipentName);
 						 
 						 final ProgressDialog pdLoading = new ProgressDialog(Create_Message.this);
 						 pdLoading.setMessage("Sending Message...");

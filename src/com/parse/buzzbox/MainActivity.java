@@ -1,51 +1,37 @@
 package com.parse.buzzbox;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -59,7 +45,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.manuelpeinado.refreshactionitem.ProgressIndicatorType;
+import com.manuelpeinado.refreshactionitem.RefreshActionItem;
+import com.manuelpeinado.refreshactionitem.RefreshActionItem.RefreshActionListener;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -68,12 +60,14 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.buzzbox.FetchLocation.LocationResult;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.twotoasters.jazzylistview.JazzyHelper;
 import com.twotoasters.jazzylistview.JazzyListView;
 
-public class MainActivity extends Activity implements LocationListener {
+@SuppressLint("SimpleDateFormat")
+public class MainActivity extends SherlockActivity implements LocationListener,RefreshActionListener {
 	
 	private static final int MAX_POST_SEARCH_RESULTS= 50;
 	private static int SEARCH_RADIUS=100,flag=0, Postflag=1;
@@ -93,7 +87,10 @@ public class MainActivity extends Activity implements LocationListener {
 	private Handler hm;
 	private int no_of_post = 0;
 	private int temp =0;
-
+	private MainActivity main;
+	private RefreshActionItem mRefreshActionItem;
+	private ProgressBar comments_loader;
+	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,8 +99,8 @@ public class MainActivity extends Activity implements LocationListener {
 			 finish();
 			}
 		setContentView(R.layout.activity_main);
-		
-		
+		main = this;
+		con = this;
 		// to get actual screen size excluding paralax
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.main_screen);
 		
@@ -137,10 +134,26 @@ public class MainActivity extends Activity implements LocationListener {
             	menuleft.toggle();
             	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
             	im.setImageResource(ParseUser.getCurrentUser().getInt("Avatar"));
+            	
             	TextView tv = (TextView)menuleft.getMenu().findViewById(R.id.Nick);
             	tv.setText(ParseUser.getCurrentUser().getUsername());
             	TextView tv2 = (TextView)menuleft.getMenu().findViewById(R.id.NoOfPosts);
             	tv2.setText(""+no_of_post);
+            	
+            	im.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						MyProfile my = new MyProfile(main);
+						  Intent i = new Intent(con,my.getClass());
+						  startActivity(i);
+						  if(logout){
+							  finish();
+						  }
+					}
+				});
+            	
             	
             	View view2 = (View)menuleft.getMenu();
             	view2.setOnTouchListener(new OnSwipeTouchListener(con){
@@ -177,10 +190,20 @@ public class MainActivity extends Activity implements LocationListener {
     		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
     		          public ParseQuery<MessageObject> create() {
     		        	  pb.setVisibility(View.VISIBLE);
-    		            ParseQuery<MessageObject> query = MessageObject.getQuery();
-    		            query.orderByDescending("createdAt");
-    		            query.whereEqualTo("receipent", ParseUser.getCurrentUser().getObjectId());
-    		            return query;
+    		        	  ParseQuery<MessageObject> query = MessageObject.getQuery();
+    		        	  query.whereEqualTo("receipent", ParseUser.getCurrentUser().getObjectId());
+    		        	   
+    		        	  ParseQuery<MessageObject> query2 = MessageObject.getQuery();
+    		        	  query2.whereEqualTo("user", ParseUser.getCurrentUser());
+    		        	   
+    		        	  List<ParseQuery<MessageObject>> queries = new ArrayList<ParseQuery<MessageObject>>();
+    		        	  queries.add(query);
+    		        	  queries.add(query2);
+    		        	   
+    		        	  ParseQuery<MessageObject> mainQuery = ParseQuery.or(queries);
+    		        	  
+    		        	  mainQuery.orderByDescending("createdAt");
+    		            return mainQuery;
     		            
     		          }
     		        };
@@ -193,16 +216,13 @@ public class MainActivity extends Activity implements LocationListener {
     		            
     		        	
     		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
-    		            //pb.setVisibility(View.GONE);
     		            TextView message_text = (TextView) view.findViewById(R.id.message_text);
+    		            ImageView private_flag = (ImageView) view.findViewById(R.id.private_flag);
     		            final TextView message_author = (TextView) view.findViewById(R.id.author);
     		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
     		            final ImageView author_avatar = (ImageView)view.findViewById(R.id.author_avatar);
     		            message_text.setText(message.getText());
-    		            if(message.getViaPost().equals(""))
-    		            via_post.setText("");
-    		            else
-    		            via_post.setText("Via Post: "+message.getViaPost());
+    		            
     		            if(message.getAuthorName()!=null)
     		            {
     		            	message_author.setText(message.getAuthorName());
@@ -211,11 +231,69 @@ public class MainActivity extends Activity implements LocationListener {
     		            {
     		            	author_avatar.setImageResource(Integer.parseInt(message.getAuthorAvatar()));
     		            }
+    		            
+    		            if(message.getViaPost().equals(""))
+    		            {
+    		            	//private message
+    		            	via_post.setText("");
+    		            	if(ParseUser.getCurrentUser().getObjectId().equals(message.getReceipentObjID()))
+    		            	{
+    		            		message_author.setText("to you");
+    		            	}
+    		            	else
+    		            	{
+    		            		message_author.setText("from you");
+    		            	}
+    		            }
+    		            else
+    		            {
+    		            	
+    		            	//via post message
+    		            	via_post.setText("Via Post: "+message.getViaPost());
+    		            	((ViewManager)view).removeView(private_flag);
+    		            	
+    		            	if(message.getViaPostReceipentName()!=null)
+    		            	{
+    		            		Log.d("asdasd", message.getViaPostReceipentName());
+    		            		if(message.getReceipentObjID().equals(ParseUser.getCurrentUser().getObjectId()))
+    		            		message_author.setText("from "+ message.getAuthorName() +" to you");
+    		            		else
+    		            		message_author.setText("from you to"+ message.getViaPostReceipentName());
+    		            	}
+    		            }
+    		            
+    		            
     		            message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
     		            	  public void done(ParseUser object, ParseException e) {
     		            		    if (e == null) {
     		            		    	message_author.setText(object.getUsername());
     		            		    	author_avatar.setImageResource(object.getInt("Avatar"));
+    		            		    	
+    		            		    	if(message.getViaPost().equals(""))
+    		        		            {
+    		        		            	//private message
+    		        		            	if(ParseUser.getCurrentUser().getObjectId().equals(message.getReceipentObjID()))
+    		        		            	{
+    		        		            		message_author.setText("to you");
+    		        		            	}
+    		        		            	else
+    		        		            	{
+    		        		            		message_author.setText("from you");
+    		        		            	}
+    		        		            }
+    		        		            else
+    		        		            {
+    		        		            	
+    		        		            	
+    		        		            	if(message.getViaPostReceipentName()!=null)
+    		        		            	{
+    		        		            		Log.d("asdasd", message.getViaPostReceipentName());
+    		        		            		if(message.getReceipentObjID().equals(ParseUser.getCurrentUser().getObjectId()))
+    		        		            		message_author.setText("from "+ object.getUsername() +" to you");
+    		        		            		else
+    		        		            		message_author.setText("from you to"+ message.getViaPostReceipentName());
+    		        		            	}
+    		        		            }
     		            		    } else {
     		            		    	
     		            		      // Failure!
@@ -305,11 +383,14 @@ public class MainActivity extends Activity implements LocationListener {
 			@Override
 			public void onPanelSlide(View panel, float slideOffset) {
 				// TODO Auto-generated method stub
-				
+				panel.setBackgroundColor(Color.TRANSPARENT);
 			}
 			
 			@Override
 			public void onPanelExpanded(View panel) {
+				comments_loader = (ProgressBar) findViewById(R.id.comments_loader);
+				
+				panel.setBackgroundColor(Color.TRANSPARENT);
 				int pos = post_list.getFirstVisiblePosition();
 				int size = post_list.getCount();
 				if(size>=1)
@@ -321,21 +402,19 @@ public class MainActivity extends Activity implements LocationListener {
 			
 			@Override
 			public void onPanelCollapsed(View panel) {
-				// TODO Auto-generated method stub
-				
+				panel.setBackgroundColor(Color.TRANSPARENT);
 			}
 			
 			@Override
 			public void onPanelAnchored(View panel) {
-				// TODO Auto-generated method stub
-				
+				panel.setBackgroundColor(Color.TRANSPARENT);
 			}
 		});
 		
 		//configure slider for comments
 		config_slider();
 		
-		con = this;
+		
 		hm = new Handler() {
             public void handleMessage(Message m) {
             	Toast.makeText(con, "Can not find location. Please check your network provider or GPS.", Toast.LENGTH_LONG).show();
@@ -362,20 +441,7 @@ public class MainActivity extends Activity implements LocationListener {
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    
-		currentLocation = this.getLastKnownLocation();
 		
-		if(currentLocation!=null)
-		{
-			if(currentLocation!=null) lastLocation= currentLocation;
-			
-			Log.d("current loc", currentLocation.toString());
-			Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
-			
-			p = geoPointFromLocation(myLoc);
-			
-			setQuery(p);
-
-		}
 		
 		
 	}
@@ -417,6 +483,8 @@ public class MainActivity extends Activity implements LocationListener {
 	// This method will Set up our customized query and will then update the List View.
 	public void setQuery(final ParseGeoPoint pgp){
 		// Set up a customized query
+		
+		mRefreshActionItem.showProgress(true);
 		ParseQueryAdapter.QueryFactory<BuzzboxPost> factory =
 		        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
 		          public ParseQuery<BuzzboxPost> create() {
@@ -517,6 +585,8 @@ public class MainActivity extends Activity implements LocationListener {
 											 new_comment.toPost(post.getObjectId());
 											 new_comment.setText(message.getText().toString().trim());
 											 new_comment.setAuthor(ParseUser.getCurrentUser());
+											 new_comment.setAuthorAvatar(String.valueOf(ParseUser.getCurrentUser().getInt("Avatar")));
+											 new_comment.setAuthorName(ParseUser.getCurrentUser().getUsername());
 											 new_comment.saveInBackground(new SaveCallback() {
 												
 												@Override
@@ -613,6 +683,7 @@ public class MainActivity extends Activity implements LocationListener {
 							Intent i = new Intent(MainActivity.this, Create_Message.class);
 							 i.putExtra("obj_id", post.getUser().getObjectId());
 							 i.putExtra("viaPost", post.getText());
+							 i.putExtra("viaPostReceipent", post.getUser().getUsername());
 							 startActivity(i);
 						}
 		            	
@@ -621,6 +692,20 @@ public class MainActivity extends Activity implements LocationListener {
 		          }
 		        };
 	        
+		        posts.addOnQueryLoadListener(new OnQueryLoadListener<BuzzboxPost>() {
+
+					@Override
+					public void onLoaded(List<BuzzboxPost> arg0, Exception arg1) {
+						// TODO Auto-generated method stub
+						mRefreshActionItem.showProgress(false);
+					}
+
+					@Override
+					public void onLoading() {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 	        setList(posts);
 		        
 	}
@@ -633,50 +718,7 @@ public class MainActivity extends Activity implements LocationListener {
         postsView.setTransitionEffect(JazzyHelper.GROW);
 	}
 	
-	public void change_location(View v){
-				 
-		//pop up a dialog box
-	 final Dialog dialog = new Dialog(this);
-	 dialog.setContentView(R.layout.change_loc);
-	 dialog.setTitle("Change Location");	
-	 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
-	 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
-
-	 //cancel button clicked
-	 dialogButtonC.setOnClickListener(new OnClickListener() {
-
-		 @Override
-		 public void onClick(View v) {
-			 dialog.cancel();
-		 }
-	 });
-
-	 //Go button clicked
-	 dialogButtonA.setOnClickListener(new OnClickListener() {
-		 @Override
-		 public void onClick(View v) {
-			 EditText location = (EditText)dialog.findViewById(R.id.location);
-			 location.setInputType(InputType.TYPE_CLASS_TEXT);
-			 
-			 String loc = location.getText().toString();
-			 if(!(loc.isEmpty())){
-				 loc = loc.replace(" ", "+");
-				 new FindPlace().execute(loc);
 	
-			 }
-			 else{
-	 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
-	 		 	 mtoast.show();
-			 }
-		 dialog.dismiss();
-
-
-		 }
-
-	 });
-
-	 dialog.show();
-	}
 	
 	
 	// If user want to create a new post
@@ -777,8 +819,28 @@ public class MainActivity extends Activity implements LocationListener {
 	  public boolean onCreateOptionsMenu(Menu menu){
 			
 			
-			MenuInflater inf=new MenuInflater(this);
-				inf.inflate(R.menu.main_activity_menu, menu);
+		  getSupportMenuInflater().inflate(R.menu.main_activity_menu, menu);
+	        MenuItem item = menu.findItem(R.id.refreshbutton);
+	        mRefreshActionItem = new RefreshActionItem(getApplicationContext());
+	        item.setActionView(mRefreshActionItem);
+	        mRefreshActionItem.setMenuItem(item);
+	        mRefreshActionItem.setProgressIndicatorType(ProgressIndicatorType.INDETERMINATE);
+	        mRefreshActionItem.setRefreshActionListener(this);
+			   
+	        currentLocation = this.getLastKnownLocation();
+				
+				if(currentLocation!=null)
+				{
+					if(currentLocation!=null) lastLocation= currentLocation;
+					
+					Log.d("current loc", currentLocation.toString());
+					Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
+					
+					p = geoPointFromLocation(myLoc);
+					
+					setQuery(p);
+
+				}
 	    	return true;
 	     }
 	  
@@ -797,107 +859,6 @@ public class MainActivity extends Activity implements LocationListener {
 	    return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
 	  }
 	  	  
-	  // This class will search for the new Location in a background thread when the user sets another location.
-	  private class FindPlace extends AsyncTask<String,Void, JSONObject> {
-			 
-			 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
-		 	 String add=null;
-
-
-			    @Override
-			    protected void onPreExecute() {
-			        super.onPreExecute();
-
-			        //this method will be running on UI thread
-			        pdLoading.setMessage("\tLoading...");
-			        pdLoading.show();
-			    }
-			    
-		     protected JSONObject doInBackground(String... url) {
-		    	String uri = "http://maps.google.com/maps/api/geocode/json?address=" + url[0] + "&sensor=false";
-		    	HttpGet httpGet = new HttpGet(uri);
-		 	    HttpClient client = new DefaultHttpClient();
-		 	    HttpResponse response;
-		 	    StringBuilder stringBuilder = new StringBuilder();
-		 	    try {
-		 	        response = client.execute(httpGet);
-		 	        HttpEntity entity = response.getEntity();
-		 	        InputStream stream = entity.getContent();
-		 	        int b;
-		 	        
-
-		 	        while ((b = stream.read()) != -1) {
-		 	            stringBuilder.append((char) b);
-		 	        }
-		 	    } catch (ClientProtocolException e) {
-		 	        e.printStackTrace();
-		 	    } catch (IOException e) {
-		 	        e.printStackTrace();
-		 	    }
-
-		 	    JSONObject jsonObject = new JSONObject();
-		 	    try {
-		 	        jsonObject = new JSONObject(stringBuilder.toString());
-
-		 	       return jsonObject;
-
-
-		 	    } catch (JSONException e) {
-
-		 			return null;
-		 	    }
-				
-		 	       
-		     }
-
-		     protected void onPostExecute(JSONObject result) {
-		         pdLoading.dismiss();
-		         if(result !=null)
-		         {
-			 	       try {
-						Longitude = ((JSONArray)result.get("results")).getJSONObject(0)
-						            .getJSONObject("geometry").getJSONObject("location")
-						            .getDouble("lng");
-						Latitude = ((JSONArray)result.get("results")).getJSONObject(0)
-				 	            	.getJSONObject("geometry").getJSONObject("location")
-				 	            	.getDouble("lat");
-						ParseGeoPoint pa = new ParseGeoPoint(Latitude,Longitude);
-						add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
-			     		
-						
-							currentLocation.setLatitude(Latitude);
-							currentLocation.setLongitude(Longitude);
-							p=geoPointFromLocation(currentLocation);
-							Postflag=0;
-							setQuery(pa);
-							add = ((JSONArray)result.get("results")).getJSONObject(0).getString("formatted_address");
-							Toast mtoast = Toast.makeText(MainActivity.this,"Location set to " +add, Toast.LENGTH_LONG);
-				     		mtoast.show();
-						
-//						else{
-//							PostBuzz(pa);
-//							Toast mtoast = Toast.makeText(MainActivity.this,"Posting through: " +add, Toast.LENGTH_SHORT);
-//				     		mtoast.show();
-//						}
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				 	   
-
-		         }
-		         else {
-		        	 Toast mtoast = Toast.makeText(MainActivity.this, "Cannot Find this place. Try setting another Location", Toast.LENGTH_SHORT);
-		     		 mtoast.show();
-		         }
-		     }
-		     
-		     
-		    	 
-		     }
-	  
-	  
 	  // This class will detect user's gestures of swiping left/Right.
 	  public class OnSwipeTouchListener implements OnTouchListener {
 
@@ -971,13 +932,8 @@ public class MainActivity extends Activity implements LocationListener {
 	  @Override
 		public boolean onOptionsItemSelected
 									    (MenuItem item) {
-		 if(item.getItemId()==R.id.refresh){
-			 currentLocation= this.getLastKnownLocation(); 
-			 p=geoPointFromLocation(currentLocation);
-			 setQuery(p);
-		 }
 		 
-		 else if(item.getItemId()==R.id.private_message){
+		 if(item.getItemId()==R.id.private_message){
 			  Intent i = new Intent(this,Private_message.class);
 			  startActivity(i);
 		 }
@@ -1007,12 +963,19 @@ public class MainActivity extends Activity implements LocationListener {
 					 EditText location = (EditText)dialog.findViewById(R.id.location);
 					 String loc = location.getText().toString();
 					 if(!(loc.isEmpty())){
-						 SEARCH_RADIUS = Integer.parseInt(loc);
-						 setQuery(p);	// Update the List.
-			
+						 if(Integer.parseInt(loc)<=50)
+						 {
+							 SEARCH_RADIUS = Integer.parseInt(loc);
+							 setQuery(p);	// Update the List.
+						 }
+						 else
+						 {
+							 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a radius less than 50 km.", Toast.LENGTH_LONG);
+				 		 	 mtoast.show();
+						 }
 					 }
 					 else{
-			 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
+						 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
 			 		 	 mtoast.show();
 					 }
 				 dialog.dismiss();
@@ -1023,56 +986,13 @@ public class MainActivity extends Activity implements LocationListener {
 			 });
 
 			 dialog.show();
-		 }
-		 else if(item.getItemId()==R.id.exclusive){
-			 
-			 flag=1;
-			 setQuery(p);
 		 }
 		 
-		 else if(item.getItemId()==R.id.search){
-			 
-			 final Dialog dialog = new Dialog(this);
-			 dialog.setContentView(R.layout.change_loc);
-			 dialog.setTitle("Change Location");	
-			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
-			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
-
-			 //cancel button clicked
-			 dialogButtonC.setOnClickListener(new OnClickListener() {
-
-				 @Override
-				 public void onClick(View v) {
-					 dialog.cancel();
-				 }
-			 });
-
-			 //Go button clicked
-			 dialogButtonA.setOnClickListener(new OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-					 EditText location = (EditText)dialog.findViewById(R.id.location);
-					 location.setInputType(InputType.TYPE_CLASS_TEXT);
-					 
-					 String loc = location.getText().toString();
-					 if(!(loc.isEmpty())){
-						 loc = loc.replace(" ", "+");
-						 new FindPlace().execute(loc);
-			
-					 }
-					 else{
-			 			 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
-			 		 	 mtoast.show();
-					 }
-				 dialog.dismiss();
-
-
-				 }
-
-			 });
-
-			 dialog.show();
-		 }
+//		 else if(item.getItemId()==R.id.exclusive){
+//			 
+//			 flag=1;
+//			 setQuery(p);
+//		 }
 		 
 		 else if(item.getItemId()==R.id.post){
 			 
@@ -1082,163 +1002,65 @@ public class MainActivity extends Activity implements LocationListener {
 				 p=geoPointFromLocation(currentLocation);
 				 Postflag=1;
 			 }
-			 
 			 new newPost(p);
 			 Intent intent = new Intent(MainActivity.this, newPost.class);
 			 MainActivity.this.startActivity(intent);
 			 
-			 setQuery(p);
-			 
-//			 final Dialog dialog = new Dialog(this);
-//			 dialog.setContentView(R.layout.new_post);
-//			 dialog.setTitle("New Post");
-//			 Button done_but = (Button) dialog.findViewById(R.id.done);
-//			 
-//			 
-
-//			 
-//			 final EditText message = (EditText)dialog.findViewById(R.id.message);
-//			 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
-//			 
-//			 	//done button clicked
-//				 done_but.setOnClickListener(new OnClickListener() {
-//
-//					 @Override
-//					 public void onClick(View v) {
-//						 //post function
-//						 if(message.getText().toString().trim().length()<1)
-//						 {
-//							 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
-//						 }
-//						 else
-//						 {
-//							 //Postflag=1;
-////							 Post = message.getText().toString();
-////							 PostBuzz(p);
-//							 dialog.dismiss();
-//							 AlertDialog.Builder builder = new AlertDialog.Builder(con);
-//						        TextView title = new TextView(con);
-//						        title.setText("Select your mood:");
-//						        title.setPadding(10, 10, 10, 10);
-//						        title.setGravity(Gravity.CENTER);
-//						        title.setTextColor(Color.rgb(0, 153, 204));
-//						        title.setTextSize(23);
-//						        builder.setCustomTitle(title);
-//						        
-//						        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//						        View layout_spinners = inflater.inflate(R.layout.spinner_layout,null);
-//						        builder.setView(layout_spinners);
-//						        builder.setCancelable(false);
-//						        builder.show();
-//						        
-//						         Spinner moods = (Spinner) dialog.findViewById(R.id.moods);
-//								 final ArrayList<String> listmoods = new ArrayList<String>();
-//								 listmoods.add("No Feelings!");
-//								 listmoods.add("Happy");
-//								 listmoods.add("Sad");
-//								 
-//								 ArrayAdapter<String> aa = new ArrayAdapter<String>(con,   android.R.layout.simple_spinner_item, listmoods);
-//								 aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
-//								 moods.setAdapter(aa);
-//								 
-//								 moods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//								        @Override
-//								        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//								        	
-//								        	TextView finalmood = (TextView) dialog.findViewById(R.id.finalmood);
-//								        	//finalmood.setText(listmoods.get(position));
-//								        	
-//								        }
-//
-//								        @Override
-//								        public void onNothingSelected(AdapterView<?> parent) {
-//
-//								        }
-//								    });
-//							 
-//							 //String loc = (locat.getText().toString()).replace(" ","+");
-//							 //new FindPlace().execute(loc);						 
-//							
-//						 }
-//						 dialog.dismiss();
-//					 }
-//				 });
-//
-//				 //Choose background button clicked
-////				 choose_bg.setOnClickListener(new OnClickListener() {
-////					 @Override
-////					 public void onClick(View v) {
-////						 //choose_bg function
-////						 Intent i = new Intent(con,Choose_bg.class);
-////						 startActivity(i);
-////					 }
-//	//
-////				 });
-//
-//				 dialog.show();	
 		 }
 		 
-		 else if(item.getItemId()==R.id.profile){
-			 
-			 MyProfile my = new MyProfile(this);
-			  Intent i = new Intent(this,my.getClass());
-			  startActivity(i);
-			  if(logout){
-				  finish();
-			  }
-		 }
+		 
 		 return true;
 		}
 	  
 	  private Location getLastKnownLocation() {
 		  
-		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		  boolean netwrkenabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		  boolean gpsenabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//		  boolean netwrkenabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//		  boolean gpsenabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//		  
+//		  if(!gpsenabled){
+//			  System.out.println("=======> GPS not enabled me aya");
+//			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+//			  alert.setTitle("GPS Settings");
+//			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
+//			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+//				  public void onClick(DialogInterface dialog , int which){
+//					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//					  MainActivity.this.startActivity(i);
+//					  finish();
+//				  }
+//			  });
+//			  
+//			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//				  public void onClick(DialogInterface dialog , int which){
+//					  finish();
+//				  }
+//			  });
+//			  
+//			  alert.show();
+//		  
+//			  
+//		  }
+//		  
+//		  if(netwrkenabled){
+//			  locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+//			  if(locationManager != null){
+//				  currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//				  System.out.println("Network me aya" + currentLocation.getLatitude());
+//			  }
+//			  
+//		  }
+//		  else if(gpsenabled){
+//			  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+//			  if(locationManager != null){
+//				  currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//				  System.out.println("Gps me aya"+currentLocation.getLatitude());
+//			  }
+//		  }
+//		  
+//		  return currentLocation;
 		  
-		  if(!gpsenabled){
-			  System.out.println("=======> GPS not enabled me aya");
-			  AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-			  alert.setTitle("GPS Settings");
-			  alert.setMessage("GPS in not enabled. Please enable the GPS from settings to use this Application.");
-			  alert.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-				  public void onClick(DialogInterface dialog , int which){
-					  Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-					  MainActivity.this.startActivity(i);
-					  finish();
-				  }
-			  });
-			  
-			  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				  public void onClick(DialogInterface dialog , int which){
-					  finish();
-				  }
-			  });
-			  
-			  alert.show();
-		  
-			  
-		  }
-		  
-		  if(netwrkenabled){
-			  locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-			  if(locationManager != null){
-				  currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-				  System.out.println("Network me aya" + currentLocation.getLatitude());
-			  }
-			  
-		  }
-		  else if(gpsenabled){
-			  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-			  if(locationManager != null){
-				  currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				  System.out.println("Gps me aya"+currentLocation.getLatitude());
-			  }
-		  }
-		  
-		  return currentLocation;
-		  
-		   /* List<String> providers = locationManager.getProviders(true);
+		    List<String> providers = locationManager.getProviders(true);
 		    Location bestLocation = null;
 		    for (String provider : providers) {
 		        Location l = locationManager.getLastKnownLocation(provider);
@@ -1285,23 +1107,13 @@ public class MainActivity extends Activity implements LocationListener {
 		    	myLocation.getLocation(this, locationResult);
 		    	myLocation.execute();
 		    }	
-		    return bestLocation;*/
+		    return bestLocation;
 		}
 	  
 	  
 	  //Function to configure slider
 	  private void config_slider()
 	  {
-//		  	//configuring slider for comments
-//			menu = new SlidingMenu(this);
-//	        menu.setMode(SlidingMenu.RIGHT);
-//	        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-//	        menu.setShadowWidthRes(R.dimen.shadow_length);
-//	        menu.setShadowDrawable(R.drawable.shadow);
-//	        menu.setBehindOffsetRes(R.dimen.behind_offset);
-//	        menu.setFadeDegree(0.35f);
-//	        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-//	        menu.setMenu(R.layout.slider_layout);
 	        
 	        menuleft = new SlidingMenu(this);
 	        menuleft.setMode(SlidingMenu.LEFT);
@@ -1356,6 +1168,7 @@ public class MainActivity extends Activity implements LocationListener {
 		}
 		public void retrieve_comments(final BuzzboxPost post, com.parse.buzzbox.HorizontalListView comments_list)
 		{
+			comments_loader.setVisibility(View.VISIBLE);
 			ParseQueryAdapter.QueryFactory<CommentsObject> factory1 =
 			        new ParseQueryAdapter.QueryFactory<CommentsObject>() {
 			          public ParseQuery<CommentsObject> create() {
@@ -1375,21 +1188,6 @@ public class MainActivity extends Activity implements LocationListener {
 			            TextView date = (TextView) view.findViewById(R.id.date);
 			            TextView time = (TextView) view.findViewById(R.id.time);
 			            final ImageView im = (ImageView) view.findViewById(R.id.avatar);
-			            
-			            
-			            message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
-		                    public void done(ParseUser object, ParseException e) {
-		                         if(e==null)
-		                         {
-		                        	 im.setImageResource(object.getInt("Avatar"));
-		                         }
-		                         else
-		                         {
-		                        	 //im.setImageResource(R.drawable.error);
-		                         }
-		                      }
-		                  });
-			            
 			            final TextView username = (TextView) view.findViewById(R.id.username);
 			            TextView message_text = (TextView) view.findViewById(R.id.comment_text);
 			            Date dtime = message.getCreatedAt();
@@ -1405,26 +1203,47 @@ public class MainActivity extends Activity implements LocationListener {
 			            time.setText(timeString);
 			            
 			            
+			            if(message.getAuthorName()!=null)
+    		            {
+    		            	username.setText(message.getAuthorName());
+    		            }
+    		            if(message.getAuthorAvatar()!=null)
+    		            {
+    		            	im.setImageResource(Integer.parseInt(message.getAuthorAvatar()));
+    		            }
+    		            
 		            	message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
 		                    public void done(ParseUser object, ParseException e) {
 		                         if(e==null)
 		                         {
+		                        	 im.setImageResource(object.getInt("Avatar"));
 		                        	 username.setText(object.getUsername());
 		                        	 username.setGravity(Gravity.CENTER_HORIZONTAL);
-		                         }
-		                         else
-		                         {
-		                        	 username.setText("");
-		                        	 
 		                         }
 		                      }
 		                  });
 						
+		            	
 			            message_text.setText(message.getText());
 			           
 			            return view;
 			          }
 			        };
+			        Comments_adapter.addOnQueryLoadListener(new OnQueryLoadListener<CommentsObject>() {
+
+						@Override
+						public void onLoaded(List<CommentsObject> arg0,
+								Exception arg1) {
+							// TODO Auto-generated method stub
+							comments_loader.setVisibility(View.INVISIBLE);
+						}
+
+						@Override
+						public void onLoading() {
+							// TODO Auto-generated method stub
+							
+						}
+					});
 			        comments_list.setAdapter(Comments_adapter);
 		}
 		
@@ -1484,6 +1303,17 @@ public class MainActivity extends Activity implements LocationListener {
 				Log.d("blag", "up");
 					post_list.smoothScrollToPosition(post_list.getFirstVisiblePosition()+1);
 			}
+		}
+
+
+
+
+		@Override
+		public void onRefreshButtonClick(RefreshActionItem sender) {
+			// TODO Auto-generated method stub
+			currentLocation= this.getLastKnownLocation(); 
+			 p=geoPointFromLocation(currentLocation);
+			 setQuery(p);
 		}
 		
 		

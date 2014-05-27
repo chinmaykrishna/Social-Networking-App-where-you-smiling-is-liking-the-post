@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.parse.buzzbox.DispatchActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,36 +28,46 @@
             </intent-filter>
         </activity>
         <activity
-        	android:name="com.parse.buzzbox.LoginActivity">
+        	android:name="com.parse.buzzbox.LoginActivity"
+        	android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.SignupActivity">
+            android:name="com.parse.buzzbox.SignupActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.MyProfile">
+            android:name="com.parse.buzzbox.MyProfile"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.My_messages">
+            android:name="com.parse.buzzbox.My_messages"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.SignupOrLogin">
+            android:name="com.parse.buzzbox.SignupOrLogin"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.MainActivity">
+            android:name="com.parse.buzzbox.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.newPost">
+            android:name="com.parse.buzzbox.newPost"
+            android:screenOrientation="portrait">
         </activity>
  
         <activity
             android:name="com.parse.buzzbox.Private_message"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
-        	android:name="com.parse.buzzbox.Create_Message">
+        	android:name="com.parse.buzzbox.Create_Message"
+        	android:screenOrientation="portrait">
         </activity>
  		<activity
-        	android:name="com.parse.buzzbox.Message_complete">
+        	android:name="com.parse.buzzbox.Message_complete"
+        	android:screenOrientation="portrait">
         </activity>
     </application>
 

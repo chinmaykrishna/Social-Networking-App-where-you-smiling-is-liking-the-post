@@ -7,7 +7,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-@ParseClassName("Messages_Thread_object")
+@ParseClassName("messages_thread_object")
 public class MessageObject extends ParseObject{
 
 	//Default constructor
@@ -102,6 +102,15 @@ public class MessageObject extends ParseObject{
 	  public String getViaPost()
 	  {
 		  return getString("viaPost");
+	  }
+	  
+	  public void setViaPostReceipentName(String viaPostReceipent)
+	  {
+		  put("viaPostReceipent",viaPostReceipent);
+	  }
+	  public String getViaPostReceipentName()
+	  {
+		  return getString("viaPostReceipent");
 	  }
 	  
 	  public static ParseQuery<MessageObject> getQuery() {

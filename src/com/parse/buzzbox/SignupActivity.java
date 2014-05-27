@@ -101,6 +101,7 @@ public class SignupActivity extends Activity{
 	        {
 	        	//wrong phone number
 	        	// Show the error message
+	        	dlg.dismiss();
 	            Toast.makeText(con, "Please enter a valid phone number", Toast.LENGTH_LONG).show();
 	        }
 	        else

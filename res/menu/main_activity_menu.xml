@@ -4,26 +4,24 @@
     <item 
 	    android:title="Send Private Message"
 	    android:id="@+id/private_message"
+	    android:showAsAction="never"
 	    />
-	<item 
-	    android:title="Refresh"
-	    android:id="@+id/refresh"
-	    />
+	<item
+    android:id="@+id/refreshbutton"          
+    android:actionViewClass="com.manuelpeinado.refreshactionitem.RefreshActionItem"
+    android:showAsAction="always"
+    android:title="Refresh"/>
+	
 	<item 
 	    android:title="Change Radius"
 	    android:id="@+id/changeradius"
+	    android:showAsAction="never"
 	    />
-	<item 
-	    android:title="Exclusive"
-	    android:id="@+id/exclusive"/>
-	<item 
-	    android:title="Search"
-	    android:id="@+id/search"/>
+	
 	<item 
 	    android:title="Post"
-	    android:id="@+id/post"/>
-	<item 
-	    android:title="Profile"
-	    android:id="@+id/profile"/>
+	    android:id="@+id/post"
+	    android:showAsAction="never"/>
+	
 	
 </menu>

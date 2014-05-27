@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/signup_login_bg"
     android:gravity="left|top"
     android:orientation="vertical"
     android:weightSum="10" >
@@ -28,11 +28,12 @@
 
             <ImageButton
                 android:id="@+id/loginButton"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/login_button"
+                android:background="@android:color/transparent"
                 android:scaleType="fitXY" />
 
         </RelativeLayout>
@@ -43,11 +44,12 @@
             android:layout_weight="5" >
             <ImageButton
                 android:id="@+id/signupButton"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/signup_button"
+                android:background="@android:color/transparent"
                 android:scaleType="fitXY" />
         </RelativeLayout>
 

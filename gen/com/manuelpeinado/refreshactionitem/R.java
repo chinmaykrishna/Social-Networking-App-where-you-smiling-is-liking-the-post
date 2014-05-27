@@ -4,7 +4,7 @@
  * aapt tool from the resource data it found.  It
  * should not be modified by hand.
  */
-package com.actionbarsherlock;
+package com.manuelpeinado.refreshactionitem;
 
 public final class R {
 	public static final class attr {
@@ -35,6 +35,9 @@ public final class R {
 		public static final int background = 0x7f01001c;
 		public static final int backgroundSplit = 0x7f01001d;
 		public static final int backgroundStacked = 0x7f010069;
+		public static final int badgeBackgroundColor = 0x7f010082;
+		public static final int badgePosition = 0x7f010084;
+		public static final int badgeTextStyle = 0x7f010083;
 		public static final int buttonStyleSmall = 0x7f010033;
 		public static final int customNavigationLayout = 0x7f01006a;
 		public static final int displayOptions = 0x7f010064;
@@ -67,7 +70,13 @@ public final class R {
 		public static final int preserveIconSpacing = 0x7f010077;
 		public static final int progressBarPadding = 0x7f01006e;
 		public static final int progressBarStyle = 0x7f01006c;
+		public static final int progressIndicatorBackgroundColor = 0x7f01007f;
+		public static final int progressIndicatorForegroundColor = 0x7f010080;
+		public static final int progressIndicatorType = 0x7f010081;
 		public static final int queryHint = 0x7f01007b;
+		public static final int refreshActionItemBackground = 0x7f01007d;
+		public static final int refreshActionItemIcon = 0x7f01007e;
+		public static final int refreshActionItemStyle = 0x7f01007c;
 		public static final int searchAutoCompleteTextView = 0x7f01003e;
 		public static final int searchDropdownBackground = 0x7f01003f;
 		public static final int searchResultListItemHeight = 0x7f010049;
@@ -257,6 +266,8 @@ public final class R {
 		public static final int abs__textfield_searchview_right_holo_dark = 0x7f02006e;
 		public static final int abs__textfield_searchview_right_holo_light = 0x7f02006f;
 		public static final int abs__toast_frame = 0x7f020070;
+		public static final int ic_navigation_refresh_dark = 0x7f02008b;
+		public static final int ic_navigation_refresh_light = 0x7f02008c;
 	}
 	public static final class id {
 		public static final int abs__action_bar = 0x7f04003d;
@@ -298,16 +309,27 @@ public final class R {
 		public static final int abs__textButton = 0x7f040030;
 		public static final int abs__title = 0x7f040038;
 		public static final int abs__up = 0x7f040020;
+		public static final int bottomLeft = 0x7f04002a;
+		public static final int bottomRight = 0x7f04002b;
+		public static final int center = 0x7f04002c;
+		public static final int determinate_progress_indicator = 0x7f040090;
 		public static final int disableHome = 0x7f04001e;
 		public static final int edit_query = 0x7f040043;
 		public static final int homeAsUp = 0x7f04001b;
+		public static final int indeterminate = 0x7f040027;
+		public static final int indeterminate_progress_indicator = 0x7f04008f;
 		public static final int listMode = 0x7f040017;
 		public static final int normal = 0x7f040016;
+		public static final int pie = 0x7f040026;
+		public static final int refresh_button = 0x7f04008e;
 		public static final int showCustom = 0x7f04001d;
 		public static final int showHome = 0x7f04001a;
 		public static final int showTitle = 0x7f04001c;
 		public static final int tabMode = 0x7f040018;
+		public static final int topLeft = 0x7f040028;
+		public static final int topRight = 0x7f040029;
 		public static final int useLogo = 0x7f040019;
+		public static final int wheel = 0x7f040025;
 		public static final int wrap_content = 0x7f040015;
 	}
 	public static final class integer {
@@ -335,6 +357,7 @@ public final class R {
 		public static final int abs__search_dropdown_item_icons_2line = 0x7f030012;
 		public static final int abs__search_view = 0x7f030013;
 		public static final int abs__simple_dropdown_hint = 0x7f030014;
+		public static final int rai__action_item = 0x7f030029;
 		public static final int sherlock_spinner_dropdown_item = 0x7f03002a;
 		public static final int sherlock_spinner_item = 0x7f03002b;
 	}
@@ -397,6 +420,10 @@ public final class R {
 		public static final int Theme_Sherlock_Light_NoActionBar = 0x7f0a0058;
 		public static final int Theme_Sherlock_NoActionBar = 0x7f0a0057;
 		public static final int Widget = 0x7f0a0000;
+		public static final int Widget_RefreshActionItem = 0x7f0a0059;
+		public static final int Widget_RefreshActionItem_Dark = 0x7f0a005c;
+		public static final int Widget_RefreshActionItem_Light = 0x7f0a005b;
+		public static final int Widget_RefreshActionItem_TextAppearance = 0x7f0a005a;
 		public static final int Widget_Sherlock_ActionBar = 0x7f0a0002;
 		public static final int Widget_Sherlock_ActionBar_Solid = 0x7f0a0003;
 		public static final int Widget_Sherlock_ActionBar_TabBar = 0x7f0a000a;
@@ -445,6 +472,15 @@ public final class R {
 		public static final int Widget_Sherlock_TextView_SpinnerItem = 0x7f0a0032;
 	}
 	public static final class styleable {
+		public static final int[] RefreshActionItem = { 0x7f01007d, 0x7f01007e, 0x7f01007f, 0x7f010080, 0x7f010081, 0x7f010082, 0x7f010083, 0x7f010084 };
+		public static final int RefreshActionItem_badgeBackgroundColor = 5;
+		public static final int RefreshActionItem_badgePosition = 7;
+		public static final int RefreshActionItem_badgeTextStyle = 6;
+		public static final int RefreshActionItem_progressIndicatorBackgroundColor = 2;
+		public static final int RefreshActionItem_progressIndicatorForegroundColor = 3;
+		public static final int RefreshActionItem_progressIndicatorType = 4;
+		public static final int RefreshActionItem_refreshActionItemBackground = 0;
+		public static final int RefreshActionItem_refreshActionItemIcon = 1;
 		public static final int[] SherlockActionBar = { 0x7f01001a, 0x7f01001b, 0x7f01001c, 0x7f01001d, 0x7f01001e, 0x7f01001f, 0x7f010063, 0x7f010064, 0x7f010065, 0x7f010066, 0x7f010067, 0x7f010068, 0x7f010069, 0x7f01006a, 0x7f01006b, 0x7f01006c, 0x7f01006d, 0x7f01006e, 0x7f01006f };
 		public static final int SherlockActionBar_background = 2;
 		public static final int SherlockActionBar_backgroundSplit = 3;

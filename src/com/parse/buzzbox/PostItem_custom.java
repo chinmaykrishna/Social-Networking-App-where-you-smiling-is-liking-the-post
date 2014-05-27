@@ -17,7 +17,7 @@ public class PostItem_custom extends LinearLayout{
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		
-	    super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(he, MeasureSpec.EXACTLY));
+	    super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(he-100, MeasureSpec.EXACTLY));
 	}
 	
 }

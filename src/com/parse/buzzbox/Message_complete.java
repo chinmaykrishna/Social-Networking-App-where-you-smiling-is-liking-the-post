@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -326,7 +327,7 @@ public class Message_complete extends Activity{
 	        TextView text = (TextView) vi.findViewById(R.id.comment_text);
 	        text.setText(comments.get(position));
 	        
-	        	if(author.get(position)==ParseUser.getCurrentUser().getObjectId())
+	        	if(!author.get(position).equals(ParseUser.getCurrentUser().getObjectId()))
 		        {
 		        	vi.setBackgroundColor(Color.parseColor("#8B7D7B"));
 		        	text.setTextColor(Color.WHITE);
