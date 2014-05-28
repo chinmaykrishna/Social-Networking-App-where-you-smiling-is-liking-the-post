@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_without_logo"
+    android:background="#443f3c"
     android:orientation="vertical" >
 
     <Gallery
@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/avatar1" />
@@ -28,7 +28,7 @@
 
     <Button
         android:id="@+id/buttonNick"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:onClick="myNick"
         android:layout_gravity="center_horizontal"
@@ -36,7 +36,7 @@
 
     <Button
         android:id="@+id/buttonPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:onClick="myPass"
         android:layout_gravity="center_horizontal"
@@ -44,7 +44,7 @@
     
     <Button
         android:id="@+id/buttonupdate"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:onClick="update"
         android:layout_gravity="center_horizontal"
@@ -52,7 +52,7 @@
 
     <Button
         android:id="@+id/buttonlogout"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="70dp"

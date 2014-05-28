@@ -234,6 +234,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            
     		            if(message.getViaPost().equals(""))
     		            {
+    		            	via_post.setText("Private message");
     		            	//private message
     		            	via_post.setText("");
     		            	if(ParseUser.getCurrentUser().getObjectId().equals(message.getReceipentObjID()))
@@ -941,8 +942,9 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			 //change radius
 			 
 			 final Dialog dialog = new Dialog(this);
+			 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			 dialog.setContentView(R.layout.change_radius);
-			 dialog.setTitle("Change Radius");	
+			 
 			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 
@@ -986,6 +988,13 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			 });
 
 			 dialog.show();
+			 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+				Window window = dialog.getWindow();
+				lp.copyFrom(window.getAttributes());
+				//This makes the dialog take up the full width
+				lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+				lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+				window.setAttributes(lp);
 		 }
 		 
 //		 else if(item.getItemId()==R.id.exclusive){

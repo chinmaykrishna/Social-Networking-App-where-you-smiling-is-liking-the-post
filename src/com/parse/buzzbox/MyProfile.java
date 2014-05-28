@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -121,8 +123,8 @@ public class MyProfile extends Activity {
 		
 		 final Dialog dialog = new Dialog(this);
 		 final ProgressDialog pdLoading = new ProgressDialog(MyProfile.this);
+		 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		 dialog.setContentView(R.layout.changenick);
-		 dialog.setTitle("Change Nick");	
 		 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 		 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 
@@ -170,13 +172,21 @@ public class MyProfile extends Activity {
 		 });
 
 		 dialog.show();
+		 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+			Window window = dialog.getWindow();
+			lp.copyFrom(window.getAttributes());
+			//This makes the dialog take up the full width
+			lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+			lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+			window.setAttributes(lp);
 	}
 	
 	public void myPass(View v){
 		
 		 final Dialog dialog = new Dialog(this);
+		 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		 
 		 dialog.setContentView(R.layout.changepass);
-		 dialog.setTitle("Change Password");	
 		 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
 		 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 
@@ -224,6 +234,13 @@ public class MyProfile extends Activity {
 		 });
 
 		 dialog.show();
+		 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+			Window window = dialog.getWindow();
+			lp.copyFrom(window.getAttributes());
+			//This makes the dialog take up the full width
+			lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+			lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+			window.setAttributes(lp);
 	}
 	
 	public void logout(View v){
