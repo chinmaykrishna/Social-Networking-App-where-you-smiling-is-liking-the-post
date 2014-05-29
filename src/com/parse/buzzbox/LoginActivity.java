@@ -1,7 +1,9 @@
 package com.parse.buzzbox;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -100,4 +102,8 @@ public class LoginActivity extends Activity {
     }
   }
   
+  @Override
+  protected void attachBaseContext(Context newBase) {
+      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+  }
 }

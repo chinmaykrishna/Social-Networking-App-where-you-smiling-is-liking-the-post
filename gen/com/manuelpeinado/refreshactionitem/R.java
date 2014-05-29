@@ -266,8 +266,8 @@ public final class R {
 		public static final int abs__textfield_searchview_right_holo_dark = 0x7f02006e;
 		public static final int abs__textfield_searchview_right_holo_light = 0x7f02006f;
 		public static final int abs__toast_frame = 0x7f020070;
-		public static final int ic_navigation_refresh_dark = 0x7f02008d;
-		public static final int ic_navigation_refresh_light = 0x7f02008e;
+		public static final int ic_navigation_refresh_dark = 0x7f02008f;
+		public static final int ic_navigation_refresh_light = 0x7f020090;
 	}
 	public static final class id {
 		public static final int abs__action_bar = 0x7f04003d;
@@ -312,16 +312,16 @@ public final class R {
 		public static final int bottomLeft = 0x7f04002a;
 		public static final int bottomRight = 0x7f04002b;
 		public static final int center = 0x7f04002c;
-		public static final int determinate_progress_indicator = 0x7f040091;
+		public static final int determinate_progress_indicator = 0x7f040092;
 		public static final int disableHome = 0x7f04001e;
 		public static final int edit_query = 0x7f040043;
 		public static final int homeAsUp = 0x7f04001b;
 		public static final int indeterminate = 0x7f040027;
-		public static final int indeterminate_progress_indicator = 0x7f040090;
+		public static final int indeterminate_progress_indicator = 0x7f040091;
 		public static final int listMode = 0x7f040017;
 		public static final int normal = 0x7f040016;
 		public static final int pie = 0x7f040026;
-		public static final int refresh_button = 0x7f04008f;
+		public static final int refresh_button = 0x7f040090;
 		public static final int showCustom = 0x7f04001d;
 		public static final int showHome = 0x7f04001a;
 		public static final int showTitle = 0x7f04001c;

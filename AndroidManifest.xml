@@ -40,10 +40,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.parse.buzzbox.My_messages"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name="com.parse.buzzbox.SignupOrLogin"
             android:screenOrientation="portrait">
         </activity>

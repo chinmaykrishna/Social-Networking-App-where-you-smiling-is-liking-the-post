@@ -1,6 +1,7 @@
 package com.parse.buzzbox;
 
 import phone_numbers.To_international;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.ProgressDialog;
@@ -147,6 +148,11 @@ public class SignupActivity extends Activity{
 	        } else {
 	          return false;
 	        }
+	      }
+	      
+	      @Override
+	      protected void attachBaseContext(Context newBase) {
+	          super.attachBaseContext(new CalligraphyContextWrapper(newBase));
 	      }
 
 	    }

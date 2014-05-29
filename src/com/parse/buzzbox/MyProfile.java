@@ -1,6 +1,8 @@
 package com.parse.buzzbox;
 
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -8,6 +10,7 @@ import com.parse.SaveCallback;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -252,6 +255,9 @@ public class MyProfile extends Activity {
 		startActivity(intent);
 		
 	}
-	
+	@Override
+	  protected void attachBaseContext(Context newBase) {
+	      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+	  }
 	
 }

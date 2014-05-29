@@ -2,12 +2,15 @@ package com.parse.buzzbox;
 
 import java.util.ArrayList;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -172,4 +175,8 @@ public class Create_Message extends Activity{
 		 });
 	}
 
+	@Override
+	  protected void attachBaseContext(Context newBase) {
+	      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+	  }
 }

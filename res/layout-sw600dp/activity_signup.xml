@@ -14,8 +14,8 @@
         <EditText
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
@@ -36,8 +36,8 @@
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_below="@+id/username"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
@@ -55,8 +55,8 @@
         <EditText
             android:id="@+id/passwordAgain"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_below="@+id/password"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
@@ -74,8 +74,8 @@
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_below="@+id/phone_number"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
@@ -106,16 +106,16 @@
         android:layout_height="50dp"
         android:layout_above="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="150dp"
         android:src="@drawable/signup_button" />
 
     <Button
         android:id="@+id/action_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="150dp"
         android:background="@drawable/check" />
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.parse.buzzbox;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import android.app.Application;
 
 import com.parse.Parse;
@@ -14,6 +15,8 @@ public class BuzzboxApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 
+		
+		CalligraphyConfig.initDefault("fonts/robotoregular.ttf");
 		// Add your initialization code here
 		//Parse.enableLocalDatastore(this);
 		Parse.initialize(this, "nOuI36TTrBv426lobvsaE63UhV3XR7Av2397Ga2j", "y6XtplZWQToWEKJcSW8QKy1t1hz2Z6eKjdaFMpZU");

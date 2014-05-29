@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -1325,6 +1327,9 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			 setQuery(p);
 		}
 		
-		
+		@Override
+		  protected void attachBaseContext(Context newBase) {
+		      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+		  }
 		
 }

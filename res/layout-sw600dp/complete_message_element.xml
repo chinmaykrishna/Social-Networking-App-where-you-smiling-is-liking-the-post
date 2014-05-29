@@ -22,14 +22,6 @@
         android:layout_weight="2.6"
         android:padding="10dp"
          >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/avatar1" />
         
         <TextView
             android:id="@+id/usernameView"
@@ -38,6 +30,7 @@
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
             android:text="Username"
+            android:textSize="25dp"
             android:textColor="#ADACAC"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -47,8 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="20dp"
             android:textColor="#ADACAC"
+            android:textSize="25dp"
             android:text="11-11-2011" />
 
         <TextView
@@ -59,7 +53,16 @@
             android:layout_alignBottom="@+id/date"
             android:layout_alignParentRight="true"
             android:text="11:11 Am"
+            android:textSize="25dp"
             android:textColor="#ADACAC" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/avatar1" />
 
     </RelativeLayout>
        
@@ -71,7 +74,7 @@
 	        android:text="Message"
 	        android:textStyle="bold"
 	        android:textColor="#ADACAC"
-	        android:textSize="24dp"
+	        android:textSize="35dp"
 	        android:background="@drawable/happy"
 	        android:gravity="center"
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -81,7 +84,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="bottom"
-        android:gravity="bottom"
+        android:gravity="center_horizontal"
         android:padding="10dp"
         android:id="@+id/rlbtns" >
 
@@ -94,22 +97,21 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    
-
-    <ImageView
-        android:id="@+id/privatemessage"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/private_message" />
-
     <ImageView
         android:id="@+id/comment"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:src="@drawable/comment" />
+
+    <ImageView
+        android:id="@+id/privatemessage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/comment"
+        android:src="@drawable/private_message" />
     
     </RelativeLayout>
 

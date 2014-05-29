@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#443f3c"
-    
-     xmlns:app1="http://schemas.android.com/apk/res/com.parse.buzzbox">
+    >
 
         
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -20,7 +19,6 @@
 	  sothree:shadowHeight="0dp"
 	  sothree:paralaxOffset="100dp"
 	  sothree:overlay="false"
-	  
 	  sothree:dragView="@+id/drag_layout">
 
     <LinearLayout
@@ -57,18 +55,23 @@
                 android:layout_height="68dp"
                 android:orientation="horizontal"
                 android:id="@+id/drag_layout"
-           		android:background="@android:color/transparent" 	    
+           		android:background="@drawable/comments" 	    
                 >
 
-
-              <ImageView
-			        android:id="@+id/imageView1"
+	         
+	             
+	             <TextView
+			        android:id="@+id/textView1"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
-			        android:src="@drawable/comments"
-			        android:scaleType="fitXY"
-			        android:background="@android:color/transparent" 	
-			         />
+			        android:gravity="center"
+			        android:text="Comments"
+			        android:textColor="#ADACAC"
+			        android:textAppearance="?android:attr/textAppearanceMedium" />
+	             
+		  
+
+              
 
             </LinearLayout>
             
@@ -102,5 +105,7 @@
     </LinearLayout>
 
   </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    
+    
     
 </LinearLayout>

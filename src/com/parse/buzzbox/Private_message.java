@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import phone_numbers.To_international;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -274,4 +275,9 @@ public class Private_message extends SherlockActivity{
 		}
 	  });
 	}
+	
+	@Override
+	  protected void attachBaseContext(Context newBase) {
+	      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+	  }
 }

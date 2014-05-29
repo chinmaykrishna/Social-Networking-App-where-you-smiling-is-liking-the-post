@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:background="@android:color/transparent"
+    
      >
 
     <LinearLayout
@@ -13,8 +14,8 @@
         android:orientation="vertical"
         android:layout_gravity="center"
     	android:background="@drawable/rect_round_2"
-    	android:padding="0dp"
-    	android:weightSum="10" >
+    	android:weightSum="10"
+    	 >
         
         <RelativeLayout
         android:layout_width="match_parent"
@@ -22,14 +23,6 @@
         android:layout_weight="2.6"
         android:padding="10dp"
          >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/avatar1" />
         
         <TextView
             android:id="@+id/usernameView"
@@ -38,6 +31,7 @@
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
             android:text="Username"
+            android:textSize="25dp"
             android:textColor="#ADACAC"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -47,8 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="20dp"
             android:textColor="#ADACAC"
+            android:textSize="25dp"
             android:text="11-11-2011" />
 
         <TextView
@@ -59,7 +54,16 @@
             android:layout_alignBottom="@+id/date"
             android:layout_alignParentRight="true"
             android:text="11:11 Am"
+            android:textSize="25dp"
             android:textColor="#ADACAC" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/avatar1" />
 
     </RelativeLayout>
        
@@ -71,7 +75,7 @@
 	        android:text="Message"
 	        android:textStyle="bold"
 	        android:textColor="#ADACAC"
-	        android:textSize="24dp"
+	        android:textSize="35dp"
 	        android:background="@drawable/happy"
 	        android:gravity="center"
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -81,9 +85,16 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="bottom"
-        android:gravity="bottom"
-        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
         android:id="@+id/rlbtns" >
+    
+    <ImageView
+        android:id="@+id/comment"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/comment" />
 
     <TextView
         android:id="@+id/Count_of_Empathizes"
@@ -94,22 +105,20 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    
+    <ImageView
+        android:id="@+id/btnEmpathize"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/empathize_1" />
 
     <ImageView
         android:id="@+id/privatemessage"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentRight="true"
+        android:onClick="private_message"
         android:src="@drawable/private_message" />
-
-    <ImageView
-        android:id="@+id/comment"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/comment" />
     
     </RelativeLayout>
 

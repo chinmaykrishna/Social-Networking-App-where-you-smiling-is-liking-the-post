@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -344,4 +346,8 @@ public class Message_complete extends Activity{
 	    }
 	}
 	
+	@Override
+	  protected void attachBaseContext(Context newBase) {
+	      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+	  }
 }

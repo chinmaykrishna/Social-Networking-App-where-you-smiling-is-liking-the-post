@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7" >
-
+        
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/logo" />
-
+        
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="Cloak"
-            android:textSize="45dp"
+            android:textSize="70dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -39,11 +39,11 @@
             android:layout_below="@+id/textView1"
             android:layout_centerHorizontal="true"
             android:text="Share Secrets"
-            android:textSize="12dp"
+            android:textSize="20dp"
             android:textColor="@android:color/white"
             android:textStyle="italic"
              />
-
+        
     </RelativeLayout>
 
     <LinearLayout
@@ -67,7 +67,7 @@
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="100dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:src="@drawable/login_button" />
@@ -78,7 +78,7 @@
                 android:layout_height="73dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/loginButton"
-                android:layout_marginRight="60dp"
+                android:layout_marginRight="100dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:src="@drawable/signup_button" />
