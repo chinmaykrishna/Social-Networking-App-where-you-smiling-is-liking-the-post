@@ -39,6 +39,7 @@
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
             android:text="Username"
+            android:layout_marginTop="5dp"
             android:textColor="#ADACAC"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -56,11 +57,19 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/date"
-            android:layout_alignBottom="@+id/date"
-            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@+id/date"
+            android:layout_below="@+id/date"
+            android:layout_marginTop="10dp"
             android:text="11:11 Am"
             android:textColor="#ADACAC" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/date"
+            android:src="@drawable/nearby" />
 
     </RelativeLayout>
        

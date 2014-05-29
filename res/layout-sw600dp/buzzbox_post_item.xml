@@ -32,6 +32,7 @@
             android:layout_centerHorizontal="true"
             android:text="Username"
             android:textSize="25dp"
+            android:layout_marginTop="10dp"
             android:textColor="#ADACAC"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -46,17 +47,6 @@
             android:textSize="25dp"
             android:text="11-11-2011" />
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/date"
-            android:layout_alignBottom="@+id/date"
-            android:layout_alignParentRight="true"
-            android:text="11:11 Am"
-            android:textSize="25dp"
-            android:textColor="#ADACAC" />
-
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="100dp"
@@ -64,6 +54,24 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/avatar1" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/date"
+            android:layout_below="@+id/date"
+            android:text="11:11 Am"
+            android:layout_marginTop="15dp"
+            android:textColor="#ADACAC"
+            android:textSize="25dp" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/date"
+            android:src="@drawable/nearby" />
 
     </RelativeLayout>
        
