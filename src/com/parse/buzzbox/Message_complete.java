@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class Message_complete extends Activity{
 	MessageObject message;
 	View viewToLoad;
 	Context con;
-	String receipent;
+	String author_obj_id;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +62,7 @@ public class Message_complete extends Activity{
         TextView date = (TextView) viewToLoad.findViewById(R.id.date);
         TextView time = (TextView) viewToLoad.findViewById(R.id.time);
         
-        receipent = this.getIntent().getExtras().getString("receipent");
+        author_obj_id = this.getIntent().getExtras().getString("author_obj_id");
         contentView.setText(this.getIntent().getExtras().getString("text"));
         contentView.setBackgroundResource(this.getIntent().getExtras().getInt("mood"));
         
@@ -218,7 +217,7 @@ public class Message_complete extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(con, Create_Message.class);
-				 i.putExtra("obj_id", receipent);
+				 i.putExtra("obj_id", author_obj_id);
 				 i.putExtra("viaPost", "");
 				 startActivity(i);
 			}

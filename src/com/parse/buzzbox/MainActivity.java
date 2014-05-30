@@ -219,10 +219,11 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		        	
     		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
     		            TextView message_text = (TextView) view.findViewById(R.id.message_text);
-    		            ImageView private_flag = (ImageView) view.findViewById(R.id.private_flag);
     		            final TextView message_author = (TextView) view.findViewById(R.id.author);
     		            TextView via_post = (TextView) view.findViewById(R.id.via_post);
     		            final ImageView author_avatar = (ImageView)view.findViewById(R.id.author_avatar);
+    		            final ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
+    		            thumbnail.setImageResource(message.getInt("mood"));
     		            message_text.setText(message.getText());
     		            
     		            if(message.getAuthorName()!=null)
@@ -238,7 +239,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            {
     		            	via_post.setText("Private message");
     		            	//private message
-    		            	via_post.setText("");
+    		            	via_post.setText("Private message");
     		            	if(ParseUser.getCurrentUser().getObjectId().equals(message.getReceipentObjID()))
     		            	{
     		            		message_author.setText("to you");
@@ -253,7 +254,6 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            	
     		            	//via post message
     		            	via_post.setText("Via Post: "+message.getViaPost());
-    		            	((ViewManager)view).removeView(private_flag);
     		            	
     		            	if(message.getViaPostReceipentName()!=null)
     		            	{
@@ -315,7 +315,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
 								intent.putExtra("author_name", message.getAuthorName());
 								intent.putExtra("author_avatar", message.getAuthorAvatar());
-								intent.putExtra("receipent", message.getReceipentObjID());
+								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
 								if(message.getCommentList()!=null)
 								{
 									String[] comments = message.getCommentList().toArray(new String[message.getCommentList().size()]);

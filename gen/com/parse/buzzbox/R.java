@@ -1350,8 +1350,8 @@ containing a value of this type.
         public static final int abs__title=0x7f040038;
         public static final int abs__up=0x7f040020;
         public static final int action_button=0x7f04005c;
-        public static final int author=0x7f04007c;
-        public static final int author_avatar=0x7f04007d;
+        public static final int author=0x7f04007d;
+        public static final int author_avatar=0x7f04007b;
         public static final int avatar=0x7f040070;
         public static final int back=0x7f040079;
         public static final int bottomLeft=0x7f04002a;
@@ -1408,7 +1408,7 @@ containing a value of this type.
         public static final int message=0x7f04006e;
         public static final int message_comment_element=0x7f040077;
         public static final int message_comments=0x7f040072;
-        public static final int message_text=0x7f04007b;
+        public static final int message_text=0x7f04007c;
         public static final int messages=0x7f04007a;
         public static final int moods=0x7f040080;
         public static final int nick=0x7f04006c;
@@ -1424,7 +1424,6 @@ containing a value of this type.
         public static final int posts=0x7f040085;
         public static final int postsMade=0x7f040087;
         public static final int postsView=0x7f040052;
-        public static final int private_flag=0x7f04007f;
         public static final int private_message=0x7f040097;
         public static final int privatemessage=0x7f040067;
         public static final int progressBar1=0x7f040078;
@@ -1446,6 +1445,7 @@ containing a value of this type.
         public static final int tabMode=0x7f040018;
         public static final int textView1=0x7f040053;
         public static final int textView2=0x7f040073;
+        public static final int thumbnail=0x7f04007e;
         public static final int tilt=0x7f04000a;
         public static final int time=0x7f040061;
         public static final int topLeft=0x7f040028;
@@ -1455,7 +1455,7 @@ containing a value of this type.
         public static final int useLogo=0x7f040019;
         public static final int username=0x7f040059;
         public static final int usernameView=0x7f04005f;
-        public static final int via_post=0x7f04007e;
+        public static final int via_post=0x7f04007f;
         public static final int wave=0x7f040004;
         public static final int wheel=0x7f040025;
         public static final int wrap_content=0x7f040015;

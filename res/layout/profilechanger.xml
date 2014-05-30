@@ -23,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hi, "
+        android:textColor="@android:color/darker_gray"
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -31,6 +32,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:onClick="myNick"
+        android:textColor="@android:color/darker_gray"
         android:layout_gravity="center_horizontal"
         android:text="Change Nick" />
 
@@ -40,6 +42,7 @@
         android:layout_height="wrap_content"
         android:onClick="myPass"
         android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/darker_gray"
         android:text="Change Password" />
     
     <Button
@@ -48,6 +51,7 @@
         android:layout_height="wrap_content"
         android:onClick="update"
         android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/darker_gray"
         android:text="Update Profile" />
 
     <Button
@@ -56,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="70dp"
+        android:textColor="@android:color/darker_gray"
         android:onClick="logout"
         android:text="Logout" />
     
