@@ -133,6 +133,7 @@ public class newPost extends Activity {
 					 
 					 new_post.setText(Post);
 					 new_post.set_no_of_empathizes(0);
+					 new_post.setUserId(ParseUser.getCurrentUser().getObjectId());
 					 new_post.Init(ParseUser.getCurrentUser().getUsername(),moodIds[moodindex]);
 					 
 					 int temp = new_post.getNoofPosts()+1;

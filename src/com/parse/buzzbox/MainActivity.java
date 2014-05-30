@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -81,6 +80,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     private Context con;
     private ParseQueryAdapter<BuzzboxPost> posts;
 	private SlidingMenu menu, menuleft, menuright;
+	private String names[], numbers[], object_ids[];
 	private static boolean logout=false;
 	private JazzyListView post_list; 
 	private SlidingUpPanelLayout comment_slider;
@@ -92,6 +92,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	private MainActivity main;
 	private RefreshActionItem mRefreshActionItem;
 	private ProgressBar comments_loader;
+	
+	
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,22 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            }
 		        });
 		
+		
+		//retrieving friends contacts from local db
+				Contacts_database db = new Contacts_database(con);
+				List<Contact> already_present = db.getAllContacts();
+				
+				names = new String[already_present.size()]; 
+				numbers = new String[already_present.size()];
+				object_ids = new String[already_present.size()];
+				
+				for(int i=0;i<already_present.size();i++)
+				{
+					names[i] = already_present.get(i).getName();
+					numbers[i] = already_present.get(i).getPhoneNumber();
+					object_ids[i] = already_present.get(i).getObjectID();
+				}
+				
 		//finish if user has been logged out
 		if(ParseUser.getCurrentUser()!=null)
 		if(!(ParseUser.getCurrentUser().isDataAvailable()))
@@ -492,20 +510,27 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
 		          public ParseQuery<BuzzboxPost> create() {
 		            
-		            ParseQuery<BuzzboxPost> query = BuzzboxPost.getQuery();
-		            query.include("user");
+		        	List<ParseQuery<BuzzboxPost>> queries = new ArrayList<ParseQuery<BuzzboxPost>>();
+		            ParseQuery<BuzzboxPost> query1 = BuzzboxPost.getQuery();
+		            query1.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
 		            
-		            if(flag==0) query.orderByDescending("createdAt");	// If the user has not pressed the Featured Button.
 		            
-		            else query.orderByDescending("NoOfEmpathizes");	// If the user has pressed the Featured Button.
+		            queries.add(query1);
+		            for(int i =0;i<object_ids.length;i++)
+		            {
+		            	ParseQuery<BuzzboxPost> query2 = BuzzboxPost.getQuery();
+		            	query2.whereEqualTo("user_id", object_ids[i]);
+		            	queries.add(query2);
+		            }
 		            
-		            flag=0;
+		            ParseQuery<BuzzboxPost> mainQuery = ParseQuery.or(queries);
+		            mainQuery.include("user");
 		            
-		            query.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
+		            mainQuery.orderByDescending("createdAt");	
 		            
-		            query.setLimit(MAX_POST_SEARCH_RESULTS);
+		            //mainQuery.setLimit(MAX_POST_SEARCH_RESULTS);
 		            
-		            return query;
+		            return mainQuery;
 		          }
 		        };
 		        
@@ -529,7 +554,18 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 		            TextView date = (TextView) view.findViewById(R.id.date);
 		            TextView time = (TextView) view.findViewById(R.id.time);
+		            ImageView im2 = (ImageView) view.findViewById(R.id.post_source);
 		            
+		            if(post.getUserId()!=null)
+		            {
+		            	for(int i=0;i<object_ids.length;i++)
+		            	{
+		            		if(post.getUserId().equals(object_ids[i]))
+		            		{
+		            			im2.setImageResource(R.drawable.friends);
+		            		}
+		            	}
+		            }
 		            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 		            // contentView.setBackground();  // We will do this to show the image.
 		            

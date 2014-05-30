@@ -13,7 +13,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,13 +22,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.CalendarContract.Reminders;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class Private_message extends SherlockActivity{
 	
@@ -50,35 +49,7 @@ public class Private_message extends SherlockActivity{
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.private_message);
 		con = this;
-		
-		//Update contacts database First time the app launches
-		sp_parse = getSharedPreferences("App_data", Activity.MODE_PRIVATE);
-		prefEdit = sp_parse.edit();
-		String str = sp_parse.getString("first_time","shubham");
-		  if(str.equals("shubham"))
-		  {
-			  prefEdit.putString("first_time", "blah");
-			  prefEdit.commit();
-			  setSupportProgressBarIndeterminateVisibility(true);
-			  chekcAllPhoneNumbers();
-			  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-						con);
-		 
-						// create alert dialog
-			  			alertDialog = alertDialogBuilder.setTitle("Please wait")
-							.setMessage("It will little longer while we are loading your friends from your contacts. You can close this screen if you want.\nYou can also update friends list from update option in options menu.")
-							.setCancelable(false)
-							.setPositiveButton("Ok, I got it.",new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,int id) {
-									alertDialog.dismiss();
-								}
-							  }).create();
-		 
-						// show it
-						alertDialog.show();
-		  }
-		  
-		  load_contacts();
+		load_contacts();
 }
 	
 	//this method checks all phone numbers 
@@ -105,6 +76,7 @@ public class Private_message extends SherlockActivity{
 		}
 		else
 		{
+			
 			Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 			String[] projection    = new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
 			                ContactsContract.CommonDataKinds.Phone.NUMBER};
@@ -114,40 +86,50 @@ public class Private_message extends SherlockActivity{
 			int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
 			int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
-			people.moveToFirst();
-			do {
-				    String name   = people.getString(indexName);
-				    String number = people.getString(indexNumber);
-				    number = (new To_international(con)).change_to_international(number);
-				    if(number!=null)
-				    {
-				    	valid_name.add(name);
-				    	valid_number.add(number);
-				    }
-			} while (people.moveToNext());
-			
-			Log.d("size", ""+valid_name.size());
-			
-			if(valid_name.size()>10)
+			int total_size = people.getCount();
+			if(total_size<=0)
 			{
-				flag = valid_name.size();
-				remaining = valid_name.size();
-				index = -1;
-				for(int i=0;i<valid_name.size();i++)
-				{
-					parse_phone_number_query();
-				}
+				setSupportProgressBarIndeterminateVisibility(false);
+				Toast.makeText(con, "No contacts found.", Toast.LENGTH_SHORT).show();
 			}
 			else
 			{
-				flag = valid_name.size();
-				remaining = valid_name.size();
-				index = -1;
-				for(int i=0;i<valid_name.size();i++)
+				people.moveToFirst();
+				do {
+					    String name   = people.getString(indexName);
+					    String number = people.getString(indexNumber);
+					    number = (new To_international(con)).change_to_international(number);
+					    if(number!=null)
+					    {
+					    	valid_name.add(name);
+					    	valid_number.add(number);
+					    }
+				} while (people.moveToNext());
+				
+				Log.d("size", ""+valid_name.size());
+				
+				if(valid_name.size()>10)
 				{
-					parse_phone_number_query();
+					flag = valid_name.size();
+					remaining = valid_name.size();
+					index = -1;
+					for(int i=0;i<valid_name.size();i++)
+					{
+						parse_phone_number_query();
+					}
+				}
+				else
+				{
+					flag = valid_name.size();
+					remaining = valid_name.size();
+					index = -1;
+					for(int i=0;i<valid_name.size();i++)
+					{
+						parse_phone_number_query();
+					}
 				}
 			}
+			
 
 		}
 				
@@ -172,12 +154,16 @@ public class Private_message extends SherlockActivity{
 	
 	public void load_contacts()
 	{
-		//listview contacts
+		//list view contacts
 				final ListView lv = (ListView)findViewById(R.id.contact_list);
 				//retrieving contacts from local db
 				Contacts_database db = new Contacts_database(con);
 				List<Contact> already_present = db.getAllContacts();
 				
+				if(already_present.size()<=0)
+				{
+					Toast.makeText(con, "No friends found in contacts. 'Update friends' option present in option menu.", Toast.LENGTH_LONG).show();
+				}
 				names = new String[already_present.size()]; 
 				numbers = new String[already_present.size()];
 				object_ids = new String[already_present.size()];

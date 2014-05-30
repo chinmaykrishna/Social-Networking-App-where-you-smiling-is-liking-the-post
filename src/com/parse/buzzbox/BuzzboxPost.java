@@ -26,10 +26,21 @@ public class BuzzboxPost extends ParseObject {
     put("text", value);
   }
 
+  public void setUser(ParseUser value) {
+	    put("user", value);
+	  }
+  
   public ParseUser getUser() {
     return getParseUser("user");
   }
   
+  public void setUserId(String value) {
+	    put("user_id", value);
+	  }
+
+public String getUserId() {
+  return getString("user_id");
+}
   public void setFav(){
 	  put("Fav",1);
   }
@@ -49,9 +60,7 @@ public class BuzzboxPost extends ParseObject {
 	  return ParseUser.getCurrentUser().getInt("noOfPosts");
   }
 
-  public void setUser(ParseUser value) {
-    put("user", value);
-  }
+  
   
   public int no_of_empathizes(){
 	  return getInt("NoOfEmpathizes");
@@ -80,6 +89,7 @@ public class BuzzboxPost extends ParseObject {
     put("location", value);
   }
 
+  
   //to put likes, dislikes to post
   
   public static ParseQuery<BuzzboxPost> getQuery() {
