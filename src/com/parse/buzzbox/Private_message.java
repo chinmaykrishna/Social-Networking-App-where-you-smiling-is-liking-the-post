@@ -108,25 +108,34 @@ public class Private_message extends SherlockActivity{
 				
 				Log.d("size", ""+valid_name.size());
 				
-				if(valid_name.size()>10)
+				if(valid_name.size()>0)
 				{
-					flag = valid_name.size();
-					remaining = valid_name.size();
-					index = -1;
-					for(int i=0;i<valid_name.size();i++)
+					if(valid_name.size()>10)
 					{
-						parse_phone_number_query();
+						flag = valid_name.size();
+						remaining = valid_name.size();
+						index = -1;
+						for(int i=0;i<valid_name.size();i++)
+						{
+							parse_phone_number_query();
+						}
+					}
+					else
+					{
+						flag = valid_name.size();
+						remaining = valid_name.size();
+						index = -1;
+						for(int i=0;i<valid_name.size();i++)
+						{
+							parse_phone_number_query();
+						}
 					}
 				}
 				else
 				{
-					flag = valid_name.size();
-					remaining = valid_name.size();
-					index = -1;
-					for(int i=0;i<valid_name.size();i++)
-					{
-						parse_phone_number_query();
-					}
+					setSupportProgressBarIndeterminateVisibility(false);
+					Toast.makeText(con, "No friends found in contacts.", Toast.LENGTH_LONG).show();
+					
 				}
 			}
 			
@@ -232,6 +241,11 @@ public class Private_message extends SherlockActivity{
 				if(objects.size()!=0)
 				{
 					
+					if(objects.get(0).getList("friends")!=null)
+					{
+						ParseUser.getCurrentUser().addAllUnique("friends_of_friends", objects.get(0).getList("friends"));
+						ParseUser.getCurrentUser().saveEventually();
+					}
 					int flag=0;
 					//got the number using buzzbox
 					String phone_number = objects.get(0).getString("phone_number");
@@ -256,8 +270,15 @@ public class Private_message extends SherlockActivity{
 				}
 		    } else {
 		        Log.d("error", e.getMessage());
-		        
 		    }
+			if(flag==0)
+			{
+				
+				//to save all friends in list in parse user
+				for(int i=0;i<object_ids.length;i++)
+					ParseUser.getCurrentUser().addUnique("friends", object_ids[i]);
+					ParseUser.getCurrentUser().saveEventually();
+			}
 		}
 	  });
 	}

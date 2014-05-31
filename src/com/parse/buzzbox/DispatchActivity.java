@@ -24,6 +24,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class DispatchActivity extends SherlockActivity{
 	public DispatchActivity() {
@@ -43,12 +44,13 @@ public class DispatchActivity extends SherlockActivity{
 	  protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    
+	    
 	    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	    con = this;
 	    sp_parse = getSharedPreferences("App_data", Activity.MODE_PRIVATE);
 		prefEdit = sp_parse.edit();
 		
-		//retrieving contacts from local db
+		
 		Contacts_database db = new Contacts_database(con);
 		List<Contact> already_present = db.getAllContacts();
 		
@@ -130,25 +132,38 @@ public class DispatchActivity extends SherlockActivity{
 						    }
 					} while (people.moveToNext());
 
-					//check each contact
-					if(valid_name.size()>10)
+					if(valid_name.size()<=0)
 					{
-						flag = valid_name.size();
-						index = -1;
-						for(int i=0;i<valid_name.size();i++)
-						{
-							parse_phone_number_query();
-						}
+						//if the total contacts are 0
+						Toast.makeText(con, "Friends checking complete.", Toast.LENGTH_SHORT).show();
+						prefEdit.putString("first_time", "blah");
+						prefEdit.commit();
+						startActivity(new Intent(con, DispatchActivity.class));
+					      finish();
 					}
 					else
 					{
-						flag = valid_name.size();
-						index = -1;
-						for(int i=0;i<valid_name.size();i++)
+						//check each contact
+						if(valid_name.size()>10)
 						{
-							parse_phone_number_query();
+							flag = valid_name.size();
+							index = -1;
+							for(int i=0;i<valid_name.size();i++)
+							{
+								parse_phone_number_query();
+							}
+						}
+						else
+						{
+							flag = valid_name.size();
+							index = -1;
+							for(int i=0;i<valid_name.size();i++)
+							{
+								parse_phone_number_query();
+							}
 						}
 					}
+					
 
 				}
 								
@@ -169,9 +184,28 @@ public class DispatchActivity extends SherlockActivity{
 				flag--;
 				if(flag==0)
 				{
+					
+					Contacts_database db = new Contacts_database(con);
+					List<Contact> already_present = db.getAllContacts();
+					
+					names = new String[already_present.size()]; 
+					numbers = new String[already_present.size()];
+					object_ids = new String[already_present.size()];
+					
+					for(int i=0;i<already_present.size();i++)
+					{
+						names[i] = already_present.get(i).getName();
+						numbers[i] = already_present.get(i).getPhoneNumber();
+						object_ids[i] = already_present.get(i).getObjectID();
+					}
+						//to save all friends in list in parse user
+						for(int i=0;i<object_ids.length;i++)
+						ParseUser.getCurrentUser().addUnique("friends", object_ids[i]);
+						ParseUser.getCurrentUser().saveEventually();
+					
 					setSupportProgressBarIndeterminateVisibility(false);
 					// if no of errors are less than 10 percent we can let user move in main activity
-					if(no_of_errors<valid_name.size()*10/100)
+					if(no_of_errors<=valid_name.size()*10/100)
 					{
 						Toast.makeText(con, "Friends checking complete.", Toast.LENGTH_SHORT).show();
 						prefEdit.putString("first_time", "blah");
@@ -215,7 +249,11 @@ public class DispatchActivity extends SherlockActivity{
 					
 					if(objects.size()!=0)
 					{
-						
+						if(objects.get(0).getList("friends")!=null)
+						{
+							ParseUser.getCurrentUser().addAllUnique("friends_of_friends", objects.get(0).getList("friends"));
+							ParseUser.getCurrentUser().saveEventually();
+						}
 						int flag=0;
 						//got the number using buzzbox
 						String phone_number = objects.get(0).getString("phone_number");

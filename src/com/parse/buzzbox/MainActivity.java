@@ -70,8 +70,7 @@ import com.twotoasters.jazzylistview.JazzyListView;
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends SherlockActivity implements LocationListener,RefreshActionListener {
 	
-	private static final int MAX_POST_SEARCH_RESULTS= 50;
-	private static int SEARCH_RADIUS=100,flag=0, Postflag=1;
+	private static int SEARCH_RADIUS=100,Postflag=1;
 	private static Location lastLocation = null;
     private static Location currentLocation = null;
     protected double Latitude,Longitude;
@@ -513,8 +512,6 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		        	List<ParseQuery<BuzzboxPost>> queries = new ArrayList<ParseQuery<BuzzboxPost>>();
 		            ParseQuery<BuzzboxPost> query1 = BuzzboxPost.getQuery();
 		            query1.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
-		            
-		            
 		            queries.add(query1);
 		            for(int i =0;i<object_ids.length;i++)
 		            {
@@ -523,7 +520,19 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            	queries.add(query2);
 		            }
 		            
+		            if(ParseUser.getCurrentUser().getList("friends_of_friends")!=null)
+		            {
+		            	for(int i=0;i<ParseUser.getCurrentUser().getList("friends_of_friends").size();i++)
+			            {
+			            	ParseQuery<BuzzboxPost> query2 = BuzzboxPost.getQuery();
+			            	query2.whereEqualTo("user_id", ParseUser.getCurrentUser().getList("friends_of_friends").get(i).toString());
+			            	queries.add(query2);
+			            }
+		            }
+		            
+		            
 		            ParseQuery<BuzzboxPost> mainQuery = ParseQuery.or(queries);
+		            
 		            mainQuery.include("user");
 		            
 		            mainQuery.orderByDescending("createdAt");	
@@ -556,6 +565,20 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            TextView time = (TextView) view.findViewById(R.id.time);
 		            ImageView im2 = (ImageView) view.findViewById(R.id.post_source);
 		            
+		            if(post.getUserId()!=null)
+		            {
+		            	if(ParseUser.getCurrentUser().getList("friends_of_friends")!=null)
+		            	{
+		            		for(int i=0;i<ParseUser.getCurrentUser().getList("friends_of_friends").size();i++)
+			            	{
+			            		if(post.getUserId().equals(ParseUser.getCurrentUser().getList("friends_of_friends").get(i)))
+			            		{
+			            			im2.setImageResource(R.drawable.friends_of_friends);
+			            		}
+			            	}
+		            	}
+		            	
+		            }
 		            if(post.getUserId()!=null)
 		            {
 		            	for(int i=0;i<object_ids.length;i++)
@@ -886,7 +909,6 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	  // This method will simply sort the Posts on the basis of number of highest empathizes.
 	  public void featured(View v){
 		  
-		  flag=1;
 		  setQuery(p);
 	  }
 	  
