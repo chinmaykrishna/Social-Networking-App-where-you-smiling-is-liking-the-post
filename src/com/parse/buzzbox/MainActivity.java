@@ -70,7 +70,7 @@ import com.twotoasters.jazzylistview.JazzyListView;
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends SherlockActivity implements LocationListener,RefreshActionListener {
 	
-	private static int SEARCH_RADIUS=100,Postflag=1;
+	private static int SEARCH_RADIUS=10,Postflag=1;
 	private static Location lastLocation = null;
     private static Location currentLocation = null;
     protected double Latitude,Longitude;
@@ -91,6 +91,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	private MainActivity main;
 	private RefreshActionItem mRefreshActionItem;
 	private ProgressBar comments_loader;
+	int x,y,x1,y1;
 	
 	
 	@SuppressLint("HandlerLeak")
@@ -106,7 +107,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		con = this;
 		// to get actual screen size excluding paralax
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.main_screen);
-		
+		final JazzyListView ja = (JazzyListView)findViewById(R.id.postsView);
 		
 		final ViewTreeObserver observer= layout.getViewTreeObserver();
 		observer.addOnGlobalLayoutListener(
@@ -117,12 +118,16 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		                {
 		        			height_actual = layout.getHeight();
 		        			temp++;
+		        			SlidingUpPanelLayout up = (SlidingUpPanelLayout)findViewById(R.id.sliding_up);
+		        			up.setOverlayed(true);
+		        			ja.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,height_actual));
 		                }
-	        			Log.d("asdasdasd", "asdasdasd");
 
 		            }
 		        });
-		
+		if(ParseUser.getCurrentUser()!=null)
+		ParseUser.getCurrentUser().fetchInBackground(null);
+
 		
 		//retrieving friends contacts from local db
 				Contacts_database db = new Contacts_database(con);
@@ -193,15 +198,18 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
             	
                 menuright.toggle();
             	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
-            	ImageView back = (ImageView)menuright.getMenu().findViewById(R.id.back);
-            	back.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						onCustomBackPressed();
-					}
-				});
+            	list.setOnTouchListener(new OnSwipeTouchListener(con)
+            	{
+            		@Override
+            		public void onSwipeRight() {
+            			menuright.toggle();
+            		}
+            		public boolean onTouch(View v, MotionEvent event) {
+                        return gestureDetector.onTouchEvent(event);
+                    }
+            	});
+            	
+            	
             	final ProgressBar pb = (ProgressBar) menuright.getMenu().findViewById(R.id.progressBar1);
             	
             	// Set up a customized query
@@ -320,33 +328,84 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            		    }
     		            		  }
     		            		});
-    		            view.setOnClickListener(new OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								
-								Intent intent = new Intent(con, Message_complete.class);
-								intent.putExtra("text", message.getText());
-								intent.putExtra("mood", message.getMood());
-								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
-								intent.putExtra("author_name", message.getAuthorName());
-								intent.putExtra("author_avatar", message.getAuthorAvatar());
-								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
-								if(message.getCommentList()!=null)
-								{
-									String[] comments = message.getCommentList().toArray(new String[message.getCommentList().size()]);
-									intent.putExtra("comments_list", comments);
-									
-									String[] authors = message.getCommentAuthors().toArray(new String[message.getCommentAuthors().size()]);
-									intent.putExtra("comments_authors", authors);
-								}
-								
-								intent.putExtra("date", message.getCreatedAt());
-								intent.putExtra("Message_object", message.getObjectId());
-								startActivity(intent);
-							}
-						});
+    		            
+    		            
+    		            view.setOnTouchListener(new OnSwipeTouchListener(con){
+    		            	@Override
+    		            	public boolean onTouch(View v, MotionEvent event) {
+    		            		
+    		            		x1= (int) event.getX();
+		            			y1= (int) event.getY();
+    		            		if(event.getAction()==MotionEvent.ACTION_DOWN)
+    		            		{
+    		            			x= (int) event.getX();
+    		            			y= (int) event.getY();
+    		            			
+    		            		}
+    		            		else if(event.getAction()==MotionEvent.ACTION_MOVE)
+    		            		{
+    		            			if((x1-x)>50&&(x1-x)>Math.abs((y1-y)))
+    		            			{
+    		            				menuright.toggle();
+    		            			}
+    		            			
+    		            		}
+    		            		else if(event.getAction()==MotionEvent.ACTION_UP)
+    		            		{
+    		            			if((x1-x)<20&&mod(y1-y)<20)
+    		            			{
+    		            				Intent intent = new Intent(con, Message_complete.class);
+    									intent.putExtra("text", message.getText());
+    									intent.putExtra("mood", message.getMood());
+    									intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
+    									intent.putExtra("author_name", message.getAuthorName());
+    									intent.putExtra("author_avatar", message.getAuthorAvatar());
+    									intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
+    									if(message.getCommentList()!=null)
+    									{
+    										String[] comments = message.getCommentList().toArray(new String[message.getCommentList().size()]);
+    										intent.putExtra("comments_list", comments);
+    										
+    										String[] authors = message.getCommentAuthors().toArray(new String[message.getCommentAuthors().size()]);
+    										intent.putExtra("comments_authors", authors);
+    									}
+    									
+    									intent.putExtra("date", message.getCreatedAt());
+    									intent.putExtra("Message_object", message.getObjectId());
+    									startActivity(intent);
+    		            			}
+    		            		}
+    		            		
+    		            		return true;
+    		            	}
+    		            });
+//    		            view.setOnClickListener(new OnClickListener() {
+//							
+//							@Override
+//							public void onClick(View v) {
+//								// TODO Auto-generated method stub
+//								
+//								Intent intent = new Intent(con, Message_complete.class);
+//								intent.putExtra("text", message.getText());
+//								intent.putExtra("mood", message.getMood());
+//								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
+//								intent.putExtra("author_name", message.getAuthorName());
+//								intent.putExtra("author_avatar", message.getAuthorAvatar());
+//								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
+//								if(message.getCommentList()!=null)
+//								{
+//									String[] comments = message.getCommentList().toArray(new String[message.getCommentList().size()]);
+//									intent.putExtra("comments_list", comments);
+//									
+//									String[] authors = message.getCommentAuthors().toArray(new String[message.getCommentAuthors().size()]);
+//									intent.putExtra("comments_authors", authors);
+//								}
+//								
+//								intent.putExtra("date", message.getCreatedAt());
+//								intent.putExtra("Message_object", message.getObjectId());
+//								startActivity(intent);
+//							}
+//						});
     		            return view;
     		          }
     		        };
@@ -394,6 +453,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     	});
 		
 		
+		final LinearLayout drag = (LinearLayout)findViewById(R.id.drag_layout);
+		final TextView tv = (TextView)findViewById(R.id.comments_tv);
 		//comment slider configuration
 		comment_slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_up);
 		
@@ -404,12 +465,15 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			public void onPanelSlide(View panel, float slideOffset) {
 				// TODO Auto-generated method stub
 				panel.setBackgroundColor(Color.TRANSPARENT);
+				tv.setText("");
+				drag.setBackgroundColor(Color.TRANSPARENT);
 			}
 			
 			@Override
 			public void onPanelExpanded(View panel) {
 				comments_loader = (ProgressBar) findViewById(R.id.comments_loader);
-				
+				tv.setText("");
+				drag.setBackgroundColor(Color.TRANSPARENT);
 				panel.setBackgroundColor(Color.TRANSPARENT);
 				int pos = post_list.getFirstVisiblePosition();
 				int size = post_list.getCount();
@@ -417,12 +481,28 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 				{
 						BuzzboxPost post = posts.getItem(pos);
 						retrieve_comments(post, hori_list);
+						hori_list.setOnTouchListener(new OnSwipeTouchListener(con){
+				        	
+							@Override
+				        	public void onSwipeBottom() {
+				        		// TODO Auto-generated method stub
+				        		
+				        		Log.d("bottom", "bottom");
+				        		comment_slider.collapsePane();
+				        	}
+							
+							public boolean onTouch(View v, MotionEvent event) {
+				                return gestureDetector.onTouchEvent(event);
+				            }
+				        });
 				}
 			}
 			
 			@Override
 			public void onPanelCollapsed(View panel) {
 				panel.setBackgroundColor(Color.TRANSPARENT);
+				tv.setText("Comments");
+				drag.setBackgroundResource(R.drawable.comments);
 			}
 			
 			@Override
@@ -519,16 +599,19 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            	query2.whereEqualTo("user_id", object_ids[i]);
 		            	queries.add(query2);
 		            }
-		            
-		            if(ParseUser.getCurrentUser().getList("friends_of_friends")!=null)
+		            if(ParseUser.getCurrentUser()!=null)
 		            {
-		            	for(int i=0;i<ParseUser.getCurrentUser().getList("friends_of_friends").size();i++)
+		            	if(ParseUser.getCurrentUser().getList("friends_of_friends")!=null)
 			            {
-			            	ParseQuery<BuzzboxPost> query2 = BuzzboxPost.getQuery();
-			            	query2.whereEqualTo("user_id", ParseUser.getCurrentUser().getList("friends_of_friends").get(i).toString());
-			            	queries.add(query2);
+			            	for(int i=0;i<ParseUser.getCurrentUser().getList("friends_of_friends").size();i++)
+				            {
+				            	ParseQuery<BuzzboxPost> query2 = BuzzboxPost.getQuery();
+				            	query2.whereEqualTo("user_id", ParseUser.getCurrentUser().getList("friends_of_friends").get(i).toString());
+				            	queries.add(query2);
+				            }
 			            }
 		            }
+		            
 		            
 		            
 		            ParseQuery<BuzzboxPost> mainQuery = ParseQuery.or(queries);
@@ -565,25 +648,28 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            TextView time = (TextView) view.findViewById(R.id.time);
 		            ImageView im2 = (ImageView) view.findViewById(R.id.post_source);
 		            
-		            if(post.getUserId()!=null)
+		            
+		            if(ParseUser.getCurrentUser()!=null)
 		            {
 		            	if(ParseUser.getCurrentUser().getList("friends_of_friends")!=null)
 		            	{
 		            		for(int i=0;i<ParseUser.getCurrentUser().getList("friends_of_friends").size();i++)
 			            	{
-			            		if(post.getUserId().equals(ParseUser.getCurrentUser().getList("friends_of_friends").get(i)))
+			            		if(post.getUserId().equals(ParseUser.getCurrentUser().getList("friends_of_friends").get(i).toString())&&!post.getUserId().equals(ParseUser.getCurrentUser().getObjectId()))
 			            		{
 			            			im2.setImageResource(R.drawable.friends_of_friends);
 			            		}
 			            	}
 		            	}
-		            	
 		            }
+		            	
+		            	
+		            
 		            if(post.getUserId()!=null)
 		            {
 		            	for(int i=0;i<object_ids.length;i++)
 		            	{
-		            		if(post.getUserId().equals(object_ids[i]))
+		            		if(post.getUserId().equals(object_ids[i])&&!post.getUserId().equals(ParseUser.getCurrentUser().getObjectId()))
 		            		{
 		            			im2.setImageResource(R.drawable.friends);
 		            		}
@@ -682,30 +768,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 						}
 					});
 		            
-		            //Favorite button
-		           /* final ImageButton bfav = (ImageButton) view.findViewById(R.id.favourite);
-		            
-		            if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
-		            	bfav.setImageResource(drawable.star_big_on);
-		            }
-		            
-		            bfav.setOnClickListener(new OnClickListener(){
-		            	
-		            	public void onClick(View v){
-		            	    
-		            		if(ParseUser.getCurrentUser().getInt(post.getObjectId())==1){
-		            			ParseUser.getCurrentUser().put(post.getObjectId(), 0);
-			            		ParseUser.getCurrentUser().saveInBackground();
-		            			bfav.setImageResource(drawable.star_big_off);
-				            }
-		            		else{
-			            		ParseUser.getCurrentUser().put(post.getObjectId(), 1);
-			            		ParseUser.getCurrentUser().saveInBackground();
-			            		bfav.setImageResource(drawable.star_big_on);
-		            		}
-		            	    		            		  
-		            	}
-		            });*/
+		           
 		            
 		            // Empathize Button.
 		            final ImageView bemp = (ImageView) view.findViewById(R.id.btnEmpathize);
@@ -741,12 +804,21 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Intent i = new Intent(MainActivity.this, Create_Message.class);
-							 i.putExtra("obj_id", post.getUser().getObjectId());
-							 i.putExtra("viaPost", post.getText());
-							 i.putExtra("viaPostReceipent", post.getUser().getUsername());
-							 startActivity(i);
+							
+							if(post.getUserId().equals(ParseUser.getCurrentUser().getObjectId()))
+							{
+								Toast.makeText(con, "Not allowed to message yourself.", Toast.LENGTH_SHORT).show();
+							}
+							else
+							{
+								// TODO Auto-generated method stub
+								Intent i = new Intent(MainActivity.this, Create_Message.class);
+								 i.putExtra("obj_id", post.getUser().getObjectId());
+								 i.putExtra("viaPost", post.getText());
+								 i.putExtra("viaPostReceipent", post.getUser().getUsername());
+								 startActivity(i);
+							}
+							
 						}
 		            	
 		            });
@@ -812,16 +884,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 				 }
 			 });
 
-			 //Choose background button clicked
-//			 choose_bg.setOnClickListener(new OnClickListener() {
-//				 @Override
-//				 public void onClick(View v) {
-//					 //choose_bg function
-//					 Intent i = new Intent(con,Choose_bg.class);
-//					 startActivity(i);
-//				 }
-//
-//			 });
+			 
 
 			 dialog.show();	
 	  }
@@ -837,45 +900,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	  }
 	  
 	  
-//	  public void PostBuzz(final ParseGeoPoint par){
-//		  
-//		  	// Postflag=0;
-//		  	 BuzzboxPost new_post = new BuzzboxPost();
-//			 new_post.setUser(ParseUser.getCurrentUser());
-//			 
-//			 new_post.setText(Post);
-//			 new_post.set_no_of_empathizes(0);
-//			 new_post.Init(ParseUser.getCurrentUser().getUsername());
-//			 
-//			 int temp = new_post.getNoofPosts()+1;
-//			 ParseUser.getCurrentUser().put("noOfPosts",temp);
-//			 ParseUser.getCurrentUser().saveInBackground();
-//			 
-//			 new_post.setLocation(par);
-//			 final ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
-//			 pdLoading.setMessage("\tPosting your Buzz...\n \t Please Wait!!");
-//			 new_post.saveInBackground(new SaveCallback() {
-//				
-//				@Override
-//				public void done(ParseException e) {
-//					// TODO Auto-generated method stub
-//					if(e==null)
-//					{
-//						pdLoading.dismiss();
-//						Toast.makeText(con, "Successfully posted.. Updating your List now!", Toast.LENGTH_SHORT).show();
-//						setQuery(par);	// Update the List.
-//					}
-//					else
-//					{
-//						Log.d("error post", e.getMessage().toString());
-//						Toast.makeText(con, "Posting failed. Please check internet connection"+e.toString(), Toast.LENGTH_LONG).show();
-//					}
-//					
-//				}
-//			});
-//			 
-//			 pdLoading.show();
-//	  }
+
 	  
 	  //Menu configuration
 	  public boolean onCreateOptionsMenu(Menu menu){
@@ -998,70 +1023,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			  Intent i = new Intent(this,Private_message.class);
 			  startActivity(i);
 		 }
-		 else if(item.getItemId()==R.id.changeradius){
-			 //change radius
-			 
-			 final Dialog dialog = new Dialog(this);
-			 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			 dialog.setContentView(R.layout.change_radius);
-			 
-			 Button dialogButtonA = (Button) dialog.findViewById(R.id.dialogButtonOK);
-			 Button dialogButtonC = (Button) dialog.findViewById(R.id.dialogButtonCancel);
-
-			 //cancel button clicked
-			 dialogButtonC.setOnClickListener(new OnClickListener() {
-
-				 @Override
-				 public void onClick(View v) {
-					 dialog.cancel();
-				 }
-			 });
-
-			 //Go button clicked
-			 dialogButtonA.setOnClickListener(new OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-
-					 EditText location = (EditText)dialog.findViewById(R.id.location);
-					 String loc = location.getText().toString();
-					 if(!(loc.isEmpty())){
-						 if(Integer.parseInt(loc)<=50)
-						 {
-							 SEARCH_RADIUS = Integer.parseInt(loc);
-							 setQuery(p);	// Update the List.
-						 }
-						 else
-						 {
-							 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a radius less than 50 km.", Toast.LENGTH_LONG);
-				 		 	 mtoast.show();
-						 }
-					 }
-					 else{
-						 Toast mtoast = Toast.makeText(MainActivity.this, "Please enter a valid Radius.", Toast.LENGTH_LONG);
-			 		 	 mtoast.show();
-					 }
-				 dialog.dismiss();
-
-
-				 }
-
-			 });
-
-			 dialog.show();
-			 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-				Window window = dialog.getWindow();
-				lp.copyFrom(window.getAttributes());
-				//This makes the dialog take up the full width
-				lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-				lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-				window.setAttributes(lp);
-		 }
 		 
-//		 else if(item.getItemId()==R.id.exclusive){
-//			 
-//			 flag=1;
-//			 setQuery(p);
-//		 }
 		 
 		 else if(item.getItemId()==R.id.post){
 			 
@@ -1237,6 +1199,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		}
 		public void retrieve_comments(final BuzzboxPost post, com.parse.buzzbox.HorizontalListView comments_list)
 		{
+			
 			comments_loader.setVisibility(View.VISIBLE);
 			ParseQueryAdapter.QueryFactory<CommentsObject> factory1 =
 			        new ParseQueryAdapter.QueryFactory<CommentsObject>() {
@@ -1304,6 +1267,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 						public void onLoaded(List<CommentsObject> arg0,
 								Exception arg1) {
 							// TODO Auto-generated method stub
+							
 							comments_loader.setVisibility(View.INVISIBLE);
 						}
 
@@ -1314,6 +1278,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 						}
 					});
 			        comments_list.setAdapter(Comments_adapter);
+			        
 		}
 		
 		public Handler returnHandler(){
@@ -1389,5 +1354,14 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		  protected void attachBaseContext(Context newBase) {
 		      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
 		  }
+		
+		int mod(int x)
+		{
+			if(x<0)
+				return x*-1;
+			else
+				return x;
+		}
+		
 		
 }

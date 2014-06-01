@@ -47,6 +47,7 @@ public class Private_message extends SherlockActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setTitle("Private Message");
 		setContentView(R.layout.private_message);
 		con = this;
 		load_contacts();

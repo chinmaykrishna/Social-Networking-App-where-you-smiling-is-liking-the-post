@@ -12,6 +12,7 @@ import com.parse.SaveCallback;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +67,7 @@ public class newPost extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setTitle("New Post");
 		setContentView(R.layout.new_post);
 		
 		Spinner moods = (Spinner)findViewById(R.id.moods);
@@ -152,7 +154,9 @@ public class newPost extends Activity {
 							{
 								pdLoading.dismiss();
 								Toast.makeText(newPost.this, "Successfully posted.. Updating your List now!", Toast.LENGTH_SHORT).show();
-								//setQuery(pgp);	// Update the List.
+								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(intent);
 								finish();
 							}
 							else

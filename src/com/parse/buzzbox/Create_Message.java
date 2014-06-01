@@ -53,7 +53,8 @@ public class Create_Message extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.new_post);
+		setTitle("New Message");
+		setContentView(R.layout.new_message);
 			
 		
 		viaPost = this.getIntent().getExtras().getString("viaPost");

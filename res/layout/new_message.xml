@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:text="Post"
+            android:text="Send"
             android:textColor="#ADACAC" />
 
         <Spinner
@@ -62,8 +62,8 @@
             android:layout_marginBottom="33dp"
             android:layout_marginLeft="10dp"
             android:text="What are you feeling?"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ADACAC"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="20dp" />
 
         <TextView

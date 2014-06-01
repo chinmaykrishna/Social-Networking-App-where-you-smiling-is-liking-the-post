@@ -38,14 +38,7 @@
                  android:layout_marginRight="10dp"
                  android:visibility="gone" />
 
-             <ImageView
-                 android:id="@+id/back"
-                 android:layout_width="30dp"
-                 android:layout_height="30dp"
-                 android:layout_alignParentLeft="true"
-                 android:layout_centerVertical="true"
-                 android:layout_marginLeft="10dp"
-                 android:src="@drawable/back_button" />
+             
 
          </RelativeLayout>
 

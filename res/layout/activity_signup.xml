@@ -11,20 +11,25 @@
         android:layout_centerInParent="true"
         android:gravity="center" >
 
-        <EditText
+        <RelativeLayout
+            android:id="@+id/r1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+         >
+         
+            <EditText
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="23dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/phone_ed_bg"
+            android:background="@drawable/edittext_bg"
             android:ems="10"
             android:gravity="center"
             android:hint="mobile number"
             android:inputType="phone"
-            android:padding="5dp"
             android:singleLine="true"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/white"
@@ -33,81 +38,134 @@
             <requestFocus />
         </EditText>
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
-            android:layout_below="@+id/username"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/unlock_ed_bg"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="password"
-            android:inputType="textPassword"
-            android:padding="5dp"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            android:textCursorDrawable="@null" />
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/phone" />
 
-        <EditText
-            android:id="@+id/passwordAgain"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
-            android:layout_below="@+id/password"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/lock_ed_bg"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="retype password"
-            android:inputType="textPassword"
-            android:padding="5dp"
-            android:singleLine="true"
-    		android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            android:textCursorDrawable="@null" />
+    </RelativeLayout>
+        
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="23dp"
-            android:layout_below="@+id/phone_number"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/user_ed_bg"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Username"
-            android:padding="5dp"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            
-            android:textColorHint="@android:color/darker_gray"
-            android:textCursorDrawable="@null" >
-        </EditText>
+        
+
+        
+
+        
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/passwordAgain"
+            android:layout_below="@+id/r4"
             android:scaleType="fitXY"
             android:src="@drawable/edittext_bg" />
-    </RelativeLayout>
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/relativeLayout1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:src="@drawable/signup_button" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/r1"
+            android:id="@+id/r2"
+             >
+            
+            <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="23dp"
+            android:background="@drawable/edittext_bg"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Username"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textCursorDrawable="@null" >
+        </EditText>
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/user" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/r2"
+            android:id="@+id/r3"
+            android:layout_centerHorizontal="true" >
+            
+            <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="23dp"
+            android:background="@drawable/edittext_bg"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textCursorDrawable="@null" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/unloc" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/r3"
+            android:id="@+id/r4"
+             >
+            
+            <EditText
+            android:id="@+id/passwordAgain"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="23dp"
+            android:background="@drawable/edittext_bg"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="retype password"
+            android:inputType="textPassword"
+            android:singleLine="true"
+    		android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textCursorDrawable="@null" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/lock" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/action_button"
@@ -117,5 +175,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:background="@drawable/check" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/signup_button" />
 
 </RelativeLayout>

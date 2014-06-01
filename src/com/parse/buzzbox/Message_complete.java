@@ -216,10 +216,18 @@ public class Message_complete extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(con, Create_Message.class);
-				 i.putExtra("obj_id", author_obj_id);
-				 i.putExtra("viaPost", "");
-				 startActivity(i);
+				if(author_obj_id.equals(ParseUser.getCurrentUser().getObjectId()))
+				{
+					Toast.makeText(con, "Not allowed to message yourself.", Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					Intent i = new Intent(con, Create_Message.class);
+					 i.putExtra("obj_id", author_obj_id);
+					 i.putExtra("viaPost", "");
+					 startActivity(i);
+				}
+				
 			}
 		});
         

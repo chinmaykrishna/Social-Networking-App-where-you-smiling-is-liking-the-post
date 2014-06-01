@@ -74,13 +74,14 @@
 
             <ImageButton
                 android:id="@+id/signupButton"
-                android:layout_width="73dp"
-                android:layout_height="73dp"
+                android:layout_width="53dp"
+                android:layout_height="53dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/loginButton"
                 android:layout_marginRight="60dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
+                android:layout_marginTop="6dp"
                 android:src="@drawable/signup_button" />
 
         </RelativeLayout>

@@ -10,24 +10,27 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@drawable/login_button"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="150dp" />
         
-    <EditText
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textSize="30dp"
         android:ems="10"
-        android:background="@drawable/user_ed_bg"
-        android:gravity="center_horizontal"
+        android:background="@drawable/edittext_bg"
+        android:gravity="center"
         android:hint="Username"
         android:singleLine="true"
         android:textColorHint="@android:color/darker_gray"
-        android:padding="5dp"
         android:textCursorDrawable="@null" 
         android:layout_gravity="center_horizontal"
         android:textColor="@android:color/white"
@@ -37,7 +40,22 @@
         <requestFocus />
     </EditText>
 
-    <EditText
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/user" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -46,15 +64,25 @@
         android:hint="password"
         android:singleLine="true"
         android:textColorHint="@android:color/darker_gray"
-        android:padding="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/lock_ed_bg"
+        android:background="@drawable/edittext_bg"
         android:textCursorDrawable="@null"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="30dp"
           />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/lock" />
+
+    </RelativeLayout>
+
+    
 
     <ImageView
         android:id="@+id/imageView2"
