@@ -7,6 +7,19 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+/**
+ *  
+ *  user - author (ParseUser)
+ *  user_name  - author user name
+ *  user_avatar - avatar
+ *  text
+ *  IsEmpathised - true or false of current user
+ *  comments over message
+ *  comments authors
+ *  viaPost - set to "" if it is private message
+ *  reciepent name
+ *   
+ */
 @ParseClassName("messages_thread_object")
 public class MessageObject extends ParseObject{
 

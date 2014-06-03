@@ -1309,7 +1309,8 @@ containing a value of this type.
         public static final int unlock_ed_bg=0x7f0200b5;
         public static final int user=0x7f0200b6;
         public static final int user_ed_bg=0x7f0200b7;
-        public static final int worry=0x7f0200b8;
+        public static final int verify=0x7f0200b8;
+        public static final int worry=0x7f0200b9;
     }
     public static final class id {
         public static final int Count_of_Empathizes=0x7f04006e;
@@ -1358,12 +1359,15 @@ containing a value of this type.
         public static final int abs__title=0x7f040038;
         public static final int abs__up=0x7f040020;
         public static final int action_button=0x7f040065;
+        public static final int adsdasdas=0x7f0400a1;
         public static final int author=0x7f040086;
         public static final int author_avatar=0x7f040084;
         public static final int avatar=0x7f04007a;
         public static final int bottomLeft=0x7f04002a;
         public static final int bottomRight=0x7f04002b;
         public static final int btnEmpathize=0x7f04006f;
+        public static final int button1=0x7f0400a3;
+        public static final int button2=0x7f0400a4;
         public static final int buttonNick=0x7f040095;
         public static final int buttonPassword=0x7f040096;
         public static final int buttonlogout=0x7f040098;
@@ -1431,12 +1435,12 @@ containing a value of this type.
         public static final int passwordAgain=0x7f040063;
         public static final int phone_number=0x7f040059;
         public static final int pie=0x7f040026;
-        public static final int post=0x7f0400a1;
+        public static final int post=0x7f0400a6;
         public static final int post_source=0x7f04006a;
         public static final int posts=0x7f04008e;
         public static final int postsMade=0x7f040090;
         public static final int postsView=0x7f040052;
-        public static final int private_message=0x7f0400a2;
+        public static final int private_message=0x7f0400a7;
         public static final int privatemessage=0x7f040070;
         public static final int progressBar1=0x7f040082;
         public static final int r1=0x7f040058;
@@ -1444,7 +1448,7 @@ containing a value of this type.
         public static final int r3=0x7f040060;
         public static final int r4=0x7f04005c;
         public static final int refresh_button=0x7f040099;
-        public static final int refreshbutton=0x7f0400a0;
+        public static final int refreshbutton=0x7f0400a5;
         public static final int relativeLayout1=0x7f040057;
         public static final int reverse_fly=0x7f040007;
         public static final int right=0x7f040010;
@@ -1466,11 +1470,13 @@ containing a value of this type.
         public static final int time=0x7f040069;
         public static final int topLeft=0x7f040028;
         public static final int topRight=0x7f040029;
+        public static final int tv=0x7f0400a0;
         public static final int twirl=0x7f04000d;
-        public static final int update=0x7f0400a3;
+        public static final int update=0x7f0400a8;
         public static final int useLogo=0x7f040019;
         public static final int username=0x7f04005e;
         public static final int usernameView=0x7f040067;
+        public static final int veri_ed=0x7f0400a2;
         public static final int via_post=0x7f040088;
         public static final int wave=0x7f040004;
         public static final int wheel=0x7f040025;
@@ -1528,7 +1534,8 @@ containing a value of this type.
         public static final int sherlock_spinner_item=0x7f03002c;
         public static final int slider_layout=0x7f03002d;
         public static final int slidingmenumain=0x7f03002e;
-        public static final int spinner_layout=0x7f03002f;
+        public static final int sms_check=0x7f03002f;
+        public static final int spinner_layout=0x7f030030;
     }
     public static final class menu {
         public static final int main_activity_menu=0x7f0b0000;

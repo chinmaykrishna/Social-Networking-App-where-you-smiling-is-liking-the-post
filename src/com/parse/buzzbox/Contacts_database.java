@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+
+//Simple database that will store phone_number, name, object_id of its ParseUser object. 
 public class Contacts_database extends SQLiteOpenHelper {
 
 	

@@ -1,5 +1,7 @@
 package com.parse.buzzbox;
 
+
+//Simple contact object commonly used to store friends 
 public class Contact {
 	
 	String phone,name,object_id;

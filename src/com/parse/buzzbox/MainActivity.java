@@ -70,27 +70,56 @@ import com.twotoasters.jazzylistview.JazzyListView;
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends SherlockActivity implements LocationListener,RefreshActionListener {
 	
+	//radius of nearby posts default 10km.
 	private static int SEARCH_RADIUS=10,Postflag=1;
+	//self descriptors variables
 	private static Location lastLocation = null;
     private static Location currentLocation = null;
     protected double Latitude,Longitude;
     private LocationManager locationManager;
     private static ParseGeoPoint p;
     private Context con;
+    
+    //this adapter will load all posts
     private ParseQueryAdapter<BuzzboxPost> posts;
-	private SlidingMenu menu, menuleft, menuright;
+    
+    //left n right sliding menu
+	private SlidingMenu  menuleft, menuright;
+	
+	// friends loaded from db
 	private String names[], numbers[], object_ids[];
 	private static boolean logout=false;
-	private JazzyListView post_list; 
+	
+	//fancy effect listview
+	private JazzyListView post_list;
+	
+	//sliding up panel for showing comments
 	private SlidingUpPanelLayout comment_slider;
+	
+	//horizontal listview
 	private com.parse.buzzbox.HorizontalListView hori_list;
+	
+	//actual height of post listview above comments part
 	private int height_actual;
+	
+	//handler to pass the message if location can not be found
 	private Handler hm;
+	
+	//self descriptor
 	private int no_of_post = 0;
+	
 	private int temp =0;
+	
+	//this activity
 	private MainActivity main;
+	
+	//the action bar item used to refresh posts list
 	private RefreshActionItem mRefreshActionItem;
+	
+	//comments progress bar to show comments are loading
 	private ProgressBar comments_loader;
+	
+	//variables that will keep information of user touch/fling in my message layout to toggle it
 	int x,y,x1,y1;
 	
 	
@@ -109,6 +138,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.main_screen);
 		final JazzyListView ja = (JazzyListView)findViewById(R.id.postsView);
 		
+		//calculate actual distance above comments layout
 		final ViewTreeObserver observer= layout.getViewTreeObserver();
 		observer.addOnGlobalLayoutListener(
 		    new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -125,6 +155,11 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 
 		            }
 		        });
+		
+		
+		 
+		 
+		// need to fetch parse user to load the friends and friends of friends.
 		if(ParseUser.getCurrentUser()!=null)
 		ParseUser.getCurrentUser().fetchInBackground(null);
 
@@ -154,6 +189,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		post_list = (JazzyListView)findViewById(R.id.postsView);
 		post_list.setOnTouchListener(new OnSwipeTouchListener(con){
 			
+			
+			//opens my profile
 			public void onSwipeRight() {
             	menuleft.toggle();
             	ImageView im = (ImageView)menuleft.getMenu().findViewById(R.id.avatar);
@@ -178,7 +215,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 					}
 				});
             	
-            	
+            	//to toggle it
             	View view2 = (View)menuleft.getMenu();
             	view2.setOnTouchListener(new OnSwipeTouchListener(con){
             		public void onSwipeLeft() {
@@ -194,10 +231,15 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
             	});
                 //Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
+			
+			
+			//to toggle my messages
 			public void onSwipeLeft() {
             	
                 menuright.toggle();
             	ListView list = (ListView)menuright.getMenu().findViewById(R.id.messages);
+            	
+            	//to toggle when user flings over empty part of list
             	list.setOnTouchListener(new OnSwipeTouchListener(con)
             	{
             		@Override
@@ -209,13 +251,15 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
                     }
             	});
             	
-            	
+            	//to show progress of message loading
             	final ProgressBar pb = (ProgressBar) menuright.getMenu().findViewById(R.id.progressBar1);
             	
             	// Set up a customized query
     		    ParseQueryAdapter.QueryFactory<MessageObject> factory =
     		        new ParseQueryAdapter.QueryFactory<MessageObject>() {
     		          public ParseQuery<MessageObject> create() {
+    		        	  
+    		        	  //loading messages to user and from user
     		        	  pb.setVisibility(View.VISIBLE);
     		        	  ParseQuery<MessageObject> query = MessageObject.getQuery();
     		        	  query.whereEqualTo("receipent", ParseUser.getCurrentUser().getObjectId());
@@ -241,7 +285,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		        	@Override
     		          public View getItemView(final MessageObject message, View view, ViewGroup parent) {
     		            
-    		        	
+    		        	//set up the item views
     		            view = View.inflate(getContext(), R.layout.my_messages_element, null);
     		            TextView message_text = (TextView) view.findViewById(R.id.message_text);
     		            final TextView message_author = (TextView) view.findViewById(R.id.author);
@@ -260,6 +304,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            	author_avatar.setImageResource(Integer.parseInt(message.getAuthorAvatar()));
     		            }
     		            
+    		            //viapost is set to "" if it is private message
     		            if(message.getViaPost().equals(""))
     		            {
     		            	via_post.setText("Private message");
@@ -290,13 +335,16 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            	}
     		            }
     		            
-    		            
+    		            //we are loading author after message; not with message because it will make loading query fast smooth
+    		            //to refresh message author in case if he has changed the nick or avatar
     		            message.getAuthor().fetchIfNeededInBackground(new GetCallback<ParseUser>() {
     		            	  public void done(ParseUser object, ParseException e) {
     		            		    if (e == null) {
     		            		    	message_author.setText(object.getUsername());
     		            		    	author_avatar.setImageResource(object.getInt("Avatar"));
     		            		    	
+    		            		    	
+    		            		    	// to set again all the view where message author information was used
     		            		    	if(message.getViaPost().equals(""))
     		        		            {
     		        		            	//private message
@@ -329,7 +377,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            		  }
     		            		});
     		            
-    		            
+    		            //function to detect fling over item and toggle menuRight or to open corresponding messag\e 
     		            view.setOnTouchListener(new OnSwipeTouchListener(con){
     		            	@Override
     		            	public boolean onTouch(View v, MotionEvent event) {
@@ -379,36 +427,12 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     		            		return true;
     		            	}
     		            });
-//    		            view.setOnClickListener(new OnClickListener() {
-//							
-//							@Override
-//							public void onClick(View v) {
-//								// TODO Auto-generated method stub
-//								
-//								Intent intent = new Intent(con, Message_complete.class);
-//								intent.putExtra("text", message.getText());
-//								intent.putExtra("mood", message.getMood());
-//								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
-//								intent.putExtra("author_name", message.getAuthorName());
-//								intent.putExtra("author_avatar", message.getAuthorAvatar());
-//								intent.putExtra("author_obj_id", message.getAuthor().getObjectId());
-//								if(message.getCommentList()!=null)
-//								{
-//									String[] comments = message.getCommentList().toArray(new String[message.getCommentList().size()]);
-//									intent.putExtra("comments_list", comments);
-//									
-//									String[] authors = message.getCommentAuthors().toArray(new String[message.getCommentAuthors().size()]);
-//									intent.putExtra("comments_authors", authors);
-//								}
-//								
-//								intent.putExtra("date", message.getCreatedAt());
-//								intent.putExtra("Message_object", message.getObjectId());
-//								startActivity(intent);
-//							}
-//						});
+    		            
     		            return view;
     		          }
     		        };
+    		        
+    		        //manage progress bar 
     		        Messages.addOnQueryLoadListener(new OnQueryLoadListener<MessageObject>() {
 
 						@Override
@@ -424,6 +448,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 							
 						}
 					});
+    		        
+    		        //setting messages adapter
     			    list.setAdapter(Messages);
     			    
     			    View view2 = (View)menuright.getMenu();
@@ -439,20 +465,31 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
                 	});
     			    
             }
+			
+			
+			//on swipe bottom load current visible element -1 element.
     		@Override
     		public void onSwipeBottom() {
     			scroll_function(1);
     		}
+    		
+    		//on swipe bottom load current visible element +1 element.
     		@Override
     		public void onSwipeTop() {
     			scroll_function(0);
     		}
+    		
     		public boolean onTouch(View v, MotionEvent event) {
                 return gestureDetector.onTouchEvent(event);
             }
     	});
 		
-		
+		/*
+		 * 
+		 * Now WE ARE CONFIGURING COMMENTS UP_SLIDER
+		 * when it is expanded we are setting panel to transparent 
+		 * and resetting as it is collapsed
+		 */
 		final LinearLayout drag = (LinearLayout)findViewById(R.id.drag_layout);
 		final TextView tv = (TextView)findViewById(R.id.comments_tv);
 		//comment slider configuration
@@ -480,7 +517,11 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 				if(size>=1)
 				{
 						BuzzboxPost post = posts.getItem(pos);
+						
+						//function to retrive comments
 						retrieve_comments(post, hori_list);
+						
+						//to detect fling to toggle slider
 						hori_list.setOnTouchListener(new OnSwipeTouchListener(con){
 				        	
 							@Override
@@ -511,10 +552,13 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			}
 		});
 		
-		//configure slider for comments
+		//configure left and right slider as per standard library rules
 		config_slider();
 		
 		
+		
+		// handler will receive message if app fails to retrive location
+		//it can prompt a dialog box to make user turn on GPS
 		hm = new Handler() {
             public void handleMessage(Message m) {
             	Toast.makeText(con, "Can not find location. Please check your network provider or GPS.", Toast.LENGTH_LONG).show();
@@ -589,6 +633,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		        new ParseQueryAdapter.QueryFactory<BuzzboxPost>() {
 		          public ParseQuery<BuzzboxPost> create() {
 		            
+		        	//this query will load posts within radius, friends and friends of friends
+		        	//and sort them by time 
 		        	List<ParseQuery<BuzzboxPost>> queries = new ArrayList<ParseQuery<BuzzboxPost>>();
 		            ParseQuery<BuzzboxPost> query1 = BuzzboxPost.getQuery();
 		            query1.whereWithinKilometers("location", pgp, SEARCH_RADIUS);
@@ -633,12 +679,14 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		          @Override
 		          public View getItemView(final BuzzboxPost post, View view, ViewGroup parent) {
 		            
+		        	  
+		        	//configuring post card element views 
 			        view = View.inflate(con, R.layout.buzzbox_post_item, null);
 			        
 			        LinearLayout lin = (LinearLayout)view.findViewById(R.id.complete_item);
 			        lin.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height_actual));
 			        
-			        
+			        //to set no of posts on left menu
 		            no_of_post = post.getNoofPosts();
 		            TextView contentView = (TextView) view.findViewById(R.id.contentView);
 		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
@@ -649,6 +697,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            ImageView im2 = (ImageView) view.findViewById(R.id.post_source);
 		            
 		            
+		            //set friends_of_friends image if user is friends_of_friends
 		            if(ParseUser.getCurrentUser()!=null)
 		            {
 		            	if(ParseUser.getCurrentUser().getList("friends_of_friends")!=null)
@@ -664,7 +713,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            }
 		            	
 		            	
-		            
+		            //set friends image if user is friend
 		            if(post.getUserId()!=null)
 		            {
 		            	for(int i=0;i<object_ids.length;i++)
@@ -675,8 +724,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            		}
 		            	}
 		            }
-		            // ImageView im = (ImageView) view.findViewById(R.id.imageView1);
-		            // contentView.setBackground();  // We will do this to show the image.
+		            
 		            
 		            contentView.setText(post.getText());
 		            
@@ -699,7 +747,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            usernameView.setText(post.getUser().getUsername());
 		            im.setImageResource(post.getUser().getInt("Avatar"));
 		            
-		          //comment button pressed
+		            //comment button pressed
 		            final ImageView comment_but = (ImageView)view.findViewById(R.id.comment);
 		            
 		            comment_but.setOnClickListener(new OnClickListener() {
@@ -707,7 +755,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 						@Override
 						public void onClick(View v) {
 						
-							
+							//dialog box to enter a comment and a done button
 							final Dialog dialog = new Dialog(con);
 							dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 							
@@ -729,6 +777,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 										 }
 										 else
 										 {
+											 
+											 //create comment object associated with current shown post
 											 CommentsObject new_comment = new CommentsObject();
 											 new_comment.toPost(post.getObjectId());
 											 new_comment.setText(message.getText().toString().trim());
@@ -758,6 +808,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 									 }
 								 });
 								 dialog.show();
+								 
+								 
 								 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 									Window window = dialog.getWindow();
 									lp.copyFrom(window.getAttributes());
@@ -811,6 +863,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 							}
 							else
 							{
+								//start activity that will create a private messsage to post author
 								// TODO Auto-generated method stub
 								Intent i = new Intent(MainActivity.this, Create_Message.class);
 								 i.putExtra("obj_id", post.getUser().getObjectId());
@@ -826,6 +879,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		          }
 		        };
 	        
+		        //to manage progress bar refresh element
 		        posts.addOnQueryLoadListener(new OnQueryLoadListener<BuzzboxPost>() {
 
 					@Override
@@ -863,7 +917,6 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		 dialog.setTitle("New Post");
 		 Button done_but = (Button) dialog.findViewById(R.id.done);
 		 final EditText message = (EditText)dialog.findViewById(R.id.message);
-		 //final EditText locat = (EditText)dialog.findViewById(R.id.locat);
 		 
 		 	//done button clicked
 			 done_but.setOnClickListener(new OnClickListener() {
@@ -905,7 +958,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	  //Menu configuration
 	  public boolean onCreateOptionsMenu(Menu menu){
 			
-			
+			//configuring refresh button in action bar as per standard rules given in library
 		  getSupportMenuInflater().inflate(R.menu.main_activity_menu, menu);
 	        MenuItem item = menu.findItem(R.id.refreshbutton);
 	        mRefreshActionItem = new RefreshActionItem(getApplicationContext());
@@ -931,11 +984,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	    	return true;
 	     }
 	  
-	  // This method will simply sort the Posts on the basis of number of highest empathizes.
-	  public void featured(View v){
-		  
-		  setQuery(p);
-	  }
+	  
 	  
 	  
 	  /*
@@ -1018,7 +1067,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	  @Override
 		public boolean onOptionsItemSelected
 									    (MenuItem item) {
-		 
+		 //private message selected
 		 if(item.getItemId()==R.id.private_message){
 			  Intent i = new Intent(this,Private_message.class);
 			  startActivity(i);
@@ -1044,7 +1093,9 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		}
 	  
 	  private Location getLastKnownLocation() {
+		 
 		  
+		  //ashish totlas code to derive location
 //		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //		  boolean netwrkenabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 //		  boolean gpsenabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -1091,6 +1142,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 //		  
 //		  return currentLocation;
 		  
+		  
+		  	//Derive loaction from best possible available resource 
 		    List<String> providers = locationManager.getProviders(true);
 		    Location bestLocation = null;
 		    for (String provider : providers) {
@@ -1118,6 +1171,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		    	    	pdLoading.dismiss();
 		    	    	if(location==null)
 		    	    	{
+		    	    		//call handler if no location if found
 		    	    		main.returnHandler().sendEmptyMessage(0);
 		    	    		//finish();
 		    	    		
@@ -1171,6 +1225,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	  @Override
 		public boolean onKeyDown(int keyCode, KeyEvent event) {
 			switch (keyCode) {
+			//to toggle menuRight or left
 			case KeyEvent.KEYCODE_BACK:
 				onCustomBackPressed();
 				return true;
@@ -1182,10 +1237,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		// If sliding menu is showing, we need to hide it on the first back button
 		// press.
 		private void onCustomBackPressed() {
-			if (menu != null
-					&& menu.isMenuShowing()) {
-				menu.toggle();
-			} else if (menuleft != null
+			 if (menuleft != null
 					&& menuleft.isMenuShowing()) {
 				menuleft.toggle();
 			}
@@ -1197,6 +1249,8 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 				this.onBackPressed();
 			}
 		}
+		
+		//to retrive comment associated with given post
 		public void retrieve_comments(final BuzzboxPost post, com.parse.buzzbox.HorizontalListView comments_list)
 		{
 			
@@ -1324,6 +1378,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		// scroll list on gesture
 		//1 = up scroll
 		//0 = down scroll
+		//to scroll post card one by one
 		public void scroll_function(int up_or_down)
 		{
 			if(up_or_down==1)
@@ -1341,7 +1396,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 
 
 
-
+		//refresh posts list
 		@Override
 		public void onRefreshButtonClick(RefreshActionItem sender) {
 			// TODO Auto-generated method stub
@@ -1350,10 +1405,13 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			 setQuery(p);
 		}
 		
+		
+		//change font
 		@Override
 		  protected void attachBaseContext(Context newBase) {
 		      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
 		  }
+		
 		
 		int mod(int x)
 		{

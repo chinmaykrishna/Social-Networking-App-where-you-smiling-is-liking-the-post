@@ -3,6 +3,7 @@ package com.parse.buzzbox;
 import android.content.Context;
 import android.widget.LinearLayout;
 
+// custom linear layout to set height explicitly
 public class PostItem_custom extends LinearLayout{
 
 	Context con;
@@ -17,7 +18,7 @@ public class PostItem_custom extends LinearLayout{
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		
-	    super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(he-100, MeasureSpec.EXACTLY));
+	    super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(he, MeasureSpec.EXACTLY));
 	}
 	
 }

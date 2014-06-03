@@ -1,6 +1,15 @@
 package com.parse.buzzbox;
 
 
+/**
+ *  
+ *  user - author (ParseUser)
+ *  user_name  - author user name
+ *  user_avatar - avatar
+ *  text
+ *  toPost - reference post objectID
+ */
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;

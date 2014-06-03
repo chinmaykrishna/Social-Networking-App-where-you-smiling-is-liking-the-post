@@ -24,33 +24,45 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class DispatchActivity extends SherlockActivity{
+	
 	public DispatchActivity() {
 	  }
 
 	private Context con;
+	//numbers and corresponding names validated by phone number library
 	private LinkedList<String> valid_name = new LinkedList<String>();
 	private LinkedList<String> valid_number = new LinkedList<String>();
-	String names[], numbers[], object_ids[];
+	
+	//names numbers object_ids saved in databases already
+	private String names[], numbers[], object_ids[];
+	
+	// the current valid number that is currently getting checked through server
 	private int index;
-	AlertDialog alertDialog;
+	
+	private AlertDialog alertDialog;
+	
+	// used to check all contacts are checked or not
 	private int flag;
+	
+	//shared preferences
 	private SharedPreferences sp_parse;
 	private SharedPreferences.Editor prefEdit;
+	
+	//no. of request failed
 	private int no_of_errors = 0;
 	  @Override
 	  protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    
-	    
+	    //set visible at starting if activity
 	    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	    con = this;
 	    sp_parse = getSharedPreferences("App_data", Activity.MODE_PRIVATE);
 		prefEdit = sp_parse.edit();
 		
-		
+		//retrieve all contacts already in db 
 		Contacts_database db = new Contacts_database(con);
 		List<Contact> already_present = db.getAllContacts();
 		
@@ -64,12 +76,15 @@ public class DispatchActivity extends SherlockActivity{
 			numbers[i] = already_present.get(i).getPhoneNumber();
 			object_ids[i] = already_present.get(i).getObjectID();
 		}
+		
+		
 	    if (ParseUser.getCurrentUser() != null) {
 	    	
 	    	String str = sp_parse.getString("first_time","shubham");
 	    	//check if it is the first time launch of app
 			  if(str.equals("shubham"))
 			  {
+				  //if it is first time check all contacts
 				  setContentView(R.layout.looking_for_friends);
 				  setSupportProgressBarIndeterminateVisibility(true);
 				  chekcAllPhoneNumbers();
@@ -184,7 +199,7 @@ public class DispatchActivity extends SherlockActivity{
 				flag--;
 				if(flag==0)
 				{
-					
+					//if all requests are complete
 					Contacts_database db = new Contacts_database(con);
 					List<Contact> already_present = db.getAllContacts();
 					
@@ -249,6 +264,7 @@ public class DispatchActivity extends SherlockActivity{
 					
 					if(objects.size()!=0)
 					{
+						//if there is user with same phone number
 						if(objects.get(0).getList("friends")!=null)
 						{
 							ParseUser.getCurrentUser().addAllUnique("friends_of_friends", objects.get(0).getList("friends"));

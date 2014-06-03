@@ -33,6 +33,7 @@
             android:singleLine="true"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/white"
+            android:ellipsize="end"
             android:textCursorDrawable="@null" >
 
             <requestFocus />
@@ -82,6 +83,7 @@
             android:gravity="center"
             android:hint="Username"
             android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
             android:textCursorDrawable="@null" >
@@ -116,6 +118,7 @@
             android:hint="password"
             android:inputType="textPassword"
             android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
             android:textCursorDrawable="@null" />
@@ -149,6 +152,7 @@
             android:hint="retype password"
             android:inputType="textPassword"
             android:singleLine="true"
+            android:ellipsize="end"
     		android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
             android:textCursorDrawable="@null" />

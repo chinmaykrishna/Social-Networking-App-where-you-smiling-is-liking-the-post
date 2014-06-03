@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
 
+//Our first activity if user is not logged in
 public class SignupOrLogin extends Activity {
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {

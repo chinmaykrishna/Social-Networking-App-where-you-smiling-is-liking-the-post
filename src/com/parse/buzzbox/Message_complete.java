@@ -38,6 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
+
+//activity to show complete message after it has been clicked from main_activity
 public class Message_complete extends Activity{
 	
 	String message_id;
@@ -49,12 +51,16 @@ public class Message_complete extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.complete_message);
+		setTitle("Message");
 		con = this;
+		
+		
 		viewToLoad = LayoutInflater.from(
 	            getApplicationContext()).inflate(
 	            R.layout.complete_message_element, null);
 		viewToLoad.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		((LinearLayout) findViewById(R.id.main_screen)).addView(viewToLoad);
+		
 		
 		TextView contentView = (TextView) viewToLoad.findViewById(R.id.contentView);
         final TextView usernameView = (TextView) viewToLoad.findViewById(R.id.usernameView);
@@ -62,6 +68,7 @@ public class Message_complete extends Activity{
         TextView date = (TextView) viewToLoad.findViewById(R.id.date);
         TextView time = (TextView) viewToLoad.findViewById(R.id.time);
         
+        //to load message data from mainactivity
         author_obj_id = this.getIntent().getExtras().getString("author_obj_id");
         contentView.setText(this.getIntent().getExtras().getString("text"));
         contentView.setBackgroundResource(this.getIntent().getExtras().getInt("mood"));
@@ -87,7 +94,7 @@ public class Message_complete extends Activity{
         	im.setImageResource(Integer.parseInt(this.getIntent().getExtras().getString("author_avatar")));
         }
         
-        
+        //set comments in up slider
         if(this.getIntent().getExtras().getStringArray("comments_list")!=null)
         {
         	JazzyListView comments = (JazzyListView)findViewById(R.id.message_comments);
@@ -95,6 +102,8 @@ public class Message_complete extends Activity{
             comments.setAdapter(adapter);
         }
         
+        //fetch message object again in case some new comments are added
+        //and set data again
 		message_id = this.getIntent().getExtras().getString("Message_object");
 		ParseQuery<MessageObject> q = MessageObject.getQuery();
 		q.getInBackground(message_id, new GetCallback<MessageObject>() {
@@ -113,7 +122,8 @@ public class Message_complete extends Activity{
 				}
 			}
 		});
-//		
+		
+		//comment on given message
 		final ImageView comment_but = (ImageView)viewToLoad.findViewById(R.id.comment);
         
         comment_but.setOnClickListener(new OnClickListener() {
@@ -161,6 +171,7 @@ public class Message_complete extends Activity{
 															// TODO Auto-generated method stub
 															if(arg0==null)
 															{
+																//comment successful
 																Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
 																message = me;
 																load_screen();
@@ -182,6 +193,7 @@ public class Message_complete extends Activity{
 								 }
 								 else
 								 {
+									 //comment successful
 									 message.addComment(ed.getText().toString().trim(), ParseUser.getCurrentUser().getObjectId());
 										message.saveInBackground(new SaveCallback() {
 											
@@ -204,13 +216,16 @@ public class Message_complete extends Activity{
 					 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 						Window window = dialog.getWindow();
 						lp.copyFrom(window.getAttributes());
-						//This makes the dialog take up the full width
+						
+						//This makes the dialog take the full width
+						
 						lp.width = WindowManager.LayoutParams.MATCH_PARENT;
 						lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 						window.setAttributes(lp);
 			}
 		});
         
+        // to private message the current message author
         ((ImageView)viewToLoad.findViewById(R.id.privatemessage)).setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -234,6 +249,8 @@ public class Message_complete extends Activity{
 		
 	}
 	
+	
+	//loads all the items after refreshing message object to show recent data
 	private void load_screen()
 	{
 		TextView contentView = (TextView) viewToLoad.findViewById(R.id.contentView);

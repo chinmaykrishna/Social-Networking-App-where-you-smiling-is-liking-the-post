@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//Quite simple activity to create new post as per the defined post object..
 public class newPost extends Activity {
 
 	/* (non-Javadoc)

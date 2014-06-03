@@ -15,11 +15,12 @@ public class BuzzboxApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 
-		
+		//changing fonts of all activity to robot regular
 		CalligraphyConfig.initDefault("fonts/robotoregular.ttf");
-		// Add your initialization code here
-		//Parse.enableLocalDatastore(this);
+		
+		//initializing parse here. 
 		Parse.initialize(this, "nOuI36TTrBv426lobvsaE63UhV3XR7Av2397Ga2j", "y6XtplZWQToWEKJcSW8QKy1t1hz2Z6eKjdaFMpZU");
+		//need to define all object created here
 		ParseObject.registerSubclass(BuzzboxPost.class);
 		ParseObject.registerSubclass(MessageObject.class);
 		ParseObject.registerSubclass(CommentsObject.class);

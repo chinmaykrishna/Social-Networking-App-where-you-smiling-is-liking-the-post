@@ -8,7 +8,12 @@ import com.parse.ParseUser;
 
 
 /**
- * Data model for a post.
+ *  text 
+ *  user - author (ParseUser)
+ *  userId - author parseUser objectId 
+ *  NoOfEmpathizes
+ *  IsEmpathised - true or false of current user
+ *  location of post creation 
  */
 @ParseClassName("Posts")
 public class BuzzboxPost extends ParseObject {
@@ -41,13 +46,9 @@ public class BuzzboxPost extends ParseObject {
 public String getUserId() {
   return getString("user_id");
 }
-  public void setFav(){
-	  put("Fav",1);
-  }
   
-  public int getFav(String key){
-	  return getInt(key);
-  }
+  
+  
   
   public void Init(String key, int mood){
 	  put(key,0);
@@ -89,8 +90,6 @@ public String getUserId() {
     put("location", value);
   }
 
-  
-  //to put likes, dislikes to post
   
   public static ParseQuery<BuzzboxPost> getQuery() {
     return ParseQuery.getQuery(BuzzboxPost.class);

@@ -30,6 +30,7 @@
         android:gravity="center"
         android:hint="Username"
         android:singleLine="true"
+        android:ellipsize="end"
         android:textColorHint="@android:color/darker_gray"
         android:textCursorDrawable="@null" 
         android:layout_gravity="center_horizontal"
@@ -68,6 +69,7 @@
         android:textCursorDrawable="@null"
         android:gravity="center"
         android:textColor="@android:color/white"
+        android:ellipsize="end"
         android:textSize="23dp"
           />
 

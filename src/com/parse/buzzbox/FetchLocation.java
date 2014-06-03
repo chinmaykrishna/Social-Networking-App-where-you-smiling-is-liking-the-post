@@ -9,6 +9,10 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+
+//this activity will fetch location if it is not already present
+//it first try to fetch location through lastKnownLocation
+//if it is not available it will fetch best location through available providers like gps or network provider 
 public class FetchLocation extends AsyncTask<String, String, String>{
     Timer timer1;
     LocationManager lm;

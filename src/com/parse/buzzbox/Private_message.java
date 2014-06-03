@@ -30,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+//Quite simple activity to create private message object as per the defined message object..
 public class Private_message extends SherlockActivity{
 	
 	private Context con;

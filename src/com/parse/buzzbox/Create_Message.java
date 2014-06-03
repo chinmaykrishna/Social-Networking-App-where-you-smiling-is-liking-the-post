@@ -23,11 +23,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//To create message
 public class Create_Message extends Activity{
 	
+	//Receipent object ID  
 	private String parse_user_obj_id;
+	//via post or private message. In case private message set to ""
 	private String viaPost;
+	//via post receipent. can be shown to both sender and receiver.
 	private String viaPostReceipentName;
+	//moods
 	private Integer[] moodIds = {
             R.drawable.noemotion,
             R.drawable.anger,
@@ -128,6 +133,7 @@ public class Create_Message extends Activity{
 					 
 						 String message_text = message.getText().toString().trim();
 						 
+						 //create message object
 						 MessageObject mo = new MessageObject();
 						 
 						 mo.setAuthor(ParseUser.getCurrentUser());
@@ -176,6 +182,7 @@ public class Create_Message extends Activity{
 		 });
 	}
 
+	
 	@Override
 	  protected void attachBaseContext(Context newBase) {
 	      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
