@@ -19,6 +19,14 @@ public final class R {
 	public static final class drawable {
 		public static final int above_shadow = 0x7f020000;
 		public static final int below_shadow = 0x7f02007e;
+		public static final int ic_launcher = 0x7f020090;
+	}
+	public static final class string {
+		public static final int app_name = 0x7f040000;
+	}
+	public static final class style {
+		public static final int AppBaseTheme = 0x7f050000;
+		public static final int AppTheme = 0x7f050001;
 	}
 	public static final class styleable {
 		public static final int[] SlidingUpPanelLayout = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006 };
