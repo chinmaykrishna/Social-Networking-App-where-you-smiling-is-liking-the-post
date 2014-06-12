@@ -156,9 +156,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            }
 		        });
 		
-		
-		 
-		 
+				 
 		// need to fetch parse user to load the friends and friends of friends.
 		if(ParseUser.getCurrentUser()!=null)
 		ParseUser.getCurrentUser().fetchInBackground(null);
@@ -689,11 +687,15 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			        //to set no of posts on left menu
 		            no_of_post = post.getNoofPosts();
 		            TextView contentView = (TextView) view.findViewById(R.id.contentView);
+		            contentView.setTextColor(Color.WHITE);
 		            TextView usernameView = (TextView) view.findViewById(R.id.usernameView);
+		            usernameView.setTextColor(Color.DKGRAY);
 		            final TextView count = (TextView) view.findViewById(R.id.Count_of_Empathizes);
 		            ImageView im = (ImageView) view.findViewById(R.id.imageView1);
 		            TextView date = (TextView) view.findViewById(R.id.date);
+		            date.setTextColor(Color.DKGRAY);
 		            TextView time = (TextView) view.findViewById(R.id.time);
+		            time.setTextColor(Color.DKGRAY);
 		            ImageView im2 = (ImageView) view.findViewById(R.id.post_source);
 		            
 		            

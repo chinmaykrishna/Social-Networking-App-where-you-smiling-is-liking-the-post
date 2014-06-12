@@ -33,7 +33,7 @@
 			        android:id="@+id/postsView"
 			        android:layout_width="fill_parent"
 			        android:layout_height="match_parent"
-			        app:effect="helix"
+			        app:effect="fan"
 			        app:only_animate_new_items="false"
 			        app:only_animate_fling="false"
 			        app:max_velocity="0">
@@ -67,7 +67,7 @@
 			        android:layout_height="match_parent"
 			        android:gravity="center"
 			        android:text="Comments"
-			        android:textColor="#ADACAC"
+			        android:textColor="#ffffff"
 			        android:textAppearance="?android:attr/textAppearanceMedium" />
 	             
 		  
