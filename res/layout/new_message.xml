@@ -24,6 +24,7 @@
         android:textColor="#ADACAC"
         android:hint="Enter the message here"
         android:maxLines="5"
+        android:maxLength="100"
         android:layout_marginTop="20dp" >
 
         <requestFocus />

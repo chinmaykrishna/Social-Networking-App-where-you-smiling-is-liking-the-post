@@ -63,10 +63,14 @@ public class Message_complete extends Activity{
 		
 		
 		TextView contentView = (TextView) viewToLoad.findViewById(R.id.contentView);
+		contentView.setTextColor(Color.WHITE);
         final TextView usernameView = (TextView) viewToLoad.findViewById(R.id.usernameView);
+        usernameView.setTextColor(Color.DKGRAY);
         final ImageView im = (ImageView) viewToLoad.findViewById(R.id.imageView1);
         TextView date = (TextView) viewToLoad.findViewById(R.id.date);
+        date.setTextColor(Color.DKGRAY);
         TextView time = (TextView) viewToLoad.findViewById(R.id.time);
+        time.setTextColor(Color.DKGRAY);
         
         //to load message data from mainactivity
         author_obj_id = this.getIntent().getExtras().getString("author_obj_id");

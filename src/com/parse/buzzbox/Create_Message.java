@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -118,6 +120,32 @@ public class Create_Message extends Activity{
 		 
 		 Button done_but = (Button)findViewById(R.id.done);
 		 final EditText message = (EditText)findViewById(R.id.message);
+		 int maxLength=100;
+		 message.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(message.getText().toString().length()>=100)
+				{
+					Toast.makeText(Create_Message.this, "Your text should not exceed 100 letters",Toast.LENGTH_LONG).show();
+				}
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		 
 		 
 		 done_but.setOnClickListener(new OnClickListener() {
 

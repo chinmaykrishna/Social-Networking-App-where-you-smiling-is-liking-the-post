@@ -74,17 +74,16 @@
     </RelativeLayout>
        
 	 <TextView
-	        android:id="@+id/contentView"
-	        android:layout_width="fill_parent"
-	        android:layout_height="0dp"
-        	android:layout_weight="6.4"
-	        android:text="Message"
-	        android:textStyle="bold"
-	        android:textColor="#ffffff"
-	        android:textSize="24dp"
-	        android:background="@drawable/happy"
-	        android:gravity="center"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	     android:id="@+id/contentView"
+	     android:layout_width="fill_parent"
+	     android:layout_height="0dp"
+	     android:layout_weight="6.4"
+	     android:background="@drawable/happy"
+	     android:gravity="center"
+	     android:text="Message"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	     android:textColor="#ffffff"
+	     android:textStyle="normal" />
 	    
     <RelativeLayout
         android:layout_width="match_parent"

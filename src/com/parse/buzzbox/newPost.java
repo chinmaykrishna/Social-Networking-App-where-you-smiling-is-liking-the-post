@@ -3,20 +3,18 @@ package com.parse.buzzbox;
 import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,8 +23,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 //Quite simple activity to create new post as per the defined post object..
-public class newPost extends Activity {
+public class newPost extends Activity  {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -115,6 +118,33 @@ public class newPost extends Activity {
 		 
 		 Button done_but = (Button)findViewById(R.id.done);
 		 final EditText message = (EditText)findViewById(R.id.message);
+		 int maxLength=100;
+		 message.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(message.getText().toString().length()>=100)
+				{
+					Toast.makeText(newPost.this, "Your text should not exceed 100 letters",Toast.LENGTH_LONG).show();
+				}
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		 
+		 
 		 
 		 done_but.setOnClickListener(new OnClickListener() {
 
