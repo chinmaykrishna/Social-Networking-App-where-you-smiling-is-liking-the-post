@@ -185,6 +185,17 @@ public class MyProfile extends Activity {
 	}
 	
 	public void myPass(View v){
+		TextView changePass= (TextView) findViewById(R.id.buttonPassword);
+		changePass.setVisibility(View.INVISIBLE);
+		ImageView line1=(ImageView) findViewById(R.id.imageView21);
+		line1.setVisibility(View.INVISIBLE);
+		EditText oldPass=(EditText) findViewById(R.id.oldPass);
+		oldPass.setVisibility(View.VISIBLE);
+		EditText newPass=(EditText) findViewById(R.id.newPass);
+		oldPass.setVisibility(View.VISIBLE);
+		EditText confirmPass=(EditText) findViewById(R.id.confirmPass);
+		oldPass.setVisibility(View.VISIBLE);
+		
 		
 		 final Dialog dialog = new Dialog(this);
 		 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -259,5 +270,19 @@ public class MyProfile extends Activity {
 	  protected void attachBaseContext(Context newBase) {
 	      super.attachBaseContext(new CalligraphyContextWrapper(newBase));
 	  }
-	
+	 private boolean isEmpty(EditText etText) {
+	        if (etText.getText().toString().trim().length() > 0) {
+	          return false;
+	        } else {
+	          return true;
+	        }
+	      }
+
+	      private boolean isMatching(EditText etText1, EditText etText2) {
+	        if (etText1.getText().toString().equals(etText2.getText().toString())) {
+	          return true;
+	        } else {
+	          return false;
+	        }
+	      }
 }

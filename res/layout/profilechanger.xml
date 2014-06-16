@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#443f3c"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/pr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:layout_alignParentTop="true"
+        android:textColor="@android:color/white"
+        android:layout_centerHorizontal="true" />
 
     <Gallery
         android:id="@+id/gallery"
+        android:layout_below="@+id/pr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -15,7 +26,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="50dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/gallery"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/avatar1" />
 
     <TextView
@@ -24,35 +36,101 @@
         android:layout_height="wrap_content"
         android:text="Hi, "
         android:textColor="@android:color/darker_gray"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_below="@+id/avatar"/>
 
-    <Button
+    <TextView
         android:id="@+id/buttonNick"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="myNick"
-        android:textColor="@android:color/darker_gray"
-        android:layout_gravity="center_horizontal"
-        android:text="Change Nick" />
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:background="@drawable/edittext_bg"
+        android:text="Choose an Alias Username"
+        android:layout_below="@+id/avatar"
+        android:clickable="true" />
 
-    <Button
+    <TextView
         android:id="@+id/buttonPassword"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="myPass"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@android:color/darker_gray"
-        android:text="Change Password" />
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="@drawable/edittext_bg"
+        android:text="Change Password"
+        android:layout_below="@+id/buttonNick"
+        android:clickable="true" />
+    
+    <EditText 
+        android:id="@+id/oldPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonNick"
+        android:textColorHint="@android:color/white"
+        android:background="@drawable/edittext_bg"
+        android:hint="Old Password"
+         android:singleLine="true"
+         android:textCursorDrawable="@null" 
+         android:gravity="center"
+         android:visibility="invisible"/>
+    
+    <EditText 
+        android:id="@+id/newPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/oldPass"
+        android:textColorHint="@android:color/white"
+        android:background="@drawable/edittext_bg"
+        android:hint="New Password"
+         android:singleLine="true"
+         android:textCursorDrawable="@null" 
+         android:gravity="center"
+         android:visibility="invisible"
+         />
+    
+    <EditText 
+        android:id="@+id/confirmPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newPass"
+        android:textColorHint="@android:color/white"
+        android:background="@drawable/edittext_bg"
+        android:hint="Confirm New Password"
+         android:singleLine="true"
+         android:textCursorDrawable="@null" 
+         android:gravity="center"
+         android:visibility="invisible"
+         />"
+    <ImageView
+        android:id="@+id/imageView21"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/edittext_bg"
+        android:layout_below="@+id/buttonPassword"
+         />
     
     <Button
         android:id="@+id/buttonupdate"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
         android:onClick="update"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@android:color/darker_gray"
-        android:text="Update Profile" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/check"
+        android:layout_below="@+id/imageView21"
+        android:layout_centerHorizontal="true"
+        android:text="" />
+     <ImageView
+        android:id="@+id/imageView22"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/edittext_bg"
+        android:layout_below="@+id/confirmPass"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/buttonlogout"
@@ -62,8 +140,10 @@
         android:layout_marginTop="70dp"
         android:textColor="@android:color/darker_gray"
         android:onClick="logout"
-        android:text="Logout" />
+        android:text="Logout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
     
-    "
+    
 
-</LinearLayout>
+</RelativeLayout>
