@@ -9,17 +9,31 @@
     <TextView
         android:id="@+id/pr"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Profile"
         android:layout_alignParentTop="true"
         android:textColor="@android:color/white"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:textSize="23dp"
+        android:layout_margin="10dp"
+         />
 
     <Gallery
         android:id="@+id/gallery"
         android:layout_below="@+id/pr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+   <!--  <TextView
+        android:id="@+id/choose_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gallery"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:text=" Choose Avatar "
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />-->
 
     <ImageView
         android:id="@+id/avatar"
@@ -38,24 +52,30 @@
         android:textColor="@android:color/darker_gray"
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/avatar"/>
+        android:textSize="23dp"
+        android:layout_below="@+id/avatar"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/buttonNick"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:textSize="23dp"
+        android:ems="10"
         android:onClick="myNick"
         android:textColor="@android:color/white"
         android:gravity="center"
         android:background="@drawable/edittext_bg"
         android:text="Choose an Alias Username"
-        android:layout_below="@+id/avatar"
+        android:layout_below="@+id/currentnick"
         android:clickable="true" />
 
     <TextView
         android:id="@+id/buttonPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:textSize="23dp"
+        android:ems="10"
         android:onClick="myPass"
         android:gravity="center"
         android:textColor="@android:color/white"
@@ -64,24 +84,15 @@
         android:layout_below="@+id/buttonNick"
         android:clickable="true" />
     
-    <EditText 
-        android:id="@+id/oldPass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonNick"
-        android:textColorHint="@android:color/white"
-        android:background="@drawable/edittext_bg"
-        android:hint="Old Password"
-         android:singleLine="true"
-         android:textCursorDrawable="@null" 
-         android:gravity="center"
-         android:visibility="invisible"/>
     
     <EditText 
         android:id="@+id/newPass"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/oldPass"
+        android:layout_height="40dp"
+        android:textSize="23dp"
+        android:ems="10"
+        android:layout_below="@+id/buttonPassword"
+        android:inputType="textPassword"
         android:textColorHint="@android:color/white"
         android:background="@drawable/edittext_bg"
         android:hint="New Password"
@@ -89,12 +100,16 @@
          android:textCursorDrawable="@null" 
          android:gravity="center"
          android:visibility="invisible"
+         android:textColor="@android:color/white"
          />
     
     <EditText 
         android:id="@+id/confirmPass"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:layout_height="40dp"
+        android:textSize="23dp"
+        android:ems="10"
         android:layout_below="@+id/newPass"
         android:textColorHint="@android:color/white"
         android:background="@drawable/edittext_bg"
@@ -103,6 +118,7 @@
          android:textCursorDrawable="@null" 
          android:gravity="center"
          android:visibility="invisible"
+          android:textColor="@android:color/white"
          />"
     <ImageView
         android:id="@+id/imageView21"
