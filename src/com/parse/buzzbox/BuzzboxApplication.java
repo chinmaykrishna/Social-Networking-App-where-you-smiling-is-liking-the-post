@@ -19,7 +19,7 @@ public class BuzzboxApplication extends Application {
 		CalligraphyConfig.initDefault("fonts/robotoregular.ttf");
 		
 		//initializing parse here. 
-		Parse.initialize(this, "nOuI36TTrBv426lobvsaE63UhV3XR7Av2397Ga2j", "y6XtplZWQToWEKJcSW8QKy1t1hz2Z6eKjdaFMpZU");
+		Parse.initialize(this, "D6T3mYwlm8bIh8Fc8bzXGmSI80u0b4CXjdvNY2cV","gzy3Q6OH0CsTVxdd7cYGiZCTeMu7bj4SD5OiOow0");
 		//need to define all object created here
 		ParseObject.registerSubclass(BuzzboxPost.class);
 		ParseObject.registerSubclass(MessageObject.class);

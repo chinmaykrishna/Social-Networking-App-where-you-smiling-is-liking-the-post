@@ -121,7 +121,7 @@ public class SignupActivity extends Activity{
 	        {
 	        	//everything is set. now we will verify phone number
 	        	 number = ti.change_to_international(phoneNumberView.getText().toString());
-	        	 Random r = new Random();
+	        	 /*Random r = new Random();
 	        	 //generate a six digit verification code
 	        	 verification_code = (int) (100000 + r.nextFloat() * 900000);
 	        	 setTitle("Number verification");
@@ -147,7 +147,30 @@ public class SignupActivity extends Activity{
 	    				      
 	    				}
 	    			  }
-	    			});
+	    			});*/
+	        	final ProgressDialog dlg = new ProgressDialog(SignupActivity.this);
+ 		        dlg.setTitle("Please wait.");
+ 		        dlg.setMessage("Signing up.");
+ 		        dlg.show();
+ 		        
+ 		        user.put("phone_number", number);
+ 		        // Call the Parse signup method
+ 		        user.signUpInBackground(new SignUpCallback() {
+
+ 		          @Override
+ 		          public void done(ParseException e) {
+ 		            dlg.dismiss();
+ 		            if (e != null) {
+ 		              // Show the error message
+ 		              Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+ 		            } else {
+ 		              // Start an intent for the dispatch activity
+ 		              Intent intent = new Intent(SignupActivity.this, DispatchActivity.class);
+ 		              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+ 		              startActivity(intent);
+ 		            }
+ 		          }
+ 		        });
 	        }
 
 

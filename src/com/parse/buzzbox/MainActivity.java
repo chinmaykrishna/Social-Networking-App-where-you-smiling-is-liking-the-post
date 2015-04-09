@@ -170,12 +170,12 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 				numbers = new String[already_present.size()];
 				object_ids = new String[already_present.size()];
 				
-				for(int i=0;i<already_present.size();i++)
+				/*for(int i=0;i<already_present.size();i++)
 				{
 					names[i] = already_present.get(i).getName();
 					numbers[i] = already_present.get(i).getPhoneNumber();
 					object_ids[i] = already_present.get(i).getObjectID();
-				}
+				}*/
 				
 		//finish if user has been logged out
 		if(ParseUser.getCurrentUser()!=null)
@@ -664,7 +664,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		            
 		            mainQuery.orderByDescending("createdAt");	
 		            
-		            //mainQuery.setLimit(MAX_POST_SEARCH_RESULTS);
+		            //mainQuery.setLimit(5);
 		            
 		            return mainQuery;
 		          }
@@ -905,7 +905,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		
 		JazzyListView postsView = (JazzyListView) this.findViewById(R.id.postsView);
         postsView.setAdapter(Po);
-        postsView.setTransitionEffect(JazzyHelper.GROW);
+        postsView.setTransitionEffect(JazzyHelper.CARDS);
 	}
 	
 	

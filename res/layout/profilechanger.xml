@@ -24,23 +24,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-   <!--  <TextView
+<RelativeLayout
+    android:id="@+id/choose"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/gallery"
+    android:layout_centerHorizontal="true"
+    >
+
+    <TextView
         android:id="@+id/choose_avatar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/gallery"
+        
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        
         android:text=" Choose Avatar "
         android:textColor="@android:color/white"
-        android:textSize="20dp" />-->
+        android:textSize="20dp" />
 
+    <ImageView
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_toLeftOf="@+id/choose_avatar"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/left" />
+
+     <ImageView
+         android:id="@+id/right"
+         android:layout_width="wrap_content"
+         android:layout_height="20dp"
+         android:layout_marginLeft="10dp"
+         android:layout_centerVertical="true"
+         android:layout_toRightOf="@+id/choose_avatar"
+         android:src="@drawable/right" />
+
+</RelativeLayout>
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/gallery"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/choose"
         android:layout_centerHorizontal="true"
         android:src="@drawable/avatar1" />
 
@@ -91,7 +119,7 @@
         android:layout_height="40dp"
         android:textSize="23dp"
         android:ems="10"
-        android:layout_below="@+id/buttonPassword"
+        android:layout_below="@+id/buttonNick"
         android:inputType="textPassword"
         android:textColorHint="@android:color/white"
         android:background="@drawable/edittext_bg"
@@ -134,9 +162,8 @@
         android:onClick="update"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="80dp"
         android:background="@drawable/check"
-        android:layout_below="@+id/imageView21"
+        android:layout_below="@+id/imageView22"
         android:layout_centerHorizontal="true"
         android:text="" />
      <ImageView
@@ -153,8 +180,8 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70dp"
         android:textColor="@android:color/darker_gray"
+        android:layout_below="@+id/update"
         android:onClick="logout"
         android:text="Logout"
         android:layout_alignParentBottom="true"
