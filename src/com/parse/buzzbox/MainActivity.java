@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,7 +14,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
+import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,6 +28,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
@@ -39,6 +44,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,6 +55,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.manuelpeinado.refreshactionitem.ProgressIndicatorType;
 import com.manuelpeinado.refreshactionitem.RefreshActionItem;
@@ -62,13 +69,16 @@ import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.buzzbox.FetchLocation.LocationResult;
+import com.qualcomm.snapdragon.sdk.face.FaceData;
+import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
+import com.qualcomm.snapdragon.sdk.face.FacialProcessing.PREVIEW_ROTATION_ANGLE;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.twotoasters.jazzylistview.JazzyHelper;
 import com.twotoasters.jazzylistview.JazzyListView;
 
 @SuppressLint("SimpleDateFormat")
-public class MainActivity extends SherlockActivity implements LocationListener,RefreshActionListener {
+public class MainActivity extends SherlockActivity implements LocationListener,RefreshActionListener, Camera.PreviewCallback {
 	
 	//radius of nearby posts default 10km.
 	private static int SEARCH_RADIUS=10,Postflag=1;
@@ -79,6 +89,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
     private LocationManager locationManager;
     private static ParseGeoPoint p;
     private Context con;
+    boolean loaded=false;
     
     //this adapter will load all posts
     private ParseQueryAdapter<BuzzboxPost> posts;
@@ -122,6 +133,19 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 	//variables that will keep information of user touch/fling in my message layout to toggle it
 	int x,y,x1,y1;
 	
+	//Camera variables
+	Camera cameraObj;
+	FrameLayout preview;
+	private CameraSurfaceView mPreview;
+	private int Front_camera=1;
+	private int Back_camera=0;
+	private boolean _qcSDKenabled;
+	FacialProcessing faceProc;
+	Display display;
+	private int displayangle;
+	private int numFaces;
+	FaceData[] facearray=null;
+	
 	
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -134,9 +158,13 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		setContentView(R.layout.activity_main);
 		main = this;
 		con = this;
+		
+		preview=(FrameLayout) findViewById(R.id.cameraPreview);
+		
 		// to get actual screen size excluding paralax
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.main_screen);
 		final JazzyListView ja = (JazzyListView)findViewById(R.id.postsView);
+		display=((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		
 		//calculate actual distance above comments layout
 		final ViewTreeObserver observer= layout.getViewTreeObserver();
@@ -583,14 +611,57 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    
+		start_camera();
 		
 		
+	}
+	
+	private void start_camera(){
+		_qcSDKenabled=FacialProcessing.isFeatureSupported(FacialProcessing.FEATURE_LIST.FEATURE_FACIAL_PROCESSING);
+		if(_qcSDKenabled && faceProc==null)
+		{
+			faceProc=FacialProcessing.getInstance();
+		}
+		else if(!_qcSDKenabled)
+		{
+			Toast.makeText(this, "Facial processing is not supported", Toast.LENGTH_LONG).show();
+		}
+		cameraObj=Camera.open(Front_camera);
 		
+		mPreview=new CameraSurfaceView(MainActivity.this, cameraObj);
+		preview=(FrameLayout) findViewById(R.id.cameraPreview);
+		preview.addView(mPreview);
+		cameraObj.setPreviewCallback(MainActivity.this);
+	}
+	
+	private void stop_camera(){
+		if(cameraObj!=null)
+		{
+			cameraObj.stopPreview();
+			cameraObj.setPreviewCallback(null);
+			preview.removeView(mPreview);
+			cameraObj.release();
+			if(_qcSDKenabled)
+			{
+				faceProc.release();
+				faceProc=null;
+			}
+			
+		}
+		cameraObj=null;
 	}
 	
 	
 	
 	
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		stop_camera();
+	}
+
 	@Override
 	protected void onRestart() {
 		// TODO Auto-generated method stub
@@ -616,6 +687,11 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			if(!(ParseUser.getCurrentUser().isDataAvailable()))
 				finish();
 
+		if(cameraObj!=null)
+		{
+			stop_camera();
+		}
+		start_camera();
 		
 		super.onResume();
 	}
@@ -888,6 +964,7 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 					public void onLoaded(List<BuzzboxPost> arg0, Exception arg1) {
 						// TODO Auto-generated method stub
 						mRefreshActionItem.showProgress(false);
+						loaded=true;
 					}
 
 					@Override
@@ -1386,7 +1463,10 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 			if(up_or_down==1)
 			{
 				Log.d("blag", "down");
+				//Toast.makeText(MainActivity.this, "last position was "+ post_list.getLastVisiblePosition()+" and first position was "+post_list.getFirstVisiblePosition(), 
+					//	Toast.LENGTH_SHORT).show();
 					post_list.smoothScrollToPosition(post_list.getLastVisiblePosition()-1);
+					
 				
 			}
 			else
@@ -1421,6 +1501,169 @@ public class MainActivity extends SherlockActivity implements LocationListener,R
 				return x*-1;
 			else
 				return x;
+		}
+
+		@Override
+		public void onPreviewFrame(byte[] data, Camera camera) {
+			// TODO Auto-generated method stub
+			int surfaceWidth=mPreview.getWidth();
+			int surfaceHeight=mPreview.getHeight();
+			int dRotation=display.getRotation();
+			faceProc.normalizeCoordinates(surfaceWidth, surfaceHeight);
+			PREVIEW_ROTATION_ANGLE angleEnum=PREVIEW_ROTATION_ANGLE.ROT_0;
+			switch(dRotation){
+			case 0:
+				displayangle=90;
+				angleEnum=PREVIEW_ROTATION_ANGLE.ROT_90;
+				break;
+			case 1:
+				displayangle=0;
+				angleEnum=PREVIEW_ROTATION_ANGLE.ROT_0;
+				break;
+			case 2:
+				displayangle=270;
+				angleEnum=PREVIEW_ROTATION_ANGLE.ROT_270;
+				break;
+			case 3:
+				displayangle=180;
+				angleEnum=PREVIEW_ROTATION_ANGLE.ROT_180;
+				break;
+			
+			}
+			cameraObj.setDisplayOrientation(displayangle);
+			if(_qcSDKenabled)
+			{
+				if(faceProc==null)
+				{
+					faceProc=FacialProcessing.getInstance();
+					
+				}
+				Parameters params=cameraObj.getParameters();
+				Size preview_size=params.getPreviewSize();
+				if(this.getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE)
+				{
+					faceProc.setFrame(data, preview_size.width, preview_size.height, true, angleEnum);
+				}
+				else if(this.getResources().getConfiguration().orientation==Configuration.ORIENTATION_PORTRAIT)
+				{
+					faceProc.setFrame(data, preview_size.width, preview_size.height, true, angleEnum);
+				}
+				
+				numFaces=faceProc.getNumFaces();
+				if(numFaces>0)
+				{
+					Toast.makeText(MainActivity.this, numFaces+" faces detected", Toast.LENGTH_SHORT).show();
+					facearray=faceProc.getFaceData();
+					if(loaded)
+					{
+					
+					int pos=post_list.getFirstVisiblePosition();
+					final BuzzboxPost post= posts.getItem(pos);
+					View view = View.inflate(con, R.layout.buzzbox_post_item, null);
+					ViewGroup parent=(ViewGroup) view.getParent();
+					
+					View v= posts.getItemView(post, view, parent);
+					for(int i=0;i<facearray.length;i++)
+					{
+						if(facearray[i].getSmileValue()>70)
+						{
+							
+							
+							final ImageView bemp = (ImageView) v.findViewById(R.id.btnEmpathize);
+							final TextView count = (TextView) v.findViewById(R.id.Count_of_Empathizes);
+							if(!(ParseUser.getCurrentUser().getInt(post.getObjectId()+"emp")==1)){
+								//BuzzboxPost.getQuery();
+								count.setText(""+(post.no_of_empathizes()+1));
+								
+								post.put("NoOfEmpathizes",(post.no_of_empathizes()+1));
+								post.saveInBackground();
+		            	    	
+		            	    	ParseUser.getCurrentUser().put(post.getObjectId()+"emp", 1);
+	            	    	    ParseUser.getCurrentUser().saveInBackground();
+							
+							}
+							else{
+								Toast mtoast = Toast.makeText(MainActivity.this, "This post is Already Empathized.", Toast.LENGTH_SHORT);
+					 		 	 mtoast.show();
+							}
+						
+						}
+						if( facearray[i].getRightEyeBlink()>80)
+						{
+							//Toast.makeText(MainActivity.this, "Right blink detected", Toast.LENGTH_SHORT).show();
+							 
+										final Dialog dialog = new Dialog(con);
+										dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+										
+										 dialog.setContentView(R.layout.comment_layout);
+										 
+										 
+										 Button done_but = (Button) dialog.findViewById(R.id.done);
+										 final EditText message = (EditText)dialog.findViewById(R.id.message);
+										 
+										 	//send button clicked
+											 done_but.setOnClickListener(new OnClickListener() {
+
+												 @Override
+												 public void onClick(View v) {
+													 //send function
+													 if(message.getText().toString().trim().length()<1)
+													 {
+														 Toast.makeText(con, "Please enter a valid text", Toast.LENGTH_SHORT).show();
+													 }
+													 else
+													 {
+														 
+														 //create comment object associated with current shown post
+														 CommentsObject new_comment = new CommentsObject();
+														 new_comment.toPost(post.getObjectId());
+														 new_comment.setText(message.getText().toString().trim());
+														 new_comment.setAuthor(ParseUser.getCurrentUser());
+														 new_comment.setAuthorAvatar(String.valueOf(ParseUser.getCurrentUser().getInt("Avatar")));
+														 new_comment.setAuthorName(ParseUser.getCurrentUser().getUsername());
+														 new_comment.saveInBackground(new SaveCallback() {
+															
+															@Override
+															public void done(ParseException e) {
+																// TODO Auto-generated method stub
+																if(e==null)
+																{
+																	
+																	Toast.makeText(con, "Comment Successful", Toast.LENGTH_SHORT).show();
+																}
+																else
+																{
+																	Log.d("error while sending", e.getMessage().toString());
+																	Toast.makeText(con, "Sending failed. Please check internet connection", Toast.LENGTH_SHORT).show();
+																}
+																
+															}
+														});
+													 }
+													 dialog.dismiss();
+												 }
+											 });
+											 dialog.show();
+											 
+											 
+											 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+												Window window = dialog.getWindow();
+												lp.copyFrom(window.getAttributes());
+												//This makes the dialog take up the full width
+												lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+												lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+												window.setAttributes(lp);
+									}
+							
+					            
+					}  
+					
+						
+					}
+				}
+			}
+
+			
 		}
 		
 		
